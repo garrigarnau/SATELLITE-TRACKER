@@ -1,0 +1,8 @@
+- afegir un boto per ficar location actual.
+- poder buscar per nom de ciutat 
+
+- pensar altres funcionalitats 
+- posar mapa
+
+- ferho mes bunic
+

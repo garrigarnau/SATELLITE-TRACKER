@@ -6,7 +6,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
   }
   
   /* Títol */
@@ -39,5 +39,10 @@ header {
   nav a.active {
     color: #ffdd57;
     text-decoration: underline;
+  }
+  
+  .header-logo {
+    height: 60px;  /* adjust size as needed */
+    margin: 5px;
   }
   

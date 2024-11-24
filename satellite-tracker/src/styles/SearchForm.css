@@ -1,0 +1,72 @@
+.search-form {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .search-form h3 {
+    margin-bottom: 15px;
+    font-size: 1.2em;
+  }
+  
+  .search-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1em;
+  }
+  
+  .search-form input {
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+  .search-form button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 500px;
+    margin-right: 50px;
+  }
+  
+  .search-form button:hover {
+    background-color: #0056b3;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .confirmation-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+  }
+  
+  .confirmed-info {
+    color: #2c5282;
+  }
+  
+  .refresh-button {
+    background-color: #718096;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .search-form .change-location-button {
+    margin-right: 20px;
+    margin-left: 20px;
+  }
+  

@@ -1,4 +1,3 @@
-- afegir un boto per ficar location actual.
 - poder buscar per nom de ciutat 
 
 - pensar altres funcionalitats 
@@ -6,3 +5,8 @@
 
 - ferho mes bunic
 
+pagina per veure els satelits que estan en orbita
+
+posar un contador fixa que mostri quan pasara la estacio espacial 
+
+canviar boto de opcions de localitzacio

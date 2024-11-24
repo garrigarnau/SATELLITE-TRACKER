@@ -21,7 +21,7 @@ export const getSatellites = async (latitude, longitude, altitude) => {
 
 export const getVisualPasses = async (satelliteId, latitude, longitude, altitude) => {
     const API_KEY = process.env.REACT_APP_N2YO_API_KEY;
-    const days = 1; // Dies de predicció
+    const days = 2; // Dies de predicció
     const minVisibility = 5; // Visibilitat mínima en segons
   
     //const url = `${BASE_URL}/visualpasses/${satelliteId}/${latitude}/${longitude}/${altitude}/${days}/${minVisibility}/&apiKey=${API_KEY}`;

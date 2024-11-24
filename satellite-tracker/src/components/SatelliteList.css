@@ -1,0 +1,44 @@
+/* satellite-tracker/src/components/SatelliteList.css */
+.satellite-list {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .satellite-item {
+    margin: 10px 0;
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    transition: transform 0.2s;
+  }
+  
+  .satellite-item:hover {
+    transform: scale(1.02);
+    border-color: #007bff;
+  }
+  
+  h3 {
+    margin: 0;
+    color: #333;
+  }
+  
+  p {
+    margin: 5px 0 0;
+    color: #666;
+  }
+  
+  /* Llistes */
+  .list {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }

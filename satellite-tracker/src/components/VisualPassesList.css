@@ -1,0 +1,41 @@
+/* satellite-tracker/src/components/VisualPassesList.css */
+.visual-passes-list {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .satellite-item {
+    margin: 10px 0;
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    transition: transform 0.2s;
+  }
+  
+  .pass-item {
+    margin: 5px 0;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  .satellite-item:hover {
+    transform: scale(1.02);
+  }
+  
+  h3 {
+    margin: 0;
+    color: #333;
+  }
+  
+  strong {
+    color: #007bff;
+  }

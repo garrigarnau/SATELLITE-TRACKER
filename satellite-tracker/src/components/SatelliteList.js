@@ -1,13 +1,15 @@
 import React from 'react';
+import './SatelliteList.css';
 
 const SatelliteList = ({ satellites }) => {
   return (
-    <div>
+    <div className="satellite-list">
       <h2>Tots els satèl·lits:</h2>
       <ul>
         {satellites.map((sat) => (
-          <li key={sat.satid}>
-            {sat.satname} - Altitud: {sat.satalt.toFixed(2)} km
+          <li key={sat.satid} className="satellite-item">
+            <h3>{sat.satname}</h3>
+            <p>Altitud: <strong>{sat.satalt.toFixed(2)} km</strong></p>
           </li>
         ))}
       </ul>

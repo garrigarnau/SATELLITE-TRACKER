@@ -2,27 +2,6 @@ import React, { useState } from 'react';
 import { getSatellites, getVisualPasses } from './api/satellites';
 
 function App() {
-  const [satellites, setSatellites] = useState([]);
-  const [visibleSatellites, setVisibleSatellites] = useState([]);
-  const [latitude, setLatitude] = useState(41.3851); // Barcelona
-  const [longitude, setLongitude] = useState(2.1734); // Barcelona
-  const [altitude, setAltitude] = useState(10); // Altitud en metres
-
-  const fetchSatellites = async () => {
-    // Obtenim satèl·lits "above"
-    const data = await getSatellites(latitude, longitude, altitude);
-    setSatellites(data);
-
-    // Per a cada satèl·lit, obtenim les passes visuals
-    const visualDataPromises = data.map(async (sat) => {
-      const visualPasses = await getVisualPasses(sat.satid, latitude, longitude, altitude);
-      return { ...sat, visualPasses };
-    });
-
-    const visualData = await Promise.all(visualDataPromises);
-    setVisibleSatellites(visualData.filter((sat) => sat.visualPasses.length > 0));
-  };
-
   return (
     <div>
       <h1>Satellite Tracker</h1>

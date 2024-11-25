@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seguiment de Satèl·lit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"/>
+    <style>
+        #map { height: 600px; width: 100%; }
+        .controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            z-index: 1000;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        .legend {
+            position: absolute;
+            bottom: 30px;
+            left: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        .legend-item {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+        .legend-color {
+            width: 20px;
+            height: 3px;
+            margin-right: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <input type="number" id="satellite-id" placeholder="ID del satèl·lit" value="25544">
+        <button onclick="startTracking()">Iniciar Seguiment</button>
+        <button onclick="clearMap()">Netejar</button>
+    </div>
+    <div class="legend">
+        <div class="legend-item">
+            <span class="legend-color" style="background: yellow;"></span>
+            Òrbita prevista
+        </div>
+        <div class="legend-item">
+            <span class="legend-color" style="background: red;"></span>
+            Trajectòria real
+        </div>
+    </div>
+    <div id="map"></div>
+    <div id="info" class="info"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script>
+        let map = L.map('map').setView([0, 0], 2);
+        let realPositionMarker = null;
+        let orbitPath = null;
+        let realPath = null;
+        let footprint = null;
+        let updateInterval = null;
+        let realPositions = [];
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        function calculateFootprint(lat, lon, radius) {
+            const points = [];
+            const R = 6371;
+            const d = radius;
+            
+            for (let i = 0; i <= 360; i++) {
+                const brng = i * Math.PI / 180;
+                const latRad = lat * Math.PI / 180;
+                const lonRad = lon * Math.PI / 180;
+                
+                const latPoint = Math.asin(
+                    Math.sin(latRad) * Math.cos(d/R) + 
+                    Math.cos(latRad) * Math.sin(d/R) * Math.cos(brng)
+                );
+                
+                const lonPoint = lonRad + Math.atan2(
+                    Math.sin(brng) * Math.sin(d/R) * Math.cos(latRad),
+                    Math.cos(d/R) - Math.sin(latRad) * Math.sin(latPoint)
+                );
+                
+                points.push([
+                    latPoint * 180 / Math.PI,
+                    lonPoint * 180 / Math.PI
+                ]);
+            }
+            
+            return points;
+        }
+
+        async function fetchOrbitData() {
+            const satelliteId = document.getElementById('satellite-id').value;
+            try {
+                const response = await fetch(`/api/satellite/${satelliteId}`);
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    const positions = data.data.positions.map(pos => [
+                        pos.satlatitude,
+                        pos.satlongitude
+                    ]);
+
+                    if (orbitPath) {
+                        map.removeLayer(orbitPath);
+                    }
+
+                    orbitPath = L.polyline(positions, {
+                        color: 'yellow',
+                        weight: 2,
+                        opacity: 0.6
+                    }).addTo(map);
+
+                    return data.data.info;
+                }
+            } catch (error) {
+                console.error('Error carregant òrbita:', error);
+            }
+            return null;
+        }
+
+        async function updateRealPosition() {
+            const satelliteId = document.getElementById('satellite-id').value;
+            try {
+                const response = await fetch(`/api/satellite/${satelliteId}/current`);
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    const position = data.data.position;
+                    const currentLatLng = [position.satlatitude, position.satlongitude];
+
+                    if (!realPositionMarker) {
+                        realPositionMarker = L.marker(currentLatLng, {
+                            icon: L.divIcon({
+                                className: 'satellite-icon',
+                                html: '🛰️',
+                                iconSize: [25, 25]
+                            })
+                        }).addTo(map);
+                    } else {
+                        realPositionMarker.setLatLng(currentLatLng);
+                    }
+
+                    realPositions.push(currentLatLng);
+                    if (realPositions.length > 50) {
+                        realPositions.shift();
+                    }
+
+                    if (realPath) {
+                        map.removeLayer(realPath);
+                    }
+                    realPath = L.polyline(realPositions, {
+                        color: 'red',
+                        weight: 3
+                    }).addTo(map);
+
+                    if (footprint) {
+                        map.removeLayer(footprint);
+                    }
+                    const footprintPoints = calculateFootprint(
+                        position.satlatitude,
+                        position.satlongitude,
+                        2200
+                    );
+                    footprint = L.polygon(footprintPoints, {
+                        color: 'white',
+                        fillColor: '#fff',
+                        fillOpacity: 0.2,
+                        weight: 1
+                    }).addTo(map);
+
+                    document.getElementById('info').innerHTML = `
+                        <h3>${data.data.info.satname}</h3>
+                        <p>ID: ${data.data.info.satid}</p>
+                        <p>Latitud: ${position.satlatitude.toFixed(4)}°</p>
+                        <p>Longitud: ${position.satlongitude.toFixed(4)}°</p>
+                        <p>Altitud: ${position.sataltitude.toFixed(2)} km</p>
+                        <p>Última actualització: ${new Date().toLocaleTimeString()}</p>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error actualitzant posició:', error);
+            }
+        }
+
+        async function startTracking() {
+            clearMap();
+            const satInfo = await fetchOrbitData();
+            
+            if (satInfo) {
+                await updateRealPosition();
+                updateInterval = setInterval(updateRealPosition, 3000);
+            }
+        }
+
+        function clearMap() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+            if (realPositionMarker) map.removeLayer(realPositionMarker);
+            if (orbitPath) map.removeLayer(orbitPath);
+            if (realPath) map.removeLayer(realPath);
+            if (footprint) map.removeLayer(footprint);
+            
+            realPositionMarker = null;
+            orbitPath = null;
+            realPath = null;
+            footprint = null;
+            realPositions = [];
+            
+            document.getElementById('info').innerHTML = '';
+        }
+    </script>
+</body>
+</html>

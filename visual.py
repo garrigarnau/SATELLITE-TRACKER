@@ -26,6 +26,7 @@ try:
     # Verifica si la resposta és correcta
     if response.status_code == 200:
         data = response.json()
+        print(data)
         print(f"Passos visibles per al satèl·lit {satellite_id}:")
         for i, pass_data in enumerate(data.get("passes", [])):
             print(f"\nPassada {i+1}:")

@@ -1,5 +1,5 @@
 import React from 'react';
-import './SatelliteList.css';
+import './styles/SatelliteList.css';
 
 const SatelliteList = ({ satellites }) => {
   return (

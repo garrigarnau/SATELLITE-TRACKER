@@ -1,20 +1,34 @@
 import React from 'react';
-import './VisualPassesList.css';
+import { Link } from 'react-router-dom';
+import './styles/VisualPassesList.css';
 
-const VisualPassesList = ({ visibleSatellites }) => {
+const VisualPassesList = ({ visibleSatellites, latitude, longitude, altitude }) => {
   return (
     <div className="visual-passes-list">
       <h2>Satèl·lits amb passes visuals:</h2>
       <ul>
         {visibleSatellites.map((sat) => (
           <li key={sat.satid} className="satellite-item">
-            <h3>{sat.satname} - Passes visibles:</h3>
+            <h3>
+              <Link 
+                to={`/satellite/${sat.satid}`}
+                state={{
+                  latitude: latitude,
+                  longitude: longitude,
+                  altitude: altitude,
+                  satname: sat.satname  // Afegim el nom del satèl·lit
+                }}
+                className="satellite-link"
+              >
+                <strong>{sat.satname}</strong>
+              </Link>
+            </h3>
             <ul>
               {sat.visualPasses.map((pass, index) => (
                 <li key={index} className="pass-item">
-                  Inici: <strong>{new Date(pass.startUTC * 1000).toLocaleString()}</strong> - 
-                  Durada: <strong>{pass.duration}s</strong> - 
-                  Altitud màxima: <strong>{pass.maxEl}°</strong>
+                  <p><strong>Inici:</strong> {new Date(pass.startUTC * 1000).toLocaleString()}</p>
+                  <p><strong>Durada:</strong> {pass.duration}s</p>
+                  <p><strong>Altitud màxima:</strong> {pass.maxEl}°</p>
                 </li>
               ))}
             </ul>

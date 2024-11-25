@@ -3,10 +3,18 @@
 - pensar altres funcionalitats 
 - posar mapa
 
-- ferho mes bunic
 
-pagina per veure els satelits que estan en orbita
+Satellite details: 
+- agrupar per inici, maxim, final
+- entrar al mapa del satellit
 
-posar un contador fixa que mostri quan pasara la estacio espacial 
+Altres Pàgines: 
+- satellits que estan en orbita
+- Contador fixa de la ISS
+- Pagina de noticies
+- Launches del dia o setmana, fer gràfic per veure els launches en el ultim mes, any, 10 anys...
 
-canviar boto de opcions de localitzacio
+
+TLE:
+
+- veure el cami que deixa enrerre.

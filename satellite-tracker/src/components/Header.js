@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/Header.css';
+import './styles/Header.css';
 import logo from '../assets/logo.png';
 
 const Header = () => {
@@ -10,7 +10,7 @@ const Header = () => {
       <h1>Satellite Tracker</h1>
       <nav>
         <Link to="/">Inici</Link>
-        <Link to="/about">Sobre</Link>
+        <Link to="/about">About</Link>
       </nav>
     </header>
   );

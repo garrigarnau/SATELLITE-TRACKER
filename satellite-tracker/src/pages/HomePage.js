@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './HomePage.css';
+import './styles/HomePage.css';
 import SearchForm from '../components/SearchForm';
 import SatelliteList from '../components/SatelliteList';
 import VisualPassesList from '../components/VisualPassesList';
@@ -45,7 +45,13 @@ const HomePage = () => {
       />
       
       <SatelliteList satellites={satellites} />
-      <VisualPassesList visibleSatellites={visibleSatellites} />
+      <VisualPassesList
+        visibleSatellites={visibleSatellites}
+        latitude={latitude} // Passem latitud com a prop
+        longitude={longitude} // Passem longitud com a prop
+        altitude={altitude} // Passem altitud com a prop
+        
+      />
     </div>
   );
 };

@@ -1,5 +1,39 @@
 const API_KEY = process.env.REACT_APP_N2YO_API_KEY;
 
+export const getSatelliteTLE = async (satelliteId) => {
+  const tleUrl = `/rest/v1/satellite/tle/${satelliteId}&apiKey=${API_KEY}`;
+  const positionsUrl = `/rest/v1/satellite/positions/${satelliteId}/41.3802/2.14/0/3000/&apiKey=${API_KEY}`;
+  
+  try {
+    const [tleResponse, positionsResponse] = await Promise.all([
+      fetch(tleUrl),
+      fetch(positionsUrl)
+    ]);
+    
+    const tleData = await tleResponse.json();
+    const positionsData = await positionsResponse.json();
+    
+    return {
+      ...tleData,
+      positions: positionsData.positions || []
+    };
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
+
+export const getRadialVelocity = async (satelliteId, latitude, longitude, altitude) => {
+  const url = `/rest/v1/satellite/radialvelocity/${satelliteId}/${latitude}/${longitude}/${altitude}/&apiKey=${API_KEY}`;
+  try {
+    const response = await fetch(url);
+    return await response.json();
+  } catch (error) {
+    console.error('Error getting velocity:', error);
+    throw error;
+  }
+};
+
 // Funció per obtenir satèl·lits "above"
 export const getSatellites = async (latitude, longitude, altitude) => {
   const url = `/rest/v1/satellite/above/${latitude}/${longitude}/${altitude}/70/18/&apiKey=${API_KEY}`;

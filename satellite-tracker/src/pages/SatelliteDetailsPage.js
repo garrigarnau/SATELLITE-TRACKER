@@ -3,8 +3,11 @@ import { useParams, useLocation } from 'react-router-dom';
 import { getVisualPasses } from '../api/satellites';
 import compassRose from '../assets/compassrose.png';
 import './styles/SatelliteDetailsPage.css';
+import SatelliteMap from '../components/SatelliteMap';
+import ReactModal from 'react-modal';
 
 const SatelliteDetailsPage = () => {
+  const [showMap, setShowMap] = useState(false);
   const { satelliteId } = useParams();
   const location = useLocation();
   const [satelliteDetails, setSatelliteDetails] = useState(null);
@@ -59,6 +62,12 @@ const SatelliteDetailsPage = () => {
           <p><strong>Longitud:</strong> {longitude}</p>
           <p><strong>Altitud:</strong> {altitude}</p>
           <p><strong>Nombre de passes:</strong> {satelliteDetails.length}</p>
+          <button
+            className="map-button"
+            onClick={() => setShowMap(true)}
+          >
+            Veure Mapa
+          </button>
         </div>
         <div className="compass-container">
           <img 
@@ -88,6 +97,21 @@ const SatelliteDetailsPage = () => {
           </li>
         ))}
       </ul>
+      <ReactModal 
+        isOpen={showMap} 
+        onRequestClose={() => setShowMap(false)}
+        className="modal-map"
+        overlayClassName="modal-overlay"
+      >
+        <button 
+          className="close-button"
+          onClick={() => setShowMap(false)}
+        >
+          ×
+        </button>
+        <SatelliteMap satelliteId={satelliteId} />
+      </ReactModal>
+      
     </div>
   );
 };

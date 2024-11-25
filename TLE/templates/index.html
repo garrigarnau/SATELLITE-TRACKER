@@ -1,13 +1,11 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Seguiment de Satèl·lit</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"/>
     <style>
-        #map {
-            height: 600px;
-            width: 100%;
-        }
+        #map { height: 600px; width: 100%; }
         .controls {
             position: absolute;
             top: 10px;
@@ -121,7 +119,6 @@
                 const data = await response.json();
 
                 if (data.status === 'success') {
-                    // Dibuixar òrbita prevista
                     const positions = data.data.positions.map(pos => [
                         pos.satlatitude,
                         pos.satlongitude
@@ -148,7 +145,6 @@
         async function updateRealPosition() {
             const satelliteId = document.getElementById('satellite-id').value;
             try {
-                // Demanem només la posició actual
                 const response = await fetch(`/api/satellite/${satelliteId}/current`);
                 const data = await response.json();
 
@@ -156,7 +152,6 @@
                     const position = data.data.position;
                     const currentLatLng = [position.satlatitude, position.satlongitude];
 
-                    // Actualitzar marcador de posició real
                     if (!realPositionMarker) {
                         realPositionMarker = L.marker(currentLatLng, {
                             icon: L.divIcon({
@@ -169,9 +164,8 @@
                         realPositionMarker.setLatLng(currentLatLng);
                     }
 
-                    // Actualitzar trajectòria real
                     realPositions.push(currentLatLng);
-                    if (realPositions.length > 50) { // Mantenim només les últimes 50 posicions
+                    if (realPositions.length > 50) {
                         realPositions.shift();
                     }
 
@@ -183,7 +177,6 @@
                         weight: 3
                     }).addTo(map);
 
-                    // Actualitzar footprint
                     if (footprint) {
                         map.removeLayer(footprint);
                     }
@@ -199,7 +192,6 @@
                         weight: 1
                     }).addTo(map);
 
-                    // Actualitzar informació
                     document.getElementById('info').innerHTML = `
                         <h3>${data.data.info.satname}</h3>
                         <p>ID: ${data.data.info.satid}</p>
@@ -216,14 +208,11 @@
 
         async function startTracking() {
             clearMap();
-            
-            // Carregar primer l'òrbita prevista
             const satInfo = await fetchOrbitData();
             
             if (satInfo) {
-                // Començar a actualitzar la posició real
                 await updateRealPosition();
-                updateInterval = setInterval(updateRealPosition, 30000); // Actualitzar cada 30 segons
+                updateInterval = setInterval(updateRealPosition, 2000);
             }
         }
 

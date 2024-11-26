@@ -1,102 +1,108 @@
 # SATELLITE-TRACKER
 
-## Descripció
+## About the Project
 
-**SATELLITE-TRACKER** és una aplicació web interactiva que permet visualitzar la trajectòria de satèl·lits en temps real i obtenir informació detallada sobre les seves òrbites. Utilitza l'API de [N2YO](https://www.n2yo.com/) per obtenir dades com passes visuals, Two-Line Element (TLE), i altra informació rellevant.
+**SATELLITE-TRACKER** is a simple web application built to track satellites, visualize their orbits, and provide information such as visibility and orbital details. This project was created as a **learning exercise** to explore the fundamentals of **React** and **JavaScript** while experimenting with integrating third-party APIs.
 
-Aquest projecte està desenvolupat amb **React** per a la interfície d'usuari i Python per a funcionalitats complementàries.
+By working on this project, I aimed to learn more about:
 
----
+- Building interactive components with **React**.
+- Consuming APIs in real-time.
+- Enhancing UI/UX design for web applications.
 
-## Funcionalitats
-
-- **Llistat de satèl·lits:** Consulta els satèl·lits visibles en una ubicació específica.
-- **Informació de passes visuals:** Descobreix quan seran visibles des del teu punt de vista.
-- **Representació de l'òrbita:** Visualitza la trajectòria del satèl·lit a l'òrbita terrestre.
-- **Personalització visual:** Interfície atractiva i fàcil d'usar, amb components optimitzats.
+This is not a production-ready application but a fun and educational project.
 
 ---
 
-## Captures de Pantalla
+## Features
 
-*(Aquí pots incloure captures de pantalla o GIFs de l'aplicació per mostrar les funcionalitats visuals.)*
+- **Satellite List:** Browse satellites visible from a specific location.
+- **Visual Passes:** Find out when satellites are visible in the sky.
+- **Orbit Visualization:** View the satellite's path around Earth.
+- **Simple and Clear UI:** Built with beginner-friendly components and responsive design.
 
 ---
 
-## Tecnologies Utilitzades
+## Screenshots
 
-- **Frontend:** React, CSS
+*(Add screenshots or GIFs showcasing the app's UI and features here.)*
+
+---
+
+## Built With
+
+- **Frontend:** React, JavaScript, CSS
 - **API:** [N2YO API](https://www.n2yo.com/)
-- **Backend:** Python (opcional per funcionalitats avançades)
-- **Deployment:** (Indica si fas servir serveis com Netlify, Vercel o altres)
+- **Backend (Optional):** Python for additional functionality
+- **Deployment:** (Specify services like Netlify, Vercel, or others if applicable)
 
 ---
 
-## Requisits
+## Prerequisites
 
-- **Node.js**: v14 o superior
-- **NPM**: v6 o superior
-- Clau d'accés per l'API de N2YO
+- **Node.js**: v14 or later
+- **NPM**: v6 or later
+- An API key from [N2YO](https://www.n2yo.com/).
 
 ---
 
-## Instal·lació i Configuració
+## Getting Started
 
-1. **Clona el repositori**:
+1. **Clone the Repository**:
 
    ```bash
    git clone https://github.com/garrigarnau/SATELLITE-TRACKER.git
    cd SATELLITE-TRACKER
    ```
 
-2. **Instal·la les dependències**:
+2. **Install Dependencies**:
 
    ```bash
    npm install
    ```
 
-3. **Configura la clau API**:
-   - Crea un fitxer `.env` a l'arrel del projecte i afegeix la teva clau d'API:
+3. **Set Up Your API Key**:
+   - Create a `.env` file in the root directory and add your N2YO API key:
      ```
-     REACT_APP_N2YO_API_KEY=la_teva_clau
+     REACT_APP_N2YO_API_KEY=your_api_key_here
      ```
 
-4. **Inicia l'aplicació**:
+4. **Run the Application**:
 
    ```bash
    npm start
    ```
 
-   L'aplicació estarà disponible a [http://localhost:3000](http://localhost:3000).
+   The app will be available at [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## Contribució
+## Future Plans
 
-Tothom és benvingut a contribuir! Si tens idees, correccions o millores:
+As this is a learning project, future improvements may include:
 
-1. Fes un **fork** del repositori.
-2. Crea una **branch** per a la teva característica o correcció.
-3. Fes un **pull request** i explica els teus canvis.
-
----
-
-## Millores Futures
-
-- Integració de mapes interactius per visualitzar satèl·lits en temps real.
-- Opció per guardar preferències de l'usuari.
-- Optimització del rendiment per a càrregues massives de dades.
+- Adding interactive maps to display satellite locations in real-time.
+- Allowing users to save preferences (e.g., favorite satellites).
+- Optimizing performance for handling large datasets.
 
 ---
 
-## Licència
+## Contribution
 
-Aquest projecte està sota la llicència MIT. Consulta el fitxer [LICENSE](LICENSE) per a més detalls.
+This project is open to contributions, especially if you’re also learning React or JavaScript. To contribute:
+
+1. Fork the repository.
+2. Create a new branch for your feature or fix.
+3. Submit a pull request explaining your changes.
 
 ---
 
-## Contacte
+## License
 
-Si tens preguntes o suggeriments, no dubtis en contactar-me a través de [GitHub](https://github.com/garrigarnau).
+Distributed under the MIT License. See `LICENSE` for more information.
 
--
+---
+
+## Contact
+
+For questions, feedback, or suggestions, feel free to contact me through [GitHub](https://github.com/garrigarnau).

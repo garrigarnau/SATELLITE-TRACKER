@@ -99,7 +99,7 @@ This project is open to contributions, especially if you’re also learning Reac
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ---
 

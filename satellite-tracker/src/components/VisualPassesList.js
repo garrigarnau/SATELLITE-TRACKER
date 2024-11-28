@@ -16,7 +16,7 @@ const VisualPassesList = ({ visibleSatellites, latitude, longitude, altitude }) 
                   latitude: latitude,
                   longitude: longitude,
                   altitude: altitude,
-                  satname: sat.satname  // Afegim el nom del satèl·lit
+                  satname: sat.satname,  // Afegim el nom del satèl·lit
                 }}
                 className="satellite-link"
               >

@@ -1,41 +1,119 @@
-/* satellite-tracker/src/components/VisualPassesList.css */
 .visual-passes-list {
+  padding: 32px;
+  background: rgba(92, 48, 94, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(247, 0, 255, 0.1);
+  margin: 32px 0;
+  border: 1px solid rgba(247, 0, 255, 0.1);
+  backdrop-filter: blur(12px);
+}
+
+h2 {
+  color: #FFFFFF;
+  font-size: 2.2em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.satellite-item {
+  margin: 16px 0;
+  padding: 24px;
+  background: rgba(26, 26, 26, 0.6);
+  border-radius: 12px;
+  border: 1px solid rgba(247, 0, 255, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.satellite-item:hover {
+  transform: translateY(-4px);
+  border-color: rgba(247, 0, 255, 0.3);
+  box-shadow: 0 8px 24px rgba(92, 48, 94, 0.2);
+}
+
+.satellite-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, #F700FF, #5C305E);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.satellite-item:hover::before {
+  opacity: 1;
+}
+
+.satellite-item h3 {
+  margin: 0 0 12px 0;
+  color: #FFFFFF;
+  font-size: 1.4em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.satellite-item p {
+  margin: 8px 0;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  font-size: 1.1em;
+}
+
+.satellite-link {
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.satellite-link:hover {
+  color: #F700FF;
+}
+
+.pass-item {
+  margin-top: 16px;
+  background: rgba(92, 48, 94, 0.2);
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(247, 0, 255, 0.1);
+  color: #FFFFFF;
+  transition: all 0.3s ease;
+}
+
+.pass-item:hover {
+  transform: translateX(4px);
+  border-color: rgba(247, 0, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(247, 0, 255, 0.15);
+}
+
+.pass-item p {
+  margin: 8px 0;
+}
+
+@media (max-width: 768px) {
+  .visual-passes-list {
     padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
+
   .satellite-item {
-    margin: 10px 0;
-    padding: 15px;
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    transition: transform 0.2s;
+    padding: 20px;
   }
-  
-  .pass-item {
-    margin: 5px 0;
-    padding: 10px;
-    background-color: #f1f1f1;
-    border-radius: 4px;
+
+  .satellite-item h3 {
+    font-size: 1.2em;
   }
-  
-  .satellite-item:hover {
-    transform: scale(1.02);
+
+  .satellite-item p {
+    font-size: 1em;
   }
-  
-  h3 {
-    margin: 0;
-    color: #333;
-  }
-  
-  strong {
-    color: #007bff;
-  }
+}

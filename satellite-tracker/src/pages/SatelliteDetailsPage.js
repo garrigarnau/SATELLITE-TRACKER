@@ -81,22 +81,80 @@ const SatelliteDetailsPage = () => {
 
       <h3>Passes Visuals:</h3>
       <ul>
-        {satelliteDetails.slice(0, 1).map((pass, index) => (
-          <li key={index} className="pass-item">
-            <p><strong>Inici (Azimut):</strong> {pass.startAzCompass} ({pass.startAz}°)</p>
-            <p><strong>Elevació inicial:</strong> {pass.startEl}°</p>
-            <p><strong>Hora d'inici:</strong> {new Date(pass.startUTC * 1000).toLocaleString()}</p>
-            <p><strong>Punt màxim (Azimut):</strong> {pass.maxAzCompass} ({pass.maxAz}°)</p>
-            <p><strong>Altitud màxima:</strong> {pass.maxEl}°</p>
-            <p><strong>Hora màxima:</strong> {new Date(pass.maxUTC * 1000).toLocaleString()}</p>
-            <p><strong>Final (Azimut):</strong> {pass.endAzCompass} ({pass.endAz}°)</p>
-            <p><strong>Elevació final:</strong> {pass.endEl}°</p>
-            <p><strong>Hora de finalització:</strong> {new Date(pass.endUTC * 1000).toLocaleString()}</p>
-            <p><strong>Durada:</strong> {pass.duration}s</p>
-            <p><strong>Magnitud:</strong> {pass.mag}</p>
-          </li>
-        ))}
-      </ul>
+  {satelliteDetails.slice(0, 1).map((pass, index) => (
+    <li key={index}>
+      {/* First Pass Section */}
+      <div className="pass-section">
+        <div className="pass-header">Inici</div>
+        <div className="pass-content">
+          <div className="info-pair">
+            <span className="info-label">Azimut:</span>
+            <span className="info-value">{pass.startAzCompass} ({pass.startAz}°)</span>
+          </div>
+          <div className="info-pair">
+            <span className="info-label">Elevació:</span>
+            <span className="info-value">{pass.startEl}°</span>
+          </div>
+          <div className="info-pair">
+            <span className="info-label">Hora:</span>
+            <span className="info-value">{new Date(pass.startUTC * 1000).toLocaleString()}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Maximum Pass Section */}
+      <div className="pass-section">
+        <div className="pass-header">Punt Màxim</div>
+        <div className="pass-content">
+          <div className="info-pair">
+            <span className="info-label">Azimut:</span>
+            <span className="info-value">{pass.maxAzCompass} ({pass.maxAz}°)</span>
+          </div>
+          <div className="info-pair">
+            <span className="info-label">Elevació:</span>
+            <span className="info-value">{pass.maxEl}°</span>
+          </div>
+          <div className="info-pair">
+            <span className="info-label">Hora:</span>
+            <span className="info-value">{new Date(pass.maxUTC * 1000).toLocaleString()}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* End Pass Section */}
+      <div className="pass-section">
+        <div className="pass-header">Final</div>
+        <div className="pass-content">
+          <div className="info-pair">
+            <span className="info-label">Azimut:</span>
+            <span className="info-value">{pass.endAzCompass} ({pass.endAz}°)</span>
+          </div>
+          <div className="info-pair">
+            <span className="info-label">Elevació:</span>
+            <span className="info-value">{pass.endEl}°</span>
+          </div>
+          <div className="info-pair">
+            <span className="info-label">Hora:</span>
+            <span className="info-value">{new Date(pass.endUTC * 1000).toLocaleString()}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Summary Section */}
+      <div className="pass-summary">
+        <div className="info-pair">
+          <span className="info-label">Durada:</span>
+          <span className="info-value">{pass.duration}s</span>
+        </div>
+        <div className="info-pair">
+          <span className="info-label">Magnitud:</span>
+          <span className="info-value">{pass.mag}</span>
+        </div>
+      </div>
+    </li>
+  ))}
+</ul>
+
       <ReactModal 
         isOpen={showMap} 
         onRequestClose={() => setShowMap(false)}

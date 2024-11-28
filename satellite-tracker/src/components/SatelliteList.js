@@ -6,7 +6,7 @@ const SatelliteList = ({ satellites }) => {
     <div className="satellite-list">
       <h2>Tots els satèl·lits:</h2>
       <ul>
-        {satellites.map((sat) => (
+        {satellites.slice(0,5).map((sat) => (
           <li key={sat.satid} className="satellite-item">
             <h3>{sat.satname}</h3>
             <p>Altitud: <strong>{sat.satalt.toFixed(2)} km</strong></p>

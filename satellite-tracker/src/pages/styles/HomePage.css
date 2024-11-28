@@ -1,93 +1,158 @@
-/* Estils globals */
+/* Global styles enhancement */
 body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
-  }
-  
-  /* Contenidor general */
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #1A1A1A;
+  color: #FFFFFF;
+  border-radius: 16px;
+}
+
+/* Container refinements */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  border-radius: 16px;
+}
+
+/* Enhanced search form */
+.search-form {
+  background: rgba(92, 48, 94, 0.1);
+  padding: 32px;
+  border-radius: 16px;
+  border: 1px solid rgba(247, 0, 255, 0.1);
+  backdrop-filter: blur(12px);
+  margin-bottom: 32px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-form:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(247, 0, 255, 0.15);
+}
+
+.search-form label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 1.1em;
+  font-weight: 500;
+  color: #FFFFFF;
+  letter-spacing: 0.02em;
+}
+
+.search-form input {
+  width: 100%;
+  padding: 14px;
+  margin-top: 8px;
+  font-size: 1em;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid #5C305E;
+  border-radius: 8px;
+  color: #FFFFFF;
+  transition: all 0.3s ease;
+}
+
+.search-form input:focus {
+  outline: none;
+  border-color: #F700FF;
+  box-shadow: 0 0 0 3px rgba(247, 0, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.search-form button {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 14px 28px;
+  font-size: 1.1em;
+  font-weight: 500;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #F700FF 0%, #5C305E 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(247, 0, 255, 0.2);
+}
+
+/* List section improvements */
+.list {
+  margin-top: 40px;
+}
+
+.list h2 {
+  font-size: 1.8em;
+  margin-bottom: 24px;
+  color: #FFFFFF;
+  position: relative;
+}
+
+.list h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #F700FF, #5C305E);
+  border-radius: 2px;
+}
+
+.list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.list li {
+  background: rgba(92, 48, 94, 0.2);
+  padding: 24px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(247, 0, 255, 0.1);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+}
+
+.list li:hover {
+  transform: translateY(-2px);
+  border-color: rgba(247, 0, 255, 0.3);
+  box-shadow: 0 8px 16px rgba(92, 48, 94, 0.3);
+}
+
+/* Header enhancement */
+h1 {
+  background: linear-gradient(135deg, #F700FF 0%, #5C305E 100%);
+  text-align: center;
+  color: #FFFFFF;
+  font-size: 2.5em;
+  padding: 32px 0;
+  margin: 0 0 32px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  border-radius: 13px;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
   .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
+    padding: 20px 16px;
   }
-  
-  /* Formulari de cerca */
+
   .search-form {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    padding: 24px;
   }
-  
-  .search-form label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 1em;
-    font-weight: bold;
-  }
-  
-  .search-form input {
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin-top: 5px;
-    font-size: 1em;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  .search-form button {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 1em;
-    font-weight: bold;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .search-form button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Llistes */
-  .list {
-    margin-top: 20px;
-  }
-  
-  .list h2 {
-    font-size: 1.5em;
-    margin-bottom: 15px;
-  }
-  
-  .list ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .list li {
-    background: white;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Estils del títol */
+
   h1 {
-    background-color: #007bff;
-    text-align: center;
-    color: white;
-    font-size: 1.5 rem;
-    padding: 1% 0;
-    margin: 0 0 20px;
-    line-height: 1.2;
+    font-size: 2em;
+    padding: 24px 0;
   }
-  
+
+  .list li {
+    padding: 20px;
+  }
+}

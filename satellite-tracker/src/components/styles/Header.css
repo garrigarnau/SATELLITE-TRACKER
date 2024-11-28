@@ -1,48 +1,104 @@
-/* Estil general del header */
+/* header.css */
 header {
-    background-color: #007bff;
-    color: white;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
+  background: linear-gradient(135deg, #5C305E 0%, #1A1A1A 100%);
+  background-size: cover;
+  color: #FFFFFF;
+  padding: 16px 50px;
+  display: flex;
+  justify-content: space-between; /* Ens deixa espai entre elements (logo i enllaços) */
+  align-items: center; /* Centrat vertical */
+  position: relative;
+  height: 100px;
+
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-logo {
+  height: 120px;
+  filter: drop-shadow(0 0 8px rgba(247, 0, 255, 0.3));
+  transition: transform 0.3s ease;
+}
+
+.header-logo:hover {
+  transform: scale(1.05);
+}
+
+/* Centrat del títol en l'espai disponible */
+.site-title {
+  font-family: 'Montserrat', sans-serif;
+  color: transparent; /* El text serà transparent */
+  font-size: 2.8em;
+  font-weight: 600;
+  margin: 0;
+  -webkit-background-clip: text; /* El fons es mostra només dins del text */
+  background-clip: text; /* Suport per a altres navegadors */
+  display: inline-block; /* Per alinear el text de manera correcta */
+  text-align: center; /* Centrar el text horitzontalment */
+  position: absolute; /* Col·locar-lo absolutament */
+  left: 50%; /* Centrar horitzontalment */
+  transform: translateX(-50%); /* Ajusta la posició per centrar exactament */
+}
+
+nav {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+nav a {
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 1.6em;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+nav a:hover {
+  background: rgba(247, 0, 255, 0.1);
+  color: #F700FF;
+}
+
+nav a.active {
+  background: linear-gradient(135deg, #F700FF, #5C305E);
+  color: #FFFFFF;
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 16px 20px;
   }
-  
-  /* Títol */
-  header h1 {
-    margin: 0;
-    font-size: 1.8em;
+
+  .header-left {
+    gap: 12px;
   }
-  
-  /* Navegació */
-  nav {
-    display: flex;
-    gap: 15px;
-  }
-  
-  /* Enllaços de la navegació */
-  nav a {
-    color: white;
-    text-decoration: none;
-    font-size: 1em;
-    font-weight: bold;
-    transition: color 0.3s ease;
-  }
-  
-  /* Canvia el color al passar el ratolí */
-  nav a:hover {
-    color: #ffdd57;
-  }
-  
-  /* Per enllaços actius (opcional, si utilitzes React Router) */
-  nav a.active {
-    color: #ffdd57;
-    text-decoration: underline;
-  }
-  
+
   .header-logo {
-    height: 60px;  /* adjust size as needed */
-    margin: 5px;
+    height: 40px;
   }
-  
+
+  .site-title {
+    font-size: 1.4em;
+  }
+
+  nav {
+    gap: 12px;
+  }
+
+  nav a {
+    padding: 6px 12px;
+    font-size: 1em;
+  }
+}

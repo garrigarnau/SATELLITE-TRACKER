@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
-import './styles/HomePage.css';
 import SearchForm from '../components/SearchForm';
 import SatelliteList from '../components/SatelliteList';
 import VisualPassesList from '../components/VisualPassesList';
 import { getSatellites, getVisualPasses } from '../api/satellites';
+import './styles/HomePage.css'
 
 const HomePage = () => {
   const [satellites, setSatellites] = useState([]);
   const [visibleSatellites, setVisibleSatellites] = useState([]);
-  const [latitude, setLatitude] = useState(41.3851);
-  const [longitude, setLongitude] = useState(2.1734);
-  const [altitude, setAltitude] = useState(10);
+  const [latitude, setLatitude] = useState(41.3851); // Barcelona
+  const [longitude, setLongitude] = useState(2.1734); // Barcelona
+  const [altitude, setAltitude] = useState(10); // Altitud en metres
   const [confirmedLocation, setConfirmedLocation] = useState(false);
+
+  const resetSatellites = () => {
+    setSatellites([]);
+    setVisibleSatellites([]);
+    setConfirmedLocation(false);
+  };
 
   const fetchSatellites = async () => {
     const data = await getSatellites(latitude, longitude, altitude);
@@ -42,15 +48,16 @@ const HomePage = () => {
         setAltitude={setAltitude}
         fetchSatellites={fetchSatellites}
         onConfirm={handleConfirmLocation}
+        resetSatellites={resetSatellites}
       />
       
       <SatelliteList satellites={satellites} />
-      <VisualPassesList
+
+      <VisualPassesList 
         visibleSatellites={visibleSatellites}
-        latitude={latitude} // Passem latitud com a prop
-        longitude={longitude} // Passem longitud com a prop
-        altitude={altitude} // Passem altitud com a prop
-        
+        latitude={latitude}
+        longitude={longitude}
+        altitude={altitude}
       />
     </div>
   );

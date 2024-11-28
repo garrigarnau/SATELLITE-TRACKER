@@ -6,7 +6,6 @@
 
 Satellite details: 
 - agrupar per inici, maxim, final
-- entrar al mapa del satellit
 
 Altres Pàgines: 
 - satellits que estan en orbita

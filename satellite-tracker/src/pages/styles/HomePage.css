@@ -156,3 +156,30 @@ h1 {
     padding: 20px;
   }
 }
+
+.iss-timer {
+  position: fixed;  /* Fixed positioning */
+  top: 150px;        /* 10px from the top */
+  right: 10px;      /* 10px from the right */
+  background-color: rgba(92, 48, 94, 0.6);
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(247, 0, 255, 0.3);
+  color: white;
+  font-size: 0.9em;  /* Smaller text */
+  max-width: 200px;  /* Limit the width */
+  z-index: 1000;     /* Ensure it stays on top of other elements */
+}
+
+.iss-timer h3 {
+  font-size: 1.2em;
+  margin: 0 0 5px 0;
+  color: #F700FF;
+}
+
+.iss-timer p {
+  margin: 0;
+  color: white;
+  font-size: 1em;
+}
+

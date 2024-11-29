@@ -5,11 +5,10 @@ header {
   color: #FFFFFF;
   padding: 16px 50px;
   display: flex;
-  justify-content: space-between; /* Ens deixa espai entre elements (logo i enllaços) */
-  align-items: center; /* Centrat vertical */
+  justify-content: space-between;
+  align-items: center;
   position: relative;
   height: 100px;
-
 }
 
 .header-left {
@@ -34,20 +33,19 @@ header {
   transform: scale(1.05);
 }
 
-/* Centrat del títol en l'espai disponible */
 .site-title {
   font-family: 'Montserrat', sans-serif;
-  color: transparent; /* El text serà transparent */
+  color: transparent;
   font-size: 2.8em;
   font-weight: 600;
   margin: 0;
-  -webkit-background-clip: text; /* El fons es mostra només dins del text */
-  background-clip: text; /* Suport per a altres navegadors */
-  display: inline-block; /* Per alinear el text de manera correcta */
-  text-align: center; /* Centrar el text horitzontalment */
-  position: absolute; /* Col·locar-lo absolutament */
-  left: 50%; /* Centrar horitzontalment */
-  transform: translateX(-50%); /* Ajusta la posició per centrar exactament */
+  -webkit-background-clip: text;
+  background-clip: text;
+  display: inline-block;
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 nav {
@@ -76,29 +74,83 @@ nav a.active {
   color: #FFFFFF;
 }
 
-@media (max-width: 768px) {
+/* Responsive styles */
+@media (max-width: 1024px) {
   header {
-    padding: 16px 20px;
-  }
-
-  .header-left {
-    gap: 12px;
-  }
-
-  .header-logo {
-    height: 40px;
+    padding: 16px 30px;
+    height: auto;
+    min-height: 80px;
   }
 
   .site-title {
-    font-size: 1.4em;
+    font-size: 2em;
   }
 
-  nav {
-    gap: 12px;
+  .header-logo {
+    height: 80px;
   }
 
   nav a {
+    font-size: 1.2em;
     padding: 6px 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 12px 20px;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .header-left {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .header-logo {
+    height: 60px;
+  }
+
+  .site-title {
+    position: static;
+    transform: none;
+    font-size: 1.6em;
+    margin: 10px 0;
+  }
+
+  nav {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  nav a {
     font-size: 1em;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 10px 15px;
+  }
+
+  .header-logo {
+    height: px;
+  }
+
+  .site-title {
+    font-size: 1.2em;
+  }
+
+  nav {
+    gap: 8px;
+  }
+
+  nav a {
+    font-size: 0.9em;
+    padding: 4px 8px;
   }
 }

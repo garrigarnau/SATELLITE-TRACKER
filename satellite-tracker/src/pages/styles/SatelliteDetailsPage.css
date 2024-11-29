@@ -1,287 +1,363 @@
 .satellite-details {
-    max-width: 1000px;
-    margin: 32px auto;
-    padding: 32px;
-    background: rgba(92, 48, 94, 0.1);
-    border-radius: 16px;
-    border: 1px solid rgba(247, 0, 255, 0.1);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(247, 0, 255, 0.15);
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .main-content {
-    display: flex;
-    gap: 32px;
-    margin-bottom: 32px;
-  }
-  
-  .left-section {
-    flex: 1;
-  }
-  
-  .title-section {
-    text-align: center;
-    margin-bottom: 32px;
-  }
-  
-  .satellite-details h2 {
-    text-align: center;
-    font-size: 2.2em;
-    margin-bottom: 32px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    position: relative;
-  }
-  
-  .satellite-details h2::after {
-    content: '';
-    position: absolute;
-    bottom: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 4px;
-    background: linear-gradient(90deg, #F700FF, #5C305E);
-    border-radius: 2px;
-  }
-  
-  .satellite-info {
-    background: rgba(26, 26, 26, 0.4);
-    border-radius: 12px;
-    padding: 24px;
-    border: 1px solid rgba(247, 0, 255, 0.1);
-    color: #FFFFFF;
-  }
-  
-  .satellite-info p {
-    font-size: 1.2em;
-    margin: 12px 0;
-    line-height: 1.6;
-  }
-  
-  .compass-section {
-    flex-shrink: 0;
-    width: 40%;
-  }
-  
-  .compass-container {
-    padding: 24px;
-    background: rgba(92, 48, 94, 0.2);
-    border-radius: 12px;
-    border: 1px solid rgba(247, 0, 255, 0.2);
-    transition: transform 0.3s ease;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .compass-image {
-    width: 220px;
-    height: 220px;
-    object-fit: contain;
-    border-radius: 8px;
-    filter: drop-shadow(0 4px 8px rgba(247, 0, 255, 0.2));
-  }
-  
-  .visual-passes-section {
-    margin-top: 32px;
-    padding: 24px;
-    background: rgba(26, 26, 26, 0.4);
-    border-radius: 12px;
-    border: 1px solid rgba(247, 0, 255, 0.1);
-  }
-  
-  .pass-item {
-    padding: 20px;
-    margin: 16px 0;
-    background: rgba(92, 48, 94, 0.2);
-    border-radius: 12px;
-    border: 1px solid rgba(247, 0, 255, 0.1);
-    line-height: 1.6;
-    color: #FFFFFF;
-    transition: all 0.3s ease;
-  }
-  
-  .map-button {
-    margin-top: 24px;
-    padding: 14px 28px;
-    background: linear-gradient(135deg, #F700FF, #5C305E);
-    color: #FFFFFF;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.1em;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-  
-  .map-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(247, 0, 255, 0.2);
-  }
-  
-  .modal-map {
-    position: relative;
-    top: 50%;
-    left: 50%;
-    right: auto;
-    bottom: auto;
-    transform: translate(-50%, -50%);
-    background: rgba(26, 26, 26, 0.95);
-    border: 1px solid rgba(247, 0, 255, 0.2);
-    border-radius: 16px;
-    padding: 24px;
-    width: 90%;
-    max-width: 1200px;
-    height: 80vh;
-    box-shadow: 0 12px 48px rgba(247, 0, 255, 0.3);
-  }
-  
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(26, 26, 26, 0.85);
-    backdrop-filter: blur(8px);
-    z-index: 1000;
-  }
-  
-  .close-button {
-    position: absolute;
-    right: 16px;
-    top: 16px;
-    background: rgba(92, 48, 94, 0.3);
-    border: 1px solid rgba(247, 0, 255, 0.2);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 24px;
-    color: #FFFFFF;
-    cursor: pointer;
-    z-index: 1001;
-    display: flex;
-    justify-content: center;
-    transition: all 0.3s ease;
-  }
-  
-  .close-button:hover {
-    background: rgba(247, 0, 255, 0.3);
-    transform: rotate(90deg);
-  }
+  max-width: 1000px;
+  margin: 32px auto;
+  padding: 32px;
+  background: rgba(92, 48, 94, 0.1);
+  border-radius: 16px;
+  border: 1px solid rgba(247, 0, 255, 0.1);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(247, 0, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+}
 
-  /* Existing styles remain the same until the .pass-item section */
+.main-content {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.left-section {
+  flex: 1;
+}
+
+.title-section {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.satellite-details h2 {
+  text-align: center;
+  font-size: 2.2em;
+  margin-bottom: 32px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  position: relative;
+}
+
+.satellite-details h2::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #F700FF, #5C305E);
+  border-radius: 2px;
+}
+
+.satellite-info {
+  background: rgba(26, 26, 26, 0.4);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid rgba(247, 0, 255, 0.1);
+  color: #FFFFFF;
+}
+
+.satellite-info p {
+  font-size: 1.2em;
+  margin: 12px 0;
+  line-height: 1.6;
+}
+
+.compass-section {
+  flex-shrink: 0;
+  width: 40%;
+}
+
+.compass-container {
+  padding: 24px;
+  background: rgba(92, 48, 94, 0.2);
+  border-radius: 12px;
+  border: 1px solid rgba(247, 0, 255, 0.2);
+  transition: transform 0.3s ease;
+  display: flex;
+  justify-content: center;
+}
+
+.compass-image {
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+  border-radius: 8px;
+  filter: drop-shadow(0 4px 8px rgba(247, 0, 255, 0.2));
+}
+
+.visual-passes-section {
+  margin-top: 32px;
+  padding: 24px;
+  background: rgba(26, 26, 26, 0.4);
+  border-radius: 12px;
+  border: 1px solid rgba(247, 0, 255, 0.1);
+}
+
+.pass-item {
+  padding: 20px;
+  margin: 16px 0;
+  background: rgba(92, 48, 94, 0.2);
+  border-radius: 12px;
+  border: 1px solid rgba(247, 0, 255, 0.1);
+  line-height: 1.6;
+  color: #FFFFFF;
+  transition: all 0.3s ease;
+}
+
+.map-button {
+  margin-top: 24px;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #F700FF, #5C305E);
+  color: #FFFFFF;
+  border: none;
+  position: relative;
+  border-radius: 30em;
+  cursor: pointer;
+  overflow: hidden;
+  font-size: 1.1em;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 6px 6px 12px #200360,
+              -6px -6px 12px #6109654b;
+}
+
+.map-button:hover {
+  transform: translateY(-2px);
+}
+
+.modal-map {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  background: rgba(26, 26, 26, 0.95);
+  border: 1px solid rgba(247, 0, 255, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  width: 90%;
+  max-width: 1200px;
+  height: 80vh;
+  box-shadow: 0 12px 48px rgba(247, 0, 255, 0.3);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(26, 26, 26, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+}
+
+.close-button {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  background: rgba(92, 48, 94, 0.3);
+  border: 1px solid rgba(247, 0, 255, 0.2);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  color: #FFFFFF;
+  cursor: pointer;
+  z-index: 1001;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.close-button:hover {
+  background: rgba(247, 0, 255, 0.3);
+  transform: rotate(90deg);
+}
 
 .pass-section {
-    background: rgba(26, 26, 26, 0.4);
-    border-radius: 12px;
-    margin-bottom: 24px;
-    border: 1px solid rgba(247, 0, 255, 0.1);
-    overflow: hidden;
-  }
-  
-  .pass-header {
-    background: rgba(92, 48, 94, 0.3);
-    padding: 12px 20px;
-    font-size: 1.2em;
-    font-weight: 500;
-    color: #F700FF;
-    border-bottom: 1px solid rgba(247, 0, 255, 0.1);
-  }
-  
-  .pass-content {
-    padding: 20px;
-  }
-  
-  .info-pair {
-    display: flex;
-    margin-bottom: 12px;
-    align-items: baseline;
-  }
-  
-  .info-label {
-    color: rgba(255, 255, 255, 0.7);
-    min-width: 100px;
-    font-size: 1em;
-  }
-  
-  .info-value {
-    color: #FFFFFF;
-    font-size: 1.1em;
-    flex: 1;
-  }
-  
-  .pass-summary {
-    background: rgba(26, 26, 26, 0.4);
-    border-radius: 12px;
-    padding: 20px;
-    margin-top: 32px;
-    border: 1px solid rgba(247, 0, 255, 0.1);
-    display: flex;
-    gap: 32px;
-  }
-  
-  /* Update the media queries section to include the new responsive styles */
-  @media (max-width: 768px) {
-    .satellite-details {
+  background: rgba(26, 26, 26, 0.4);
+  border-radius: 12px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(247, 0, 255, 0.1);
+  overflow: hidden;
+}
+
+.pass-header {
+  background: rgba(92, 48, 94, 0.3);
+  padding: 12px 20px;
+  font-size: 1.2em;
+  font-weight: 500;
+  color: #F700FF;
+  border-bottom: 1px solid rgba(247, 0, 255, 0.1);
+}
+
+.pass-content {
+  padding: 20px;
+}
+
+.info-pair {
+  display: flex;
+  margin-bottom: 12px;
+  align-items: baseline;
+}
+
+.info-label {
+  color: rgba(255, 255, 255, 0.7);
+  min-width: 100px;
+  font-size: 1em;
+}
+
+.info-value {
+  color: #FFFFFF;
+  font-size: 1.1em;
+  flex: 1;
+}
+
+.pass-summary {
+  background: rgba(26, 26, 26, 0.4);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 32px;
+  border: 1px solid rgba(247, 0, 255, 0.1);
+  display: flex;
+  gap: 32px;
+}
+
+.info-icon {
+  cursor: pointer;
+  color: #F700FF;
+  margin-left: 8px;
+  font-size: 18px;
+}
+
+.info-modal {
+  padding: 20px;
+  background-color: rgba(26, 26, 26, 0.9);
+  border-radius: 12px;
+  color: #fff;
+  max-width: 600px;
+  margin: 50px auto;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .satellite-details {
+      margin: 20px auto;
       padding: 24px;
-    }
-  
-    .info-container {
-      align-items: left;
-      padding: 20px;
-    }
-  
-    .compass-container {
-      margin-top: 24px;
-    }
-  
-    .satellite-info {
-      width: 50%;
-    }
-  
-    .compass-image {
-      width: 150px;
-      height: 150px;
-    }
-  
-    .info-pair {
+  }
+
+  .satellite-details h2 {
+      font-size: 2em;
+  }
+
+  .compass-section {
+      width: 35%;
+  }
+
+  .compass-image {
+      width: 180px;
+      height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .satellite-details {
+      padding: 16px;
+      margin: 16px;
+  }
+
+  .main-content {
+      flex-direction: column;
+      gap: 24px;
+  }
+
+  .compass-section {
+      width: 100%;
+  }
+
+  .compass-container {
+      padding: 16px;
+  }
+
+  .satellite-info {
+      width: 100%;
+      padding: 16px;
+  }
+
+  .satellite-info p {
+      font-size: 1.1em;
+  }
+
+  .info-pair {
       flex-direction: column;
       gap: 4px;
-    }
-  
-    .info-label {
+  }
+
+  .info-label {
       min-width: unset;
-    }
-  
-    .pass-summary {
+  }
+
+  .pass-summary {
       flex-direction: column;
-      gap: 12px;
-    }
+      gap: 16px;
+      padding: 16px;
   }
-  
-  @media (max-width: 768px) {
-    .satellite-details {
-      padding: 24px;
-    }
-  
-    .info-container {
-      align-items: left;
-      padding: 20px;
-    }
-  
-    .compass-container {
-      margin-top: 24px;
-    }
-  
-    .satellite-info {
-      width: 50%;
-    }
-  
-    .compass-image {
-      width: 150px;
-      height: 150px;
-    }
+
+  .visual-passes-section {
+      padding: 16px;
   }
+
+  .pass-item {
+      padding: 16px;
+      margin: 12px 0;
+  }
+
+  .modal-map {
+      width: 95%;
+      height: 90vh;
+      padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .satellite-details {
+      padding: 12px;
+      margin: 12px;
+  }
+
+  .satellite-details h2 {
+      font-size: 1.6em;
+  }
+
+  .compass-image {
+      width: 140px;
+      height: 140px;
+  }
+
+  .satellite-info p {
+      font-size: 1em;
+  }
+
+  .pass-header {
+      font-size: 1.1em;
+      padding: 10px 16px;
+  }
+
+  .info-value {
+      font-size: 1em;
+  }
+
+  .map-button {
+      width: 100%;
+      padding: 12px 20px;
+      font-size: 1em;
+  }
+
+  .close-button {
+      width: 32px;
+      height: 32px;
+      font-size: 20px;
+  }
+}

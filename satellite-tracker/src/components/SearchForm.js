@@ -5,7 +5,7 @@ const SearchForm = ({ latitude, setLatitude, longitude, setLongitude, altitude, 
   const [useCurrentLocation, setUseCurrentLocation] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [currentCoordinates, setCurrentCoordinates] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(''); // Afegir missatge d'error per coordenades
+  const [errorMessage, setErrorMessage] = useState(''); // Add error message for coordinates
 
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -21,12 +21,12 @@ const SearchForm = ({ latitude, setLatitude, longitude, setLongitude, altitude, 
           });
         },
         (error) => {
-          console.error('Error obtenint la localització:', error.message);
-          alert('No hem pogut obtenir la teva ubicació actual.');
+          console.error('Error getting location:', error.message);
+          alert('We could not retrieve your current location.');
         }
       );
     } else {
-      alert('La geolocalització no està suportada pel navegador.');
+      alert('Geolocation is not supported by your browser.');
     }
   };
 
@@ -39,40 +39,40 @@ const SearchForm = ({ latitude, setLatitude, longitude, setLongitude, altitude, 
     }
   };
 
-  // Validació de les coordenades
+  // Validate coordinates
   const validateCoordinates = () => {
-    // Comprovar si les coordenades no estan buides
+    // Check if the coordinates are not empty
     if (!latitude || !longitude || !altitude) {
-      setErrorMessage('Tots els camps (Latitud, Longitud, Altitud) són obligatoris.');
+      setErrorMessage('All fields (Latitude, Longitude, Altitude) are required.');
       return false;
     }
 
-    // Comprovar que la latitud estigui dins del rang vàlid
+    // Check if latitude is within valid range
     if (latitude < -90 || latitude > 90) {
-      setErrorMessage('La latitud ha de ser entre -90 i 90.');
+      setErrorMessage('Latitude must be between -90 and 90.');
       return false;
     }
 
-    // Comprovar que la longitud estigui dins del rang vàlid
+    // Check if longitude is within valid range
     if (longitude < -180 || longitude > 180) {
-      setErrorMessage('La longitud ha de ser entre -180 i 180.');
+      setErrorMessage('Longitude must be between -180 and 180.');
       return false;
     }
 
-    // Comprovar que l'altitud sigui un número vàlid (opcionalment, dins d'un rang raonable)
+    // Check if altitude is a valid number (optionally within a reasonable range)
     if (altitude && (isNaN(altitude) || altitude < 0 || altitude > 40000)) {
-      setErrorMessage('L\'altitud ha de ser un número vàlid entre 0 i 40,000 metres.');
+      setErrorMessage('Altitude must be a valid number between 0 and 40,000 meters.');
       return false;
     }
 
-    setErrorMessage(''); // Si totes les validacions passen, es neteja el missatge d'error
+    setErrorMessage(''); // If all validations pass, clear the error message
     return true;
   };
 
   const handleConfirm = () => {
     if (validateCoordinates()) {
       setIsConfirmed(true);
-      onConfirm(); // Confirmem la localització i cridem la funció per passar les dades
+      onConfirm(); // Confirm location and call the function to pass the data
     }
   };
 
@@ -83,42 +83,42 @@ const SearchForm = ({ latitude, setLatitude, longitude, setLongitude, altitude, 
     setAltitude('');
     setUseCurrentLocation(false);
     setCurrentCoordinates(null);
-    resetSatellites(); // Esborrar les llistes de satèl·lits i passes visuals
+    resetSatellites(); // Clear satellite and visual passes lists
   };
 
   return (
     <div className="search-form">
-      <h3>Opcions de localització</h3>
+      <h3>Location Options</h3>
       <div className="location-options">
         <button
           className={`location-option-btn ${useCurrentLocation ? 'active' : ''}`}
           onClick={() => handleLocationOptionClick('current')}
         >
-          Utilitzar la meva ubicació actual
+          Use my current location
         </button>
         <button
           className={`location-option-btn ${!useCurrentLocation ? 'active' : ''}`}
           onClick={() => handleLocationOptionClick('manual')}
         >
-          Introduir coordenades manualment
+          Enter coordinates manually
         </button>
       </div>
 
-      {/* Mostrar coordenades actuals si s'han obtingut */}
+      {/* Show current coordinates if obtained */}
       {currentCoordinates && useCurrentLocation && (
         <div className="current-coordinates">
-          <p><strong>Coordenades actuals:</strong></p>
-          <p>Latitud: {currentCoordinates.latitude}°</p>
-          <p>Longitud: {currentCoordinates.longitude}°</p>
-          <p>Altitud: {currentCoordinates.altitude}m</p>
+          <p><strong>Current Coordinates:</strong></p>
+          <p>Latitude: {currentCoordinates.latitude}°</p>
+          <p>Longitude: {currentCoordinates.longitude}°</p>
+          <p>Altitude: {currentCoordinates.altitude}m</p>
         </div>
       )}
 
-      {/* Formulari per introduir coordenades manualment */}
+      {/* Form for manually entering coordinates */}
       {!useCurrentLocation && (
         <div className="coordinates-input">
           <label>
-            Latitud:
+            Latitude:
             <input
               type="number"
               value={latitude}
@@ -126,7 +126,7 @@ const SearchForm = ({ latitude, setLatitude, longitude, setLongitude, altitude, 
             />
           </label>
           <label>
-            Longitud:
+            Longitude:
             <input
               type="number"
               value={longitude}
@@ -134,7 +134,7 @@ const SearchForm = ({ latitude, setLatitude, longitude, setLongitude, altitude, 
             />
           </label>
           <label>
-            Altitud:
+            Altitude:
             <input
               type="number"
               value={altitude}
@@ -144,22 +144,22 @@ const SearchForm = ({ latitude, setLatitude, longitude, setLongitude, altitude, 
         </div>
       )}
 
-      {/* Missatge d'error si les coordenades no són vàlides */}
+      {/* Display error message if coordinates are invalid */}
       {errorMessage && <p className="error-message">{errorMessage}</p>}
 
       <div className="confirmation-section">
         {!isConfirmed ? (
           <button type="button" className="confirm-btn" onClick={handleConfirm}>
-            Confirmar Localització
+            Confirm Location
           </button>
         ) : (
           <>
             <div className="confirmed-info">
-              <p>Localització confirmada: {latitude}°, {longitude}°, {altitude}m</p>
+              <p>Location confirmed: {latitude}°, {longitude}°, {altitude}m</p>
             </div>
-            <button onClick={fetchSatellites} className="search-btn">Cerca Satèl·lits</button>
+            <button onClick={fetchSatellites} className="search-btn">Search Satellites</button>
             <button onClick={handleRefresh} className="refresh-btn">
-              Canviar Localització
+              Change Location
             </button>
           </>
         )}

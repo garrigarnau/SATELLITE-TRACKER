@@ -5,7 +5,7 @@ import './styles/VisualPassesList.css';
 const VisualPassesList = ({ visibleSatellites, latitude, longitude, altitude }) => {
   return (
     <div className="visual-passes-list">
-      <h2>Satèl·lits amb passes visuals:</h2>
+      <h2>Satellites with Visual Passes:</h2>
       <ul>
         {visibleSatellites.map((sat) => (
           <li key={sat.satid} className="satellite-item">
@@ -16,7 +16,7 @@ const VisualPassesList = ({ visibleSatellites, latitude, longitude, altitude }) 
                   latitude: latitude,
                   longitude: longitude,
                   altitude: altitude,
-                  satname: sat.satname,  // Afegim el nom del satèl·lit
+                  satname: sat.satname,  // Add satellite name
                 }}
                 className="satellite-link"
               >
@@ -26,9 +26,9 @@ const VisualPassesList = ({ visibleSatellites, latitude, longitude, altitude }) 
             <ul>
               {sat.visualPasses.map((pass, index) => (
                 <li key={index} className="pass-item">
-                  <p><strong>Inici:</strong> {new Date(pass.startUTC * 1000).toLocaleString()}</p>
-                  <p><strong>Durada:</strong> {pass.duration}s</p>
-                  <p><strong>Altitud màxima:</strong> {pass.maxEl}°</p>
+                  <p><strong>Start:</strong> {new Date(pass.startUTC * 1000).toLocaleString()}</p>
+                  <p><strong>Duration:</strong> {pass.duration}s</p>
+                  <p><strong>Maximum Altitude:</strong> {pass.maxEl}°</p>
                 </li>
               ))}
             </ul>

@@ -38,7 +38,7 @@ const HomePage = () => {
 
   return (
     <div className="container">
-      <h1>Localització</h1>
+      <h1>Localization</h1>
       <SearchForm
         latitude={latitude}
         setLatitude={setLatitude}

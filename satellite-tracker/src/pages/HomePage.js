@@ -8,9 +8,9 @@ import './styles/HomePage.css'
 const HomePage = () => {
   const [satellites, setSatellites] = useState([]);
   const [visibleSatellites, setVisibleSatellites] = useState([]);
-  const [latitude, setLatitude] = useState(41.3851); // Barcelona
-  const [longitude, setLongitude] = useState(2.1734); // Barcelona
-  const [altitude, setAltitude] = useState(10); // Altitud en metres
+  const [latitude, setLatitude] = useState(); // Barcelona
+  const [longitude, setLongitude] = useState(); // Barcelona
+  const [altitude, setAltitude] = useState(); // Altitud en metres
   const [confirmedLocation, setConfirmedLocation] = useState(false);
 
   const resetSatellites = () => {
@@ -38,7 +38,6 @@ const HomePage = () => {
 
   return (
     <div className="container">
-      <h1>Localization</h1>
       <SearchForm
         latitude={latitude}
         setLatitude={setLatitude}

@@ -2,7 +2,7 @@ const API_KEY = process.env.REACT_APP_N2YO_API_KEY;
 
 export const getSatelliteTLE = async (satelliteId) => {
   const tleUrl = `/rest/v1/satellite/tle/${satelliteId}&apiKey=${API_KEY}`;
-  const positionsUrl = `/rest/v1/satellite/positions/${satelliteId}/41.3802/2.14/0/3000/&apiKey=${API_KEY}`;
+  const positionsUrl = `/rest/v1/satellite/positions/${satelliteId}/0/0/0/3000/&apiKey=${API_KEY}`;
   
   try {
     const [tleResponse, positionsResponse] = await Promise.all([

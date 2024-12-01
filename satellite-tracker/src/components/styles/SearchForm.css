@@ -1,3 +1,6 @@
+/* First import the font */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+
 .search-form {
   background: rgba(92, 48, 94, 0.1);
   padding: 32px;
@@ -36,47 +39,39 @@
   width: 100%;
 }
 
+
 .location-option-btn {
-  width: 100%;
-  padding: 16px 24px;
-  font-size: 1.1em;
-  border: 2px solid transparent;
-  background: linear-gradient(135deg, #5C305E, #1A1A1A);
+  padding: 14px 28px; /* Keep the original padding */
+  font-size: 1.1em; /* Keep the original font size */
+  font-weight: 500; /* Maintain consistency */
+  font-family: 'Montserrat', sans-serif;
   color: #FFFFFF;
-  border-radius: 8px;
+  background: #ac2ca6;
+  border: none;
+  border-radius: 8px; /* Keep the original border radius */
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.location-option-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #F700FF, #5C305E);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 1;
-}
-
-.location-option-btn span {
-  position: relative;
-  z-index: 2;
-}
-
-.location-option-btn.active {
-  border-color: #F700FF;
-  background: linear-gradient(135deg, #F700FF, #5C305E);
+  text-align: center;
+  transition: all 0.3s ease; /* Keep smooth transitions */
+  display: inline-flex; /* Align SVG and text properly */
+  align-items: center; /* Vertically center SVG and text */
 }
 
 .location-option-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(247, 0, 255, 0.2);
+  background: linear-gradient(135deg, #333, #222); /* Add hover effect */
 }
+
+.location-option-btn svg {
+  display: inline;
+  width: 1.3rem; /* Same as in .button */
+  height: 1.3rem; /* Same as in .button */
+  margin-right: 0.75rem; /* Keep spacing for the icon */
+  color: white;
+}
+
+.location-option-btn:focus svg {
+  animation: spin_357 0.5s linear; /* Add spinning animation on focus */
+}
+
 
 .coordinates-input {
   display: flex;
@@ -122,7 +117,48 @@
 }
 
 .confirm-btn,
-.search-btn,
+
+.search-btn {
+  padding: 14px 28px; /* Keep the original padding */
+  font-size: 1.1em; /* Keep the original font size */
+  font-weight: 500; /* Maintain consistency */
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #5C305E, #1A1A1A);
+  border: none;
+  border-radius: 8px; /* Keep the original border radius */
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease; /* Keep smooth transitions */
+  display: inline-flex; /* Align SVG and text properly */
+  align-items: center; /* Vertically center SVG and text */
+}
+
+.search-btn:hover {
+  background: linear-gradient(135deg, #333, #222); /* Add hover effect */
+}
+
+.search-btn svg {
+  display: inline;
+  width: 1.3rem; /* Same as in .button */
+  height: 1.3rem; /* Same as in .button */
+  margin-right: 0.75rem; /* Keep spacing for the icon */
+  color: white;
+}
+
+.search-btn:focus svg {
+  animation: spin_357 0.5s linear; /* Add spinning animation on focus */
+}
+
+@keyframes spin_357 {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .refresh-btn {
   padding: 14px 28px;
   font-size: 1.1em;
@@ -147,17 +183,42 @@
 
 /* Estils per mostrar les coordenades actuals */
 .current-coordinates {
-  background-color: rgba(92, 48, 94, 0.1);
-  border-radius: 8px;
-  padding: 16px;
-  margin-top: 16px;
-  color: #FFFFFF;
+  cursor: pointer;
+  padding: 1em;
+  font-size: 1em;
+  width: fit-content;
+  min-width: 7em;
+  color: white;
+  background: #212121;
+  background-size: cover;
+  background-blend-mode: overlay;
+  border-radius: 0.5em;
+  outline: 0.1em solid #353535;
+  border: 0;
+  box-shadow: 0 0 1em 1em rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  position: relative;
+}
+
+.current-coordinates:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 1em 0.45em rgba(0, 0, 0, 0.1);
+  background: linear-gradient(45deg, #212121, #252525);
+  background: radial-gradient(
+    circle at bottom,
+    rgba(92, 48, 94, 0.5) 10%,
+    #212121 70%
+  );
+  outline: 0;
 }
 
 .current-coordinates p {
   margin: 5px 0;
   font-size: 1.1em;
+  color: #FFFFFF;
 }
+
+
 
 /* Estils per al missatge d'error */
 .error-message {

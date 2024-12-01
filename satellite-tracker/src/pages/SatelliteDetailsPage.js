@@ -6,6 +6,16 @@ import './styles/SatelliteDetailsPage.css';
 import SatelliteMap from '../components/SatelliteMap';
 import ReactModal from 'react-modal';
 
+const LoaderComponent = () => (
+  <div className="loading-container">
+    <div className="three-body">
+      <div className="three-body__dot" />
+      <div className="three-body__dot" />
+      <div className="three-body__dot" />
+    </div>
+  </div>
+);
+
 const SatelliteDetailsPage = () => {
   const [showMap, setShowMap] = useState(false);
   const [showInfo, setShowInfo] = useState(false); // To control the info popup
@@ -46,7 +56,7 @@ const SatelliteDetailsPage = () => {
   }
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <LoaderComponent/>;
   }
 
   if (!satelliteDetails || satelliteDetails.length === 0) {
@@ -71,9 +81,11 @@ const SatelliteDetailsPage = () => {
           <p><strong>Latitude:</strong> {latitude}</p>
           <p><strong>Longitude:</strong> {longitude}</p>
           <p><strong>Altitude:</strong> {altitude}</p>
+
+          
           
           <button
-            className="map-button"
+            className="map-btn"
             onClick={() => setShowMap(true)}
           >
             View Map

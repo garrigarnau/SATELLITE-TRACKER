@@ -48,12 +48,14 @@
 }
 
 .satellite-info {
+  flex: 1; /* Add this line to make it take remaining space */
   background: rgba(26, 26, 26, 0.4);
   border-radius: 12px;
   padding: 24px;
   border: 1px solid rgba(247, 0, 255, 0.1);
   color: #FFFFFF;
 }
+
 
 .satellite-info p {
   font-size: 1.2em;
@@ -67,6 +69,7 @@
 }
 
 .compass-container {
+  flex-shrink: 0; /* Add this to prevent shrinking */
   padding: 24px;
   background: rgba(92, 48, 94, 0.2);
   border-radius: 12px;
@@ -74,6 +77,7 @@
   transition: transform 0.3s ease;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .compass-image {
@@ -103,25 +107,36 @@
   transition: all 0.3s ease;
 }
 
-.map-button {
-  margin-top: 24px;
-  padding: 14px 28px;
-  background: linear-gradient(135deg, #F700FF, #5C305E);
+.map-btn {
+  padding: 14px 28px; /* Keep the original padding */
+  font-size: 1.1em; /* Keep the original font size */
+  font-weight: 500; /* Maintain consistency */
+  font-family: 'Montserrat', sans-serif;
   color: #FFFFFF;
+  background: #ac2ca6;
   border: none;
-  position: relative;
-  border-radius: 30em;
+  border-radius: 8px; /* Keep the original border radius */
   cursor: pointer;
-  overflow: hidden;
-  font-size: 1.1em;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 6px 6px 12px #200360,
-              -6px -6px 12px #6109654b;
+  text-align: center;
+  transition: all 0.3s ease; /* Keep smooth transitions */
+  display: inline-flex; /* Align SVG and text properly */
+  align-items: center; /* Vertically center SVG and text */
 }
 
-.map-button:hover {
-  transform: translateY(-2px);
+.map-btn:hover {
+  background: linear-gradient(135deg, #333, #222); /* Add hover effect */
+}
+
+.map-btn svg {
+  display: inline;
+  width: 1.3rem; /* Same as in .button */
+  height: 1.3rem; /* Same as in .button */
+  margin-right: 0.75rem; /* Keep spacing for the icon */
+  color: white;
+}
+
+.map-btn:focus svg {
+  animation: spin_357 0.5s linear; /* Add spinning animation on focus */
 }
 
 .modal-map {
@@ -241,6 +256,122 @@
   margin: 50px auto;
 }
 
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: rgba(92, 48, 94, 0.1);
+  backdrop-filter: blur(12px);
+}
+
+.three-body {
+  --uib-size: 35px;
+  --uib-speed: 0.8s;
+  --uib-color: #F700FF;
+  position: relative;
+  display: inline-block;
+  height: var(--uib-size);
+  width: var(--uib-size);
+  animation: spin78236 calc(var(--uib-speed) * 2.5) infinite linear;
+}
+
+.three-body__dot {
+  position: absolute;
+  height: 100%;
+  width: 30%;
+}
+
+.three-body__dot:after {
+  content: '';
+  position: absolute;
+  height: 0%;
+  width: 100%;
+  padding-bottom: 100%;
+  background-color: var(--uib-color);
+  border-radius: 50%;
+}
+
+.three-body__dot:nth-child(1) {
+  bottom: 5%;
+  left: 0;
+  transform: rotate(60deg);
+  transform-origin: 50% 85%;
+}
+
+.three-body__dot:nth-child(1)::after {
+  bottom: 0;
+  left: 0;
+  animation: wobble1 var(--uib-speed) infinite ease-in-out;
+  animation-delay: calc(var(--uib-speed) * -0.3);
+}
+
+.three-body__dot:nth-child(2) {
+  bottom: 5%;
+  right: 0;
+  transform: rotate(-60deg);
+  transform-origin: 50% 85%;
+}
+
+.three-body__dot:nth-child(2)::after {
+  bottom: 0;
+  left: 0;
+  animation: wobble1 var(--uib-speed) infinite calc(var(--uib-speed) * -0.15) ease-in-out;
+}
+
+.three-body__dot:nth-child(3) {
+  bottom: -5%;
+  left: 0;
+  transform: translateX(116.666%);
+}
+
+.three-body__dot:nth-child(3)::after {
+  top: 0;
+  left: 0;
+  animation: wobble2 var(--uib-speed) infinite ease-in-out;
+}
+
+
+.info-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+
+@keyframes spin78236 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wobble1 {
+  0%, 100% {
+    transform: translateY(0%) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-66%) scale(0.65);
+    opacity: 0.8;
+  }
+}
+
+@keyframes wobble2 {
+  0%, 100% {
+    transform: translateY(0%) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(66%) scale(0.65);
+    opacity: 0.8;
+  }
+}
+
 /* Responsive Styles */
 @media (max-width: 1024px) {
   .satellite-details {
@@ -318,6 +449,13 @@
       width: 95%;
       height: 90vh;
       padding: 16px;
+  }
+  .info-container {
+    flex-direction: column;
+  }
+
+  .compass-container {
+    width: 100%;
   }
 }
 

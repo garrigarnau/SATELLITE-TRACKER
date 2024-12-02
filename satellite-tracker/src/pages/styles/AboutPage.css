@@ -11,13 +11,13 @@
     text-align: center;
     font-size: 2em;
     font-weight: 600;
-    color: #F700FF;
     margin-bottom: 32px;
+    background: transparent;
   }
   
   .about-page h2 {
     font-size: 2em;
-    color: #5C305E;
+    color: #c229ca;
     margin-bottom: 16px;
   }
   
@@ -55,6 +55,50 @@
   
     .about-page p {
       font-size: 1.1em;
+    }
+  }
+  
+  @media (max-width: 320px) {
+    .about-page {
+      padding: 16px;
+    }
+  
+    .about-page h1 {
+      font-size: 1.5em;
+    }
+  
+    .about-page h2 {
+      font-size: 1.2em;
+    }
+  
+    .about-page p {
+      font-size: 0.9em;
+    }
+  
+    .about-section, .non-profit, .motivation, .call-to-action {
+      padding: 16px;
+    }
+  }
+  
+  @media (max-width: 375px) {
+    .about-page {
+      padding: 20px;
+    }
+  
+    .about-page h1 {
+      font-size: 1.8em;
+    }
+  
+    .about-page h2 {
+      font-size: 1.5em;
+    }
+  
+    .about-page p {
+      font-size: 1em;
+    }
+  
+    .about-section, .non-profit, .motivation, .call-to-action {
+      padding: 20px;
     }
   }
   

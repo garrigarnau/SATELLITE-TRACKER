@@ -371,85 +371,84 @@
     opacity: 0.8;
   }
 }
-
-/* Responsive Styles */
 @media (max-width: 1024px) {
   .satellite-details {
-      margin: 20px auto;
-      padding: 24px;
+    margin: 20px auto;
+    padding: 24px;
   }
 
   .satellite-details h2 {
-      font-size: 2em;
+    font-size: 2em;
   }
 
   .compass-section {
-      width: 35%;
+    width: 35%;
   }
 
   .compass-image {
-      width: 180px;
-      height: 180px;
+    width: 180px;
+    height: 180px;
   }
 }
 
 @media (max-width: 768px) {
   .satellite-details {
-      padding: 16px;
-      margin: 16px;
+    padding: 16px;
+    margin: 16px;
   }
 
   .main-content {
-      flex-direction: column;
-      gap: 24px;
+    flex-direction: column;
+    gap: 24px;
   }
 
   .compass-section {
-      width: 100%;
+    width: 100%;
   }
 
   .compass-container {
-      padding: 16px;
+    padding: 16px;
   }
 
   .satellite-info {
-      width: 100%;
-      padding: 16px;
+    width: 100%;
+    padding: 16px;
   }
 
   .satellite-info p {
-      font-size: 1.1em;
+    font-size: 1.1em;
   }
 
   .info-pair {
-      flex-direction: column;
-      gap: 4px;
+    flex-direction: column;
+    gap: 4px;
   }
 
   .info-label {
-      min-width: unset;
+    min-width: unset;
   }
 
   .pass-summary {
-      flex-direction: column;
-      gap: 16px;
-      padding: 16px;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
   }
 
   .visual-passes-section {
-      padding: 16px;
+    padding: 16px;
   }
 
   .pass-item {
-      padding: 16px;
-      margin: 12px 0;
+    padding: 16px;
+    margin: 12px 0;
   }
 
   .modal-map {
-      width: 95%;
-      height: 90vh;
-      padding: 16px;
+    width: 95%;
+    height: 90vh;
+    padding: 16px;
   }
+
   .info-container {
     flex-direction: column;
   }
@@ -461,41 +460,93 @@
 
 @media (max-width: 480px) {
   .satellite-details {
-      padding: 12px;
-      margin: 12px;
+    padding: 12px;
+    margin: 12px;
   }
 
   .satellite-details h2 {
-      font-size: 1.6em;
+    font-size: 1.6em;
   }
 
   .compass-image {
-      width: 140px;
-      height: 140px;
+    width: 140px;
+    height: 140px;
   }
 
   .satellite-info p {
-      font-size: 1em;
+    font-size: 1em;
   }
 
   .pass-header {
-      font-size: 1.1em;
-      padding: 10px 16px;
+    font-size: 1.1em;
+    padding: 10px 16px;
   }
 
   .info-value {
-      font-size: 1em;
+    font-size: 1em;
   }
 
-  .map-button {
-      width: 100%;
-      padding: 12px 20px;
-      font-size: 1em;
+  .map-btn {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 1em;
   }
 
   .close-button {
-      width: 32px;
-      height: 32px;
-      font-size: 20px;
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 320px) {
+  .satellite-details {
+    margin: 16px auto;
+    padding: 16px;
+  }
+
+  .satellite-details h2 {
+    font-size: 1.6em;
+  }
+
+  .satellite-info p {
+    font-size: 0.9em;
+  }
+
+  .map-btn {
+    padding: 10px 20px;
+    font-size: 0.9em;
+  }
+
+  .close-button {
+    width: 28px;
+    height: 28px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 375px) {
+  .satellite-details {
+    padding: 16px;
+    margin: 16px;
+  }
+
+  .satellite-details h2 {
+    font-size: 1.8em;
+  }
+
+  .satellite-info p {
+    font-size: 1em;
+  }
+
+  .map-btn {
+    padding: 12px 24px;
+    font-size: 1em;
+  }
+
+  .close-button {
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
   }
 }

@@ -157,6 +157,34 @@ h1 {
   }
 }
 
+@media (max-width: 375px) {
+  .container {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  .search-form {
+    padding: 20px;
+  }
+
+  .search-form input {
+    padding: 10px;
+    font-size: 1em;
+  }
+
+  .search-form button {
+    padding: 10px 16px;
+    font-size: 1em;
+  }
+
+  .iss-timer {
+    font-size: 1em;
+  }
+}
+
 .iss-timer {
   position: fixed;  /* Fixed positioning */
   top: 150px;        /* 10px from the top */

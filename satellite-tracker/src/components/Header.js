@@ -1,25 +1,33 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './styles/Header.css';
-import logo from '../assets/logo.png';
-import backgroundImage from '../assets/header2.jpg';
-
+import logo from '../assets/logo1.png';
 
 const Header = () => {
+  const location = useLocation(); // Get the current page's location
+
+  const handleLogoClick = () => {
+    if (location.pathname === '/') {
+      window.location.reload(); // Reload the home page if already on it
+    }
+  };
+
   return (
     <header
       style={{
-        background: `url(${backgroundImage}) no-repeat center center`,
         backgroundSize: 'cover',
       }}
     >
       <div className="header-left">
-        <img
-          src={logo}
-          alt="Satellite Tracker Logo"
-          className="header-logo"
-        />
-        <h1 className="site-title">Satellite Tracker</h1>
+        {/* Logo with Link and click handler */}
+        <Link to="/" onClick={handleLogoClick}>
+          <img
+            src={logo}
+            alt="Satellite Tracker Logo"
+            className="header-logo"
+          />
+        </Link>
+        <h1 className="site-title">SATELLITE TRACKER</h1>
       </div>
       <nav>
         <Link to="/" className="nav-link" data-text="Home">

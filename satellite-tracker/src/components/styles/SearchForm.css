@@ -1,229 +1,107 @@
-/* First import the font */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
-
 .search-form {
   background: rgba(92, 48, 94, 0.1);
-  padding: 32px;
-  border-radius: 16px;
+  padding: 16px; /* Reduce padding inside the form */
+  border-radius: 12px; /* Slightly smaller rounded corners */
   border: 1px solid rgba(247, 0, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(247, 0, 255, 0.15);
-  margin-bottom: 32px;
-  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(247, 0, 255, 0.15); /* Softer shadow */
+  max-width: 500px; /* Set a smaller max width */
+  margin: 0 auto 16px; /* Center the form and reduce bottom margin */
+  backdrop-filter: blur(8px); /* Adjust blur for a cleaner look */
 }
 
 .search-form h3 {
-  margin-bottom: 28px;
-  font-size: 1.4em;
+  margin-bottom: 16px; /* Smaller space below title */
+  font-size: 1.2em; /* Slightly smaller title */
   color: #FFFFFF;
   font-weight: 600;
-  letter-spacing: -0.01em;
-  position: relative;
+  text-align: center; /* Center-align the title */
 }
 
-.search-form h3::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 0;
-  width: 40px;
-  height: 3px;
-  background: linear-gradient(90deg, #F700FF, #5C305E);
-  border-radius: 2px;
-}
-
-.location-options {
+.city-search,
+.current-location {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  margin-bottom: 36px;
-  width: 100%;
+  gap: 10px; /* Reduce gaps between inputs/buttons */
+  margin-bottom: 12px; /* Reduce space below sections */
 }
 
-
-.location-option-btn {
-  padding: 14px 28px; /* Keep the original padding */
-  font-size: 1.1em; /* Keep the original font size */
-  font-weight: 500; /* Maintain consistency */
-  font-family: 'Montserrat', sans-serif;
-  color: #FFFFFF;
-  background: #ac2ca6;
-  border: none;
-  border-radius: 8px; /* Keep the original border radius */
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.3s ease; /* Keep smooth transitions */
-  display: inline-flex; /* Align SVG and text properly */
-  align-items: center; /* Vertically center SVG and text */
-}
-
-.location-option-btn:hover {
-  background: linear-gradient(135deg, #333, #222); /* Add hover effect */
-}
-
-.location-option-btn svg {
-  display: inline;
-  width: 1.3rem; /* Same as in .button */
-  height: 1.3rem; /* Same as in .button */
-  margin-right: 0.75rem; /* Keep spacing for the icon */
-  color: white;
-}
-
-.location-option-btn:focus svg {
-  animation: spin_357 0.5s linear; /* Add spinning animation on focus */
-}
-
-
-.coordinates-input {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 24px;
-  background: rgba(26, 26, 26, 0.4);
-  border-radius: 12px;
-  border: 1px solid rgba(247, 0, 255, 0.1);
-}
-
-.coordinates-input label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 1.1em;
-  color: #FFFFFF;
+.city-search label {
+  font-size: 0.8em; /* Smaller label text */
   font-weight: 500;
+  color: #FFFFFF;
+  margin-bottom: 6px;
 }
 
-.coordinates-input input {
+.city-search input {
   width: 100%;
-  padding: 12px 16px;
-  font-size: 1em;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 8px 10px; /* Smaller padding for inputs */
+  font-size: 0.9em; /* Smaller input text size */
   background: rgba(255, 255, 255, 0.1);
-  border: 2px solid #5C305E;
-  border-radius: 8px;
+  border: 1px solid #5C305E;
+  border-radius: 6px; /* Slightly sharper corners */
   color: #FFFFFF;
   transition: all 0.3s ease;
 }
 
-.coordinates-input input:focus {
+.city-search input:focus {
   outline: none;
   border-color: #F700FF;
-  box-shadow: 0 0 0 3px rgba(247, 0, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(247, 0, 255, 0.2);
+}
+
+.search-city-btn,
+.current-location-btn,
+.confirm-btn,
+.search-btn,
+.refresh-btn {
+  padding: 6px 12px; /* Smaller button size */
+  font-size: 0.9em; /* Smaller button text size */
+  font-weight: 500;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #5C305E, #1A1A1A);
+  border: none;
+  border-radius: 6px; /* Slightly sharper corners */
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.search-city-btn:hover,
+.current-location-btn:hover,
+.confirm-btn:hover,
+.search-btn:hover,
+.refresh-btn:hover {
+  background: linear-gradient(135deg, #333, #222); /* Hover effect */
+}
+
+.coordinates-info {
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(26, 26, 26, 0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(247, 0, 255, 0.1);
+  color: #FFFFFF;
+  font-size: 0.85em; /* Slightly smaller text */
+  text-align: center;
 }
 
 .confirmation-section {
-  margin-top: 32px;
   display: flex;
+  justify-content: space-between; /* Align buttons horizontally */
   align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.confirm-btn,
-
-.search-btn {
-  padding: 14px 28px; /* Keep the original padding */
-  font-size: 1.1em; /* Keep the original font size */
-  font-weight: 500; /* Maintain consistency */
-  color: #FFFFFF;
-  background: linear-gradient(135deg, #5C305E, #1A1A1A);
-  border: none;
-  border-radius: 8px; /* Keep the original border radius */
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.3s ease; /* Keep smooth transitions */
-  display: inline-flex; /* Align SVG and text properly */
-  align-items: center; /* Vertically center SVG and text */
-}
-
-.search-btn:hover {
-  background: linear-gradient(135deg, #333, #222); /* Add hover effect */
-}
-
-.search-btn svg {
-  display: inline;
-  width: 1.3rem; /* Same as in .button */
-  height: 1.3rem; /* Same as in .button */
-  margin-right: 0.75rem; /* Keep spacing for the icon */
-  color: white;
-}
-
-.search-btn:focus svg {
-  animation: spin_357 0.5s linear; /* Add spinning animation on focus */
-}
-
-@keyframes spin_357 {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.refresh-btn {
-  padding: 14px 28px;
-  font-size: 1.1em;
-  font-weight: 500;
-  color: #FFFFFF;
-  background: linear-gradient(135deg, #F700FF, #5C305E);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.refresh-btn {
-  background: linear-gradient(135deg, #5C305E, #1A1A1A);
-}
-
-.confirmed-info {
-  color: #F700FF;
-  flex-grow: 1;
-  font-size: 1.1em;
-}
-
-/* Estils per mostrar les coordenades actuals */
-.current-coordinates {
-  cursor: pointer;
-  padding: 1em;
-  font-size: 1em;
-  width: fit-content;
-  min-width: 7em;
-  color: white;
-  background: #212121;
-  background-size: cover;
-  background-blend-mode: overlay;
-  border-radius: 0.5em;
-  outline: 0.1em solid #353535;
-  border: 0;
-  box-shadow: 0 0 1em 1em rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease-in-out;
-  position: relative;
-}
-
-.current-coordinates:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 1em 0.45em rgba(0, 0, 0, 0.1);
-  background: linear-gradient(45deg, #212121, #252525);
-  background: radial-gradient(
-    circle at bottom,
-    rgba(92, 48, 94, 0.5) 10%,
-    #212121 70%
-  );
-  outline: 0;
-}
-
-.current-coordinates p {
-  margin: 5px 0;
-  font-size: 1.1em;
-  color: #FFFFFF;
-}
-
-
-
-/* Estils per al missatge d'error */
-.error-message {
-  color: #FF0000; /* Vermell per a errors */
-  font-size: 1em;
   margin-top: 16px;
-  font-weight: bold;
+  gap: 10px;
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
 }
+
+.error-message {
+  color: #FF0000;
+  font-size: 0.85em; /* Smaller error message font */
+  margin-top: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+

@@ -35,6 +35,10 @@ const SatelliteDetailsPage = () => {
   const { latitude, longitude, altitude, satname } = coordinates;
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
+  useEffect(() => {
     const fetchSatelliteDetails = async () => {
       try {
         if (latitude && longitude && altitude) {
@@ -101,7 +105,7 @@ const SatelliteDetailsPage = () => {
         </div>
       </div>
 
-      <h3>Visual Passes:</h3>
+      <h3>Visual Pass:</h3>
       <ul>
         {satelliteDetails.slice(0, 1).map((pass, index) => (
           <li key={index}>

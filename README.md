@@ -25,7 +25,14 @@ This is not a production-ready application but a fun and educational project.
 
 ## Screenshots
 
-*(Add screenshots or GIFs showcasing the app's UI and features here.)*
+![image](https://github.com/user-attachments/assets/304e3578-a72c-4f67-be84-87f00eee14f4)
+![image](https://github.com/user-attachments/assets/b7bd12b9-7ea0-4f8b-a35f-5d0023663146)
+![image](https://github.com/user-attachments/assets/e15db2e6-4220-4edc-b368-1c424d0a5540)
+![image](https://github.com/user-attachments/assets/3621bb88-f0c8-47c8-86b0-b29efcf4cdee)
+![image](https://github.com/user-attachments/assets/e6eea6f8-b3a0-4c37-be95-ef376fa4ffbd)
+
+
+
 
 ---
 

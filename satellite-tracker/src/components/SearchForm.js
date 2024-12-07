@@ -30,10 +30,9 @@ const SearchForm = ({
 
     try {
       const response = await axios.get(
-        `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(
-          city
-        )}&key=${API_KEY}`
+        `/geocode/v1/json?q=${encodeURIComponent(city)}&key=${API_KEY}`
       );
+      
 
       const data = response.data;
       if (data.results.length > 0) {

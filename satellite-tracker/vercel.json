@@ -1,0 +1,13 @@
+{
+    "rewrites": [
+      {
+        "source": "/rest/v1/satellite/:path*",
+        "destination": "https://api.n2yo.com/rest/v1/satellite/:path*"
+      },
+      {
+        "source": "/geocode/v1/json",
+        "destination": "https://api.opencagedata.com/geocode/v1/json"
+      }
+    ]
+  }
+  

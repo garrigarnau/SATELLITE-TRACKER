@@ -1,7 +1,8 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+# The lock file is out of sync with package.json, so install like Vercel did.
+RUN npm install --no-audit --no-fund
 COPY . .
 # CRA inlines REACT_APP_* at build time, so the keys come in as build args.
 ARG REACT_APP_N2YO_API_KEY

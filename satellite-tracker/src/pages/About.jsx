@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom'
 import { useObserver, observerQuery } from '../lib/observer'
+import { useSeo } from '../lib/seo'
+import { ABOUT_META } from '../lib/seo-data'
 
 export default function About() {
   const [observer] = useObserver()
+  useSeo(ABOUT_META)
   return (
     <div className="wrap page prose">
       <p className="eyebrow">About</p>

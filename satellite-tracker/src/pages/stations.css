@@ -1,0 +1,49 @@
+/* International stations page: ISS (white) and Tiangong (magenta) on one map. */
+.stations__follow { align-items: center; margin: 4px 0 10px; }
+.stations__follow-label {
+  display: inline-flex; align-items: center; height: 32px; padding: 0 12px;
+  border-right: 1px solid var(--line-strong);
+  font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+}
+.stations__map { height: min(62vh, 540px); min-height: 340px; }
+
+/* Map markers: the ISS keeps the default white glyph; Tiangong goes magenta. */
+.tracked--iss .tracked__halo { border-color: rgba(255, 255, 255, 0.8); background: rgba(255, 255, 255, 0.1); }
+.tracked--iss .tracked__glyph { filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7)); }
+.tracked--tg .tracked__glyph { stroke: var(--magenta); }
+.tracked--tg .tracked__label { border-color: rgba(247, 0, 255, 0.7); }
+
+.stations__distance { margin-top: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-grad); }
+.stations__distance .panel__title { margin-bottom: 10px; }
+.stations__distance-stats { grid-template-columns: 1fr 1fr; }
+.stations__distance-stats dd { font-size: 1.25rem; }
+
+.stations__panels { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+.stations__panel .panel__head { flex-wrap: wrap; }
+.stations__name { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 14px; font-weight: 600; min-width: 0; }
+.stations__name::before { content: ''; flex: none; width: 8px; height: 8px; border-radius: 50%; }
+.stations__panel--iss .stations__name::before { background: #fff; box-shadow: 0 0 6px rgba(255, 255, 255, 0.7); }
+.stations__panel--tg .stations__name::before { background: var(--magenta); box-shadow: 0 0 6px var(--magenta); }
+.stations__panel--tg::before { background: linear-gradient(90deg, rgba(247, 0, 255, 0.6), rgba(247, 0, 255, 0.15)); }
+.stations__operator { margin: 10px 0 0; font-size: 13px; color: var(--muted); }
+.stations__operator span { color: var(--faint); }
+
+.stations__nopass { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+
+/* The shared comparison table highlights column 2; here ISS is column 2 (white)
+   and Tiangong column 3 (magenta). */
+.stations .compare thead th:nth-child(2) { box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.6); }
+.stations .compare thead th:nth-child(3) { color: var(--text); box-shadow: inset 0 -1px 0 rgba(247, 0, 255, 0.6); }
+.stations .compare tbody td:nth-child(3) { color: var(--text); }
+.stations__sources { margin: 8px 0 0; padding-left: 18px; font-size: 13px; color: var(--muted); }
+.stations__sources a { color: var(--muted); text-underline-offset: 3px; }
+.stations__sources a:hover { color: var(--text); }
+
+@media (max-width: 760px) {
+  .stations__panels { grid-template-columns: 1fr; }
+  .stations__map { height: 52vh; min-height: 320px; }
+}
+@media (max-width: 420px) {
+  .stations__follow-label { display: none; }
+  .stations__distance-stats dd { font-size: 1.05rem; }
+}

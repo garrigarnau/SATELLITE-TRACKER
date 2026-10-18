@@ -124,10 +124,12 @@ button { font: inherit; color: inherit; }
   .loc__pin { width: 8px; height: 8px; }
   .lang { margin-left: 6px; }
   .lang__opt { min-width: 26px; padding: 0 5px; height: 26px; }
+  /* Five links don't fit; Starlink keeps its card on the home page. */
+  .header__link--starlink { display: none; }
 }
 @media (max-width: 360px) {
   /* Too narrow for four controls; Starlink is still linked from the home page. */
-  .header__link--starlink { display: none; }
+  .header__link--starlink, .header__link--stations { display: none; }
   .header__inner { gap: 8px; }
   .header__link { padding: 8px 4px; font-size: 11px; }
   .lang { margin-left: 4px; }

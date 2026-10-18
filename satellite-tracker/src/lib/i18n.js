@@ -10,6 +10,7 @@ const en = {
   // Header, footer, generic
   'nav.tonight': 'Tonight',
   'nav.starlink': 'Starlink',
+  'nav.stations': 'Stations',
   'nav.about': 'About',
   'nav.home': 'Satellite Tracker, home',
   'nav.primary': 'Primary',
@@ -227,11 +228,15 @@ const en = {
   'facts.meta': 'Orbit and catalogue data: CelesTrak SATCAT, updated {date}.',
   'sat.tiangongLink': 'Open the Tiangong page: facts, Tiangong vs ISS and where to see it →',
   'tg.unavailable': 'Live position unavailable',
+  'footer.stations': 'ISS and Tiangong live',
+  'passes.bothStations': 'both together',
+  'sat.stationsLink': 'See the ISS and Tiangong together on one map →',
 }
 
 const es = {
   'nav.tonight': 'Esta noche',
   'nav.starlink': 'Starlink',
+  'nav.stations': 'Estaciones',
   'nav.about': 'Acerca de',
   'nav.home': 'Satellite Tracker, inicio',
   'nav.primary': 'Principal',
@@ -439,6 +444,9 @@ const es = {
   'facts.meta': 'Datos orbitales y de catálogo: CelesTrak SATCAT, actualizados el {date}.',
   'sat.tiangongLink': 'Abrir la página de Tiangong: datos, Tiangong frente a la ISS y dónde verla →',
   'tg.unavailable': 'Posición en directo no disponible',
+  'footer.stations': 'La ISS y Tiangong en directo',
+  'passes.bothStations': 'las dos juntas',
+  'sat.stationsLink': 'Ver la ISS y Tiangong juntas en un mapa →',
 }
 
 export const DICTS = { en, es }

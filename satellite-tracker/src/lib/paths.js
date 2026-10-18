@@ -5,6 +5,7 @@
 //   /satellite/:id    ↔ /es/satelite/:id
 //   /about            ↔ /es/acerca
 //   /starlink         ↔ /es/starlink
+//   /stations         ↔ /es/estaciones
 //   /tonight/:slug    ↔ /es/esta-noche/:slug_es  (Spanish city slug, e.g. london ↔ londres)
 
 import CITIES from '../data/cities.json' with { type: 'json' }
@@ -35,6 +36,7 @@ export function localizePath(path, locale) {
   if (pathname === '/' || pathname === '') out = '/es'
   else if (pathname.startsWith('/satellite/')) out = `/es/satelite/${pathname.slice('/satellite/'.length)}`
   else if (pathname === '/about') out = '/es/acerca'
+  else if (pathname === '/stations') out = '/es/estaciones'
   else if (pathname.startsWith('/tonight/')) out = `/es/esta-noche/${esCitySlug(pathname.slice('/tonight/'.length))}`
   else out = `/es${pathname}`
   return out + query
@@ -46,6 +48,7 @@ export function toEnglishPath(pathname) {
   const rest = pathname.slice(3) || '/'
   if (rest.startsWith('/satelite/')) return `/satellite/${rest.slice('/satelite/'.length)}`
   if (rest === '/acerca') return '/about'
+  if (rest === '/estaciones') return '/stations'
   if (rest.startsWith('/esta-noche/')) return `/tonight/${enCitySlug(rest.slice('/esta-noche/'.length))}`
   return rest
 }

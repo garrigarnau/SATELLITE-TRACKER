@@ -10,6 +10,7 @@ import {
 } from '../src/lib/seo-data.js'
 import { RENAMED_CITY_SLUGS, localizePath } from '../src/lib/paths.js'
 import { TIANGONG_COPY, tiangongFaqJsonLd } from '../src/lib/tiangong.js'
+import { STATIONS, STATIONS_COPY, stationsCompare, stationsJsonLd } from '../src/lib/stations.js'
 import { FACTS, factRows, factSummary, factsJsonLd } from '../src/lib/satellite-facts.js'
 import { FAQ, faqFor, faqJsonLd } from '../src/lib/faq.js'
 import { CITIES, cityCopy, cityJsonLd, cityMeta, cityPath, cityQuery, nearbyCities } from '../src/lib/cities.js'
@@ -59,6 +60,20 @@ function tiangongBody(locale) {
     + `<div class="tiangong__intro">${t.intro.map((p) => `<p>${esc(p)}</p>`).join('')}</div>`
     + `<h2>${esc(t.compareTitle)}</h2><table><thead><tr><td></td><th>Tiangong</th><th>ISS</th></tr></thead><tbody>${rows}</tbody></table>`
     + `<p>${esc(t.compareFootnote)}</p><h2>${esc(t.faqTitle)}</h2>${faq}<h2>${esc(t.sourcesTitle)}</h2><ul>${sources}</ul></div>`
+}
+
+// ---- International stations: intro, links and the ISS vs Tiangong table as
+// real HTML (live positions and distances only exist in the browser).
+function stationsBody(locale) {
+  const c = STATIONS_COPY[locale]
+  const cmp = stationsCompare(locale)
+  const rows = cmp.rows.map(([l, a, b]) => `<tr><th scope="row">${esc(l)}</th><td>${esc(a)}</td><td>${esc(b)}</td></tr>`).join('')
+  const links = STATIONS.map((st) => `<li><a href="${localizePath(st.page, locale)}">${esc(st.name[locale])}</a></li>`).join('')
+  const sources = cmp.sources.map((src) => `<li><a href="${src.url}">${esc(src.label)}</a></li>`).join('')
+  return `<div class="wrap page stations"><p class="eyebrow">${esc(c.eyebrow)}</p><h1 class="sat-head__title">${esc(c.title)}</h1>`
+    + `<div class="tiangong__intro">${c.intro.map((p) => `<p>${esc(p)}</p>`).join('')}</div><ul>${links}</ul>`
+    + `<h2>${esc(c.compareTitle)}</h2><p>${esc(cmp.note)}</p><table><thead><tr><td></td><th>ISS</th><th>Tiangong</th></tr></thead><tbody>${rows}</tbody></table>`
+    + `<p>${esc(cmp.footnote)}</p><ul>${sources}</ul></div>`
 }
 
 // ---- City pages: intro, links and FAQ as real HTML (no pass times: those are
@@ -153,6 +168,15 @@ const routesFor = (locale) => [
   { meta: META[locale].starlink, locale },
   // Tiangong: intro, comparison and FAQ (with its FAQPage JSON-LD) inside #root.
   { meta: META[locale].tiangong, locale, extra: { root: tiangongBody(locale) } },
+  // International stations: intro + comparison inside #root, WebPage/ItemList JSON-LD in <head>.
+  {
+    meta: META[locale].stations,
+    locale,
+    extra: {
+      root: stationsBody(locale),
+      head: `    <script type="application/ld+json" id="ld-stations">${json(stationsJsonLd(locale, `${SITE}${localizePath('/stations', locale)}`))}</script>`,
+    },
+  },
   ...satRoutes(locale),
   ...cityRoutes(locale),
 ]
@@ -232,6 +256,7 @@ Made by Arnau Garriga Torné (https://arnaugarriga.com). Source code: https://gi
 - [Home](${SITE}/): search a city or use your location to get visible passes and what's overhead now.
 - [International Space Station (ISS)](${SITE}/satellite/25544): live position, ground track and visible passes.
 - [Tiangong tracker](${SITE}/tiangong): where China's space station is right now, when to see it, and how it compares with the ISS.
+- [International stations](${SITE}/stations): the ISS and Tiangong live on one map, their orbits, the distance between them and when to see each.
 - [Hubble Space Telescope](${SITE}/satellite/20580)
 - [Starlink over contested regions](${SITE}/starlink): how many Starlink satellites are overhead in Kyiv, Tehran, Caracas and other cities, now and over the next 90 minutes. Coverage geometry, not service.
 - [About](${SITE}/about): methods, data sources and FAQ.

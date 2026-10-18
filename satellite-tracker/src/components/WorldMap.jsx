@@ -9,9 +9,10 @@ export const dotIcon = (kind) =>
 const escapeHtml = (s) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`)
 
 // The tracked satellite: a glyph with a pulsing halo and its name next to it.
-export const trackedIcon = (name = '') =>
+// `variant` adds a colour modifier (tracked--tg) when two are on one map.
+export const trackedIcon = (name = '', variant) =>
   L.divIcon({
-    className: 'tracked',
+    className: variant ? `tracked tracked--${variant}` : 'tracked',
     html: `<span class="tracked__halo"></span>
       <svg class="tracked__glyph" viewBox="0 0 32 32" aria-hidden="true">
         <rect x="12" y="12" width="8" height="8" rx="1.5" />

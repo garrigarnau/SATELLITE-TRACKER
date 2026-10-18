@@ -39,3 +39,19 @@ export function useSeo({ title, description, path = '/' }) {
     setCanonical(url)
   }, [title, description, path])
 }
+
+// Adds (or replaces) a JSON-LD block in <head> for as long as the page is mounted.
+export function useJsonLd(id, data) {
+  const json = JSON.stringify(data)
+  useEffect(() => {
+    let el = document.getElementById(id)
+    if (!el) {
+      el = document.createElement('script')
+      el.type = 'application/ld+json'
+      el.id = id
+      document.head.appendChild(el)
+    }
+    el.textContent = json
+    return () => el.remove()
+  }, [id, json])
+}

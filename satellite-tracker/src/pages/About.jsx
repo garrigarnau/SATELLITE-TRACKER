@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useObserver, observerQuery } from '../lib/observer'
 import { useSeo } from '../lib/seo'
 import { ABOUT_META } from '../lib/seo-data'
+import Faq from '../components/Faq'
 
 export default function About() {
   const [observer] = useObserver()
@@ -43,6 +44,7 @@ export default function About() {
         alive by a love of looking up at night. The code is on <a href="https://github.com/garrigarnau/SATELLITE-TRACKER" target="_blank" rel="noreferrer">GitHub</a>.
       </p>
       <Link className="btn" to={`/${observerQuery(observer)}`}>See tonight&rsquo;s passes</Link>
+      <Faq />
     </div>
   )
 }

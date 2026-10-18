@@ -1,0 +1,38 @@
+# Keeps the API keys server-side: the browser calls /api/*, nginx adds the key.
+# Responses are cached briefly so repeat visits don't burn the N2YO hourly quota.
+proxy_cache_path /var/cache/nginx/api levels=1:2 keys_zone=api:10m max_size=100m inactive=6h;
+
+server {
+    listen 80;
+    root /usr/share/nginx/html;
+
+    location /api/n2yo/ {
+        rewrite ^/api/n2yo/(.*)$ /rest/v1/satellite/$1&apiKey=${N2YO_API_KEY} break;
+        proxy_pass https://api.n2yo.com;
+        proxy_set_header Host api.n2yo.com;
+        proxy_ssl_server_name on;
+        proxy_cache api;
+        proxy_cache_valid 200 2m;
+        proxy_ignore_headers Cache-Control Expires Set-Cookie;
+        add_header X-Cache $upstream_cache_status;
+    }
+
+    location /api/geocode {
+        rewrite ^ /geocode/v1/json?key=${OPENCAGE_API_KEY} break;
+        proxy_pass https://api.opencagedata.com;
+        proxy_set_header Host api.opencagedata.com;
+        proxy_ssl_server_name on;
+        proxy_cache api;
+        proxy_cache_valid 200 1d;
+        proxy_ignore_headers Cache-Control Expires Set-Cookie;
+    }
+
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    location / {
+        try_files $uri /index.html;
+    }
+}

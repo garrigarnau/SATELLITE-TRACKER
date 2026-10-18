@@ -110,6 +110,7 @@ function Passes({ observer }) {
         <div>
           <p className="section__note">
             Bright satellites you can spot with the naked eye. Passes cluster around dusk and dawn, when your sky is dark but the satellite is still in sunlight.
+            {' '}Space stations: <Link to={`/satellite/25544${q}`}>ISS</Link> · <Link to={`/tiangong${q}`}>Tiangong</Link>.
           </p>
           {(cloudyCount > 0 || hideCloudy) && (
             <label className="sky-toggle">

@@ -70,6 +70,9 @@ export default function Tiangong() {
       ) : (
         <LiveTracker satrec={satrec} name="Tiangong" pos={pos} look={look} observer={observer} now={now} />
       )}
+      <p className="sat-crosslink">
+        <Link to={tr.lp(`/stations${observerQuery(observer)}`)}>{tr('sat.stationsLink')}</Link>
+      </p>
 
       {observer ? (
         <Passes id={TIANGONG_ID} observer={observer} satrec={satrec} now={now} look={look} />

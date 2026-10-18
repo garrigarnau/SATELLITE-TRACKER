@@ -8,6 +8,7 @@ import Satellite from './pages/Satellite'
 import About from './pages/About'
 import Starlink from './pages/Starlink'
 import Tiangong from './pages/Tiangong'
+import Stations from './pages/Stations'
 import City from './pages/City'
 
 function ScrollToTop() {
@@ -46,12 +47,14 @@ export default function App() {
           <Route path="/satellite/:id" element={<Satellite />} />
           <Route path="/starlink" element={<Starlink />} />
           <Route path="/tiangong" element={<Tiangong />} />
+          <Route path="/stations" element={<Stations />} />
           <Route path="/about" element={<About />} />
           <Route path="/tonight/:slug" element={<City />} />
           <Route path="/es" element={<Home />} />
           <Route path="/es/satelite/:id" element={<Satellite />} />
           <Route path="/es/starlink" element={<Starlink />} />
           <Route path="/es/tiangong" element={<Tiangong />} />
+          <Route path="/es/estaciones" element={<Stations />} />
           <Route path="/es/acerca" element={<About />} />
           <Route path="/es/esta-noche/:slug" element={<City />} />
           <Route path="*" element={<NotFound />} />
@@ -61,6 +64,7 @@ export default function App() {
         <div className="wrap footer__inner">
           <span>{t('footer.data')} <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">{t('footer.weather')}</a></span>
           <span className="footer__links">
+            <Link to={t.lp('/stations')}>{t('footer.stations')}</Link>
             <Link to={t.lp('/tiangong')}>{t('footer.tiangong')}</Link>
             <a href="https://github.com/garrigarnau/SATELLITE-TRACKER" target="_blank" rel="noreferrer">{t('footer.source')}</a>
           </span>

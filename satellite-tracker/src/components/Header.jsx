@@ -28,6 +28,7 @@ export default function Header() {
         <nav className="header__nav" aria-label={t('nav.primary')}>
           <NavLink to={t.lp(`/${q}`)} end className="header__link">{t('nav.tonight')}</NavLink>
           <NavLink to={t.lp(`/starlink${q}`)} className="header__link header__link--starlink">{t('nav.starlink')}</NavLink>
+          <NavLink to={t.lp(`/stations${q}`)} className="header__link header__link--stations">{t('nav.stations')}</NavLink>
           <NavLink to={t.lp(`/about${q}`)} className="header__link">{t('nav.about')}</NavLink>
           {observer && (
             <div className="loc">

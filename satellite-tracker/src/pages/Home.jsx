@@ -122,7 +122,7 @@ export function Passes({ observer, seo = true }) {
         <div>
           <p className="section__note">
             {t('passes.note')}
-            {' '}{t('passes.stations')} <Link to={t.lp(`/satellite/25544${q}`)}>ISS</Link> · <Link to={t.lp(`/tiangong${q}`)}>Tiangong</Link>.
+            {' '}{t('passes.stations')} <Link to={t.lp(`/satellite/25544${q}`)}>ISS</Link> · <Link to={t.lp(`/tiangong${q}`)}>Tiangong</Link> · <Link to={t.lp(`/stations${q}`)}>{t('passes.bothStations')}</Link>.
           </p>
           {(cloudyCount > 0 || hideCloudy) && (
             <label className="sky-toggle">

@@ -76,6 +76,11 @@ export default function Satellite() {
           <Link to={t.lp(`/tiangong${observerQuery(observer)}`)}>{t('sat.tiangongLink')}</Link>
         </p>
       )}
+      {(Number(id) === TIANGONG_ID || Number(id) === 25544) && (
+        <p className="sat-crosslink">
+          <Link to={t.lp(`/stations${observerQuery(observer)}`)}>{t('sat.stationsLink')}</Link>
+        </p>
+      )}
 
       <SatelliteFacts id={id} name={prettySatNameFor(t.locale, id, tle.name)} satrec={satrec} />
 

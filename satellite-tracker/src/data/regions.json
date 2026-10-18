@@ -1,0 +1,120 @@
+{
+  "reviewed": "2026-10-18",
+  "minElevationDeg": 25,
+  "regions": [
+    {
+      "id": "kyiv",
+      "label": "Kyiv",
+      "country": "Ukraine",
+      "lat": 50.45,
+      "lon": 30.523,
+      "kind": "region",
+      "context": "In February 2026 Ukraine required Starlink terminals to be registered and SpaceX cut off unregistered ones, which Ukraine said were used by Russian forces; a Russian deputy defence minister acknowledged the outage on 17 Feb.",
+      "asOf": "2026-02-17",
+      "sources": [
+        { "title": "bne IntelliNews, Feb 2026", "url": "https://www.intellinews.com/ukraine-says-russian-frontline-activity-drops-after-starlink-terminals-blocked-424675/" },
+        { "title": "Anadolu Agency, Feb 2026", "url": "https://www.aa.com.tr/en/world/senior-russian-military-official-acknowledges-starlink-terminals-disabled-for-2-weeks/3833306" }
+      ]
+    },
+    {
+      "id": "kramatorsk",
+      "label": "Kramatorsk",
+      "country": "Ukraine, eastern front",
+      "lat": 48.723,
+      "lon": 37.556,
+      "kind": "region",
+      "context": "Front-line area; Ukraine said Russian units there relied on unregistered Starlink terminals, including on drones, until the February 2026 whitelist.",
+      "asOf": "2026-02-17",
+      "sources": [
+        { "title": "Novaya Gazeta Europe, 5 Feb 2026", "url": "https://novayagazeta.eu/en/articles/2026/02/05/starlink-outage-leaves-russian-military-without-satellite-internet-access-within-ukraines-borders-en-news" },
+        { "title": "bne IntelliNews, Feb 2026", "url": "https://www.intellinews.com/ukraine-says-russian-frontline-activity-drops-after-starlink-terminals-blocked-424675/" },
+        { "title": "Anadolu Agency, Feb 2026", "url": "https://www.aa.com.tr/en/world/senior-russian-military-official-acknowledges-starlink-terminals-disabled-for-2-weeks/3833306" }
+      ]
+    },
+    {
+      "id": "tehran",
+      "label": "Tehran",
+      "country": "Iran",
+      "lat": 35.689,
+      "lon": 51.389,
+      "kind": "region",
+      "context": "Using or distributing Starlink is punishable by fines and prison in Iran; in October 2026 a Supreme National Cyberspace Council official called it a \"tool of war\" amid the war that began on 28 Feb 2026.",
+      "asOf": "2026-10-14",
+      "sources": [
+        { "title": "Al Jazeera, 14 Oct 2026", "url": "https://www.aljazeera.com/news/2026/10/14/iran-targets-starlink-as-tool-of-war-with-hints-at-internet-restrictions" }
+      ]
+    },
+    {
+      "id": "caracas",
+      "label": "Caracas",
+      "country": "Venezuela",
+      "lat": 10.481,
+      "lon": -66.904,
+      "kind": "region",
+      "context": "On 4 Jan 2026, after US strikes and Maduro's capture, Starlink offered free service credits to users in Venezuela until 3 Feb; it is not sold there.",
+      "asOf": "2026-01-05",
+      "sources": [
+        { "title": "The Register, 5 Jan 2026", "url": "https://www.theregister.com/2026/01/05/starlink_free_service_venezuela/" }
+      ]
+    },
+    {
+      "id": "gaza",
+      "label": "Gaza City",
+      "country": "Gaza",
+      "lat": 31.502,
+      "lon": 34.467,
+      "kind": "region",
+      "context": "Musk pledged Starlink for aid groups in Gaza in October 2023; Israel opposed it and later approved limited use for a field hospital in Rafah.",
+      "asOf": "2024-02",
+      "sources": [
+        { "title": "Dawn", "url": "https://www.dawn.com/news/1814371" },
+        { "title": "Benton Institute", "url": "https://www.benton.org/headlines/israel-and-un-negotiate-deploying-musks-starlink-gaza" }
+      ]
+    },
+    {
+      "id": "taipei",
+      "label": "Taipei",
+      "country": "Taiwan",
+      "lat": 25.033,
+      "lon": 121.565,
+      "kind": "region",
+      "context": "Starlink is not offered in Taiwan; in July 2026 lawmakers approved changes allowing case-by-case exemptions from the foreign-ownership rules that had kept it out.",
+      "asOf": "2026-07",
+      "sources": [
+        { "title": "Citizen Digital / AFP, Jul 2026", "url": "https://citizen.digital/article/taiwan-lawmakers-remove-legal-hurdles-for-starlink-to-operate-n386806" }
+      ]
+    },
+    {
+      "id": "khartoum",
+      "label": "Khartoum",
+      "country": "Sudan",
+      "lat": 15.501,
+      "lon": 32.56,
+      "kind": "region",
+      "context": "Starlink is not licensed in Sudan, but terminals smuggled via neighbouring countries have been widely reported in use by civilians and the RSF since 2023.",
+      "asOf": "2024-04-11",
+      "sources": [
+        { "title": "Geeska", "url": "https://www.geeska.com/en/starlink-ruins-sudans-networks" },
+        { "title": "Gigazine, 11 Apr 2024", "url": "https://gigazine.net/gsc_news/en/20240411-starlink-russia-sudan-black-market" }
+      ]
+    },
+    {
+      "id": "madrid",
+      "label": "Madrid",
+      "country": "Spain · reference",
+      "lat": 40.417,
+      "lon": -3.704,
+      "kind": "control",
+      "context": "Reference city at a similar latitude, to show what \"normal\" looks like."
+    },
+    {
+      "id": "quito",
+      "label": "Quito",
+      "country": "Ecuador · reference",
+      "lat": -0.18,
+      "lon": -78.468,
+      "kind": "control",
+      "context": "Near-equatorial reference, to compare with Caracas."
+    }
+  ]
+}

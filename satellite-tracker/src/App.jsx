@@ -4,6 +4,7 @@ import Header from './components/Header'
 import Home from './pages/Home'
 import Satellite from './pages/Satellite'
 import About from './pages/About'
+import Starlink from './pages/Starlink'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -22,6 +23,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/satellite/:id" element={<Satellite />} />
+          <Route path="/starlink" element={<Starlink />} />
           <Route path="/about" element={<About />} />
           <Route
             path="*"
@@ -37,7 +39,7 @@ export default function App() {
       </main>
       <footer className="footer">
         <div className="wrap footer__inner">
-          <span>Data from N2YO · Orbits by satellite.js</span>
+          <span>Orbits from CelesTrak · Overhead from N2YO · <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Weather by Open-Meteo</a></span>
           <a href="https://github.com/garrigarnau/SATELLITE-TRACKER" target="_blank" rel="noreferrer">Source on GitHub</a>
         </div>
       </footer>

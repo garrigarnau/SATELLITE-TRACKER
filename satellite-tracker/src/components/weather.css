@@ -1,0 +1,25 @@
+/* Sky (cloud cover) stat on pass cards */
+.sky-icon { flex: none; width: 13px; height: 13px; color: var(--muted); }
+.sky-icon[data-level='clear'] { color: #fff; }
+.sky-stat--none { color: var(--faint); }
+.pass__stats .sky-stat { min-width: 92px; } /* keeps columns aligned across cards */
+
+/* Passes likely clouded out: quieter, but still readable and clickable */
+.pass--cloudy .pass__when,
+.pass--cloudy .pass__body,
+.pass--cloudy .pass__stats > div:not(.sky-stat) { opacity: 0.5; transition: opacity 160ms var(--ease); }
+.pass--cloudy:hover .pass__when,
+.pass--cloudy:hover .pass__body,
+.pass--cloudy:hover .pass__stats > div,
+.pass--cloudy.is-active .pass__when,
+.pass--cloudy.is-active .pass__body,
+.pass--cloudy.is-active .pass__stats > div { opacity: 1; }
+.pass--cloudy .sky-stat dd { color: var(--muted); }
+
+/* "Hide cloudy passes" toggle in the home passes header */
+.sky-toggle {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 8px;
+  font-size: 12px; color: var(--muted); cursor: pointer; user-select: none;
+}
+.sky-toggle input { margin: 0; accent-color: var(--magenta); }
+.sky-toggle:hover { color: var(--text); }

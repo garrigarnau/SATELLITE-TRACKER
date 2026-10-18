@@ -18,6 +18,7 @@ export default function Header() {
 
         <nav className="header__nav" aria-label="Primary">
           <NavLink to={`/${q}`} end className="header__link">Tonight</NavLink>
+          <NavLink to={`/starlink${q}`} className="header__link">Starlink</NavLink>
           <NavLink to={`/about${q}`} className="header__link">About</NavLink>
           {observer && (
             <div className="loc">

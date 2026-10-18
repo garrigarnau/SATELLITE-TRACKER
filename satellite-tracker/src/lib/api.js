@@ -17,6 +17,9 @@ async function getJson(url, { ttlMs = 60_000 } = {}) {
 }
 
 const n2yo = (path) => `/api/n2yo/${path}`
+
+// N2YO's free plan caps some endpoints per hour; worth telling the user plainly.
+export const isQuotaError = (e) => /exceeded|transactions allowed/i.test(e?.message || '')
 const fix = (n, d = 4) => Number(n).toFixed(d)
 
 // N2YO "above" categories worth exposing as filters.
@@ -48,20 +51,61 @@ export async function getAbove({ lat, lon, alt = 0 }, category, radius = 70) {
   return data.above || []
 }
 
-export async function getVisualPasses(id, { lat, lon, alt = 0 }, days = 10, minVisibility = 60) {
-  const data = await getJson(
-    n2yo(`visualpasses/${id}/${fix(lat)}/${fix(lon)}/${Math.round(alt)}/${days}/${minVisibility}/`),
-    { ttlMs: 30 * 60_000 },
-  )
-  return {
-    name: data.info?.satname,
-    passes: (data.passes || []).map((p) => ({ ...p, satid: id, satname: data.info?.satname })),
+// Friendlier names for the spotlight satellites than the catalogue's.
+const NAMES = { 25544: 'ISS', 48274: 'Tiangong (CSS)', 20580: 'Hubble', 27386: 'Envisat', 25994: 'Terra', 27424: 'Aqua' }
+
+// Orbital elements from CelesTrak (cached for 2 h by nginx, matching CelesTrak's
+// update cadence), with N2YO only as a fallback.
+export async function getTle(id) {
+  try {
+    const res = await fetch(`/api/celestrak/NORAD/elements/gp.php?CATNR=${encodeURIComponent(id)}&FORMAT=TLE`)
+    if (!res.ok) throw new Error(`CelesTrak ${res.status}`)
+    const [name, line1, line2] = (await res.text()).trim().split(/\r?\n/).map((l) => l.trim())
+    if (!line1?.startsWith('1 ') || !line2?.startsWith('2 ')) throw new Error('No elements')
+    return { name: NAMES[id] || name, id: Number(id), line1, line2 }
+  } catch {
+    const data = await getJson(n2yo(`tle/${id}`), { ttlMs: 6 * 3_600_000 })
+    const [line1, line2] = (data.tle || '').split(/\r?\n/)
+    if (!line1 || !line2) throw new Error('No orbital data for this satellite')
+    return { name: NAMES[id] || data.info?.satname, id: Number(id), line1, line2 }
   }
 }
 
-export async function getTle(id) {
-  const data = await getJson(n2yo(`tle/${id}`), { ttlMs: 6 * 3_600_000 })
-  const [line1, line2] = (data.tle || '').split(/\r?\n/)
-  if (!line1 || !line2) throw new Error('No orbital data for this satellite')
-  return { name: data.info?.satname, id: data.info?.satid, line1, line2 }
+// Visible passes, predicted locally in a Web Worker (see lib/passes.js), so
+// they cost no API quota. Same shape as N2YO's visualpasses response.
+let worker
+let jobs = 0
+const pending = new Map()
+
+function runWorker(payload) {
+  if (!worker) {
+    worker = new Worker(new URL('../workers/passes.worker.js', import.meta.url), { type: 'module' })
+    worker.onmessage = ({ data }) => {
+      const job = pending.get(data.jobId)
+      if (!job) return
+      pending.delete(data.jobId)
+      data.error ? job.reject(new Error(data.error)) : job.resolve(data.passes)
+    }
+  }
+  return new Promise((resolve, reject) => {
+    const jobId = ++jobs
+    pending.set(jobId, { resolve, reject })
+    worker.postMessage({ jobId, ...payload })
+  })
+}
+
+const passMemo = new Map()
+
+export function getVisualPasses(id, { lat, lon, alt = 0 }, days = 10, minVisibility = 60) {
+  const key = `${id}:${lat.toFixed(2)}:${lon.toFixed(2)}:${days}:${minVisibility}`
+  const hit = passMemo.get(key)
+  if (hit && Date.now() - hit.at < 15 * 60_000) return hit.promise
+
+  const promise = getTle(id).then(async (tle) => {
+    const passes = await runWorker({ tle, observer: { lat, lon, alt }, opts: { days, minVisibility } })
+    return { name: tle.name, passes: passes.map((p) => ({ ...p, satid: Number(id), satname: tle.name })) }
+  })
+  passMemo.set(key, { at: Date.now(), promise })
+  promise.catch(() => passMemo.delete(key))
+  return promise
 }

@@ -1,0 +1,38 @@
+/* ---------- Ownership breakdown (overhead list panel) ---------- */
+.own { margin: 0 0 8px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.own__head {
+  display: flex; justify-content: space-between; gap: 8px; margin: 0 0 6px;
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint);
+}
+.own__head span:last-child:not(:first-child) { color: var(--muted); letter-spacing: 0.06em; }
+
+.own__bar {
+  display: flex; gap: 1px; height: 8px; overflow: hidden;
+  border-radius: var(--radius-sm); background: var(--line);
+}
+.own__bar.skeleton { min-height: 0; }
+.own__seg { flex-basis: 0; min-width: 3px; cursor: pointer; transition: opacity 160ms var(--ease); }
+.own__seg.is-dim { opacity: 0.25; }
+
+/* Monochrome ramp into the plum accent; "other" stays neutral grey. */
+.own__c0 { background: #ffffff; }
+.own__c1 { background: #d9b8de; }
+.own__c2 { background: #b06ab8; }
+.own__c3 { background: var(--plum); }
+.own__c4 { background: #3a2a3b; }
+.own__cx { background: var(--faint); }
+
+.own__legend { margin: 6px -6px 0; padding: 0; list-style: none; }
+.own__legend-skel { height: 58px; min-height: 0; margin-top: 6px; border-radius: var(--radius-sm); }
+.own__row {
+  display: grid; grid-template-columns: 8px minmax(0, 1fr) auto 3.5ch; align-items: center; gap: 8px;
+  width: 100%; padding: 2px 6px; border: 0; border-radius: var(--radius-sm);
+  background: transparent; text-align: left; cursor: pointer; font-size: 12px; line-height: 18px;
+  transition: background-color 160ms var(--ease);
+}
+.own__row:hover { background: var(--surface-2); }
+.own__row.is-active { background: var(--surface-2); box-shadow: inset 2px 0 0 #fff; }
+.own__dot { width: 8px; height: 8px; border-radius: 1px; }
+.own__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.own__num { color: var(--text); font-variant-numeric: tabular-nums; }
+.own__pct { color: var(--faint); font-variant-numeric: tabular-nums; text-align: right; }

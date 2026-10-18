@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Marker, Polyline, Tooltip } from 'react-leaflet'
-import { CATEGORIES, SPOTLIGHT, getAbove, getTle, getVisualPasses } from '../lib/api'
+import { CATEGORIES, SPOTLIGHT, getAbove, getTle, getVisualPasses, isQuotaError } from '../lib/api'
 import { groundTrack, periodMinutes, positionAt, toSatrec } from '../lib/orbit'
 import { useObserver, observerQuery } from '../lib/observer'
 import { useNow } from '../lib/useNow'
@@ -9,8 +9,11 @@ import { fmtNum } from '../lib/format'
 import LocationSearch from '../components/LocationSearch'
 import HeroSky from '../components/HeroSky'
 import PassCard from '../components/PassCard'
+import { CLOUDED_OUT, passCloud, useCloudForecast } from '../lib/weather'
 import WorldMap, { dotIcon, trackedIcon } from '../components/WorldMap'
 import { Notice, Skeleton } from '../components/Status'
+import Ownership from '../components/Ownership'
+import { ownershipBreakdown, useOwnership } from '../lib/celestrak'
 
 export default function Home() {
   const [observer, setObserver] = useObserver()
@@ -54,14 +57,19 @@ function Passes({ observer }) {
     Promise.allSettled(SPOTLIGHT.map((id) => getVisualPasses(id, observer))).then((results) => {
       if (!alive) return
       const ok = results.filter((r) => r.status === 'fulfilled')
-      if (!ok.length) return setState({ status: 'error', passes: [] })
+      if (!ok.length) return setState({ status: 'error', passes: [], quota: results.some((r) => isQuotaError(r.reason)) })
       const passes = ok.flatMap((r) => r.value.passes).sort((a, b) => a.startUTC - b.startUTC)
       setState({ status: 'ready', passes })
     })
     return () => { alive = false }
   }, [observer.lat, observer.lon]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const upcoming = useMemo(() => state.passes.filter((p) => p.endUTC * 1000 > now), [state.passes, now])
+  const weather = useCloudForecast(observer)
+  const [hideCloudy, setHideCloudy] = useState(false)
+  const future = useMemo(() => state.passes.filter((p) => p.endUTC * 1000 > now), [state.passes, now])
+  const isCloudy = (p) => { const c = passCloud(weather, p); return typeof c === 'number' && c >= CLOUDED_OUT }
+  const cloudyCount = future.filter(isCloudy).length
+  const upcoming = hideCloudy ? future.filter((p) => !isCloudy(p)) : future
 
   return (
     <section className="section" aria-labelledby="passes-title">
@@ -70,16 +78,29 @@ function Passes({ observer }) {
           <p className="eyebrow">Next 10 days</p>
           <h2 id="passes-title" className="section__title">Visible passes from {observer.name}</h2>
         </div>
-        <p className="section__note">
-          Bright satellites you can spot with the naked eye. Passes cluster around dusk and dawn, when your sky is dark but the satellite is still in sunlight.
-        </p>
+        <div>
+          <p className="section__note">
+            Bright satellites you can spot with the naked eye. Passes cluster around dusk and dawn, when your sky is dark but the satellite is still in sunlight.
+          </p>
+          {(cloudyCount > 0 || hideCloudy) && (
+            <label className="sky-toggle">
+              <input type="checkbox" checked={hideCloudy} onChange={(e) => setHideCloudy(e.target.checked)} />
+              Hide cloudy passes ({cloudyCount})
+            </label>
+          )}
+        </div>
       </div>
 
       {state.status === 'loading' && <div className="passes"><Skeleton rows={3} /></div>}
       {state.status === 'error' && (
-        <Notice tone="error" title="Couldn't load passes">The satellite data service didn't respond. Try again in a few minutes.</Notice>
+        <Notice tone="error" title="Couldn't load passes">
+          {state.quota
+            ? 'The free pass-prediction quota for this hour is used up. Predictions will be back within the hour.'
+            : "The satellite data service didn't respond. Try again in a few minutes."}
+        </Notice>
       )}
-      {state.status === 'ready' && !upcoming.length && (
+      {future.length > 0 && !upcoming.length && <Notice>Every pass in the forecast window looks clouded out.</Notice>}
+      {state.status === 'ready' && !future.length && (
         <Notice title="No visible passes in the next 10 days">
           That happens around midsummer at high latitudes, when the sky never gets dark enough. Check what&rsquo;s overhead below instead.
         </Notice>
@@ -88,7 +109,7 @@ function Passes({ observer }) {
         <>
           <div className="passes">
             {upcoming.slice(0, limit).map((p) => (
-              <PassCard key={`${p.satid}-${p.startUTC}`} pass={p} now={now} to={`/satellite/${p.satid}${q}`} />
+              <PassCard key={`${p.satid}-${p.startUTC}`} pass={p} now={now} to={`/satellite/${p.satid}${q}`} cloud={passCloud(weather, p)} />
             ))}
           </div>
           {upcoming.length > limit && (
@@ -109,9 +130,17 @@ function Overhead({ observer }) {
   const [selected, setSelected] = useState(null)
   const q = observerQuery(observer)
 
+  const [ownerFilter, setOwnerFilter] = useState(null)
+  const ownership = useOwnership(state.status === 'ready' ? state.list : [], category)
+  const buckets = useMemo(() => ownershipBreakdown(state.list, ownership.owners), [state.list, ownership.owners])
+  const militaryCount = ownership.military ? state.list.filter((s) => ownership.military.has(s.satid)).length : 0
+  const filterIds = buckets.find((b) => b.key === ownerFilter)?.ids
+  const shown = filterIds ? state.list.filter((s) => filterIds.has(s.satid)) : state.list
+
   useEffect(() => {
     let alive = true
     setSelected(null)
+    setOwnerFilter(null)
     setState((s) => ({ status: 'loading', list: s.list }))
     getAbove(observer, category)
       .then((list) => alive && setState({ status: 'ready', list: [...list].sort((a, b) => a.satalt - b.satalt) }))
@@ -156,7 +185,7 @@ function Overhead({ observer }) {
           <Marker position={[observer.lat, observer.lon]} icon={dotIcon('you')}>
             <Tooltip>You</Tooltip>
           </Marker>
-          {state.list.map((s) =>
+          {shown.map((s) =>
             s.satid === selected?.satid ? null : (
               <Marker key={s.satid} position={[s.satlat, s.satlng]} icon={dotIcon('sat')} eventHandlers={{ click: () => setSelected(s) }}>
                 <Tooltip>{s.satname}</Tooltip>
@@ -170,10 +199,21 @@ function Overhead({ observer }) {
           <p className="overhead__count" aria-live="polite">
             {state.status === 'loading' ? 'Scanning the sky…' : `${state.list.length} above you`}
           </p>
+          {category === 52 && (
+            <Link className="overhead__more" to={`/starlink${q}`}>How many are over Kyiv, Tehran or Caracas right now? →</Link>
+          )}
           {state.status === 'error' && <Notice tone="error">Couldn&rsquo;t reach the satellite data service.</Notice>}
           {state.status === 'ready' && !state.list.length && <Notice>Nothing in this category is above you right now.</Notice>}
+          <Ownership
+            status={state.status === 'ready' ? ownership.status : 'idle'}
+            buckets={buckets}
+            total={state.list.length}
+            militaryCount={militaryCount}
+            filter={ownerFilter}
+            onFilter={setOwnerFilter}
+          />
           <ul className="sats">
-            {state.list.map((s) => (
+            {shown.map((s) => (
               <li key={s.satid}>
                 <button
                   type="button"

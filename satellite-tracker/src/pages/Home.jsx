@@ -11,6 +11,7 @@ import { fmtDay, fmtNum, fmtTime } from '../lib/format'
 import LocationSearch from '../components/LocationSearch'
 import { track } from '../lib/track'
 import HeroSky from '../components/HeroSky'
+import Faq from '../components/Faq'
 import PassCard from '../components/PassCard'
 import { CLOUDED_OUT, passCloud, useCloudForecast } from '../lib/weather'
 import WorldMap, { dotIcon, trackedIcon } from '../components/WorldMap'
@@ -24,6 +25,7 @@ export default function Home() {
 
   if (!observer) {
     return (
+      <>
       <section className="hero">
         <HeroSky />
         <div className="wrap hero__inner">
@@ -49,6 +51,10 @@ export default function Home() {
           </aside>
         </div>
       </section>
+      <div className="wrap faq--home">
+        <Faq />
+      </div>
+      </>
     )
   }
 

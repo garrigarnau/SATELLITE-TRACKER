@@ -6,8 +6,9 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
-  ABOUT_META, DEFAULT_META, SAT_NAMES, SITE, SITEMAP_SATELLITES, STARLINK_META, satelliteMeta,
+  ABOUT_META, DEFAULT_META, SAT_NAMES, SITE, SITEMAP_SATELLITES, STARLINK_META, TIANGONG_META, satelliteMeta,
 } from '../src/lib/seo-data.js'
+import { TIANGONG_COPY, tiangongFaqJsonLd } from '../src/lib/tiangong.js'
 import { FACTS, factRows, factsJsonLd } from '../src/lib/satellite-facts.js'
 import { FAQ, faqJsonLd } from '../src/lib/faq.js'
 
@@ -34,6 +35,18 @@ function render({ title, description, path }, extra = {}) {
     if (!re.test(html)) throw new Error(`prerender: tag not found for ${re}`)
     return html.replace(re, to)
   }, template)
+}
+
+function tiangongBody() {
+  const t = TIANGONG_COPY.en
+  const rows = t.compare.map(([l, a, b]) => `<tr><th scope="row">${esc(l)}</th><td>${esc(a)}</td><td>${esc(b)}</td></tr>`).join('')
+  const faq = t.faq.map(({ q, a }) => `<h3>${esc(q)}</h3><p>${esc(a)}</p>`).join('')
+  const sources = t.sources.map((s) => `<li><a href="${s.url}">${esc(s.label)}</a></li>`).join('')
+  return `<div class="wrap page tiangong"><script type="application/ld+json">${JSON.stringify(tiangongFaqJsonLd(t)).replace(/</g, '\\u003c')}</script>`
+    + `<p class="eyebrow">${esc(t.eyebrow)}</p><h1 class="sat-head__title">${esc(t.title)}</h1>`
+    + `<div class="tiangong__intro">${t.intro.map((p) => `<p>${esc(p)}</p>`).join('')}</div>`
+    + `<h2>${esc(t.compareTitle)}</h2><table><thead><tr><td></td><th>Tiangong</th><th>ISS</th></tr></thead><tbody>${rows}</tbody></table>`
+    + `<p>${esc(t.compareFootnote)}</p><h2>${esc(t.faqTitle)}</h2>${faq}<h2>${esc(t.sourcesTitle)}</h2><ul>${sources}</ul></div>`
 }
 
 // ---- Satellite pages: citable facts in the raw HTML -------------------------
@@ -91,6 +104,8 @@ const satRoutes = SITEMAP_SATELLITES.map((id) => {
 const routes = [
   { meta: ABOUT_META },
   { meta: STARLINK_META },
+  // Tiangong: intro, comparison and FAQ (with its FAQPage JSON-LD) inside #root.
+  { meta: TIANGONG_META, extra: { root: tiangongBody() } },
   ...satRoutes,
 ]
 
@@ -134,7 +149,7 @@ Made by Arnau Garriga Torné (https://arnaugarriga.com). Source code: https://gi
 
 - [Home](${SITE}/): search a city or use your location to get visible passes and what's overhead now.
 - [International Space Station (ISS)](${SITE}/satellite/25544): live position, ground track and visible passes.
-- [Tiangong Space Station](${SITE}/satellite/48274)
+- [Tiangong tracker](${SITE}/tiangong): where China's space station is right now, when to see it, and how it compares with the ISS.
 - [Hubble Space Telescope](${SITE}/satellite/20580)
 - [Starlink over contested regions](${SITE}/starlink): how many Starlink satellites are overhead in Kyiv, Tehran, Caracas and other cities, now and over the next 90 minutes. Coverage geometry, not service.
 - [About](${SITE}/about): methods, data sources and FAQ.

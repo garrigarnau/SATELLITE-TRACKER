@@ -72,5 +72,12 @@ export const STARLINK_META = {
   path: '/starlink',
 }
 
+export const TIANGONG_META = {
+  title: `Tiangong tracker: where is China's space station right now · ${SITE_NAME}`,
+  description:
+    "Live position of Tiangong, China's space station, on a map, when you can see it from your city tonight, and how it compares with the ISS.",
+  path: '/tiangong',
+}
+
 // Satellites that get a prerendered page and a sitemap entry.
 export const SITEMAP_SATELLITES = [25544, 48274, 20580, 27386, 25994, 27424]

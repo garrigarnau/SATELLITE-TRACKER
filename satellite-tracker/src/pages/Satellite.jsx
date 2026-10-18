@@ -2,19 +2,19 @@ import { useEffect, useMemo, useState } from 'react'
 import { useSeo } from '../lib/seo'
 import { prettySatName, satelliteMeta } from '../lib/seo-data'
 import { Link, useParams } from 'react-router-dom'
-import { Circle, Marker, Polyline, Tooltip } from 'react-leaflet'
 import { getTle, getVisualPasses, isQuotaError } from '../lib/api'
-import { footprintKm, groundTrack, lookAngles, periodMinutes, positionAt, skyPath, toSatrec } from '../lib/orbit'
+import { lookAngles, periodMinutes, positionAt, skyPath, toSatrec } from '../lib/orbit'
 import { useObserver, observerQuery } from '../lib/observer'
 import { useNow } from '../lib/useNow'
-import { compass, fmtCoord, fmtNum } from '../lib/format'
-import WorldMap, { dotIcon, trackedIcon } from '../components/WorldMap'
+import { compass } from '../lib/format'
+import LiveTracker from '../components/LiveTracker'
+import { TIANGONG_ID } from '../lib/tiangong'
 import PassCard from '../components/PassCard'
 import { passCloud, sky, useCloudForecast } from '../lib/weather'
 import SkyChart from '../components/SkyChart'
 import LocationSearch from '../components/LocationSearch'
 import { track } from '../lib/track'
-import { Notice, Skeleton, Term } from '../components/Status'
+import { Notice, Skeleton } from '../components/Status'
 import { FACTS, factRows, genericSummary } from '../lib/satellite-facts'
 import satcatFallback from '../data/satcat-fallback.json'
 import '../lib/satellite-facts.css'
@@ -24,7 +24,6 @@ export default function Satellite() {
   const [observer, setObserver] = useObserver()
   const now = useNow(1000)
   const [tle, setTle] = useState({ status: 'loading' })
-  const [follow, setFollow] = useState(true)
 
   useEffect(() => {
     let alive = true
@@ -39,20 +38,6 @@ export default function Satellite() {
   const pos = satrec ? positionAt(satrec, now) : null
   const look = satrec && observer ? lookAngles(satrec, now, observer) : null
 
-  // The ground track only needs refreshing every half minute.
-  const trackKey = Math.floor(now.getTime() / 30_000)
-  const track = useMemo(() => {
-    if (!satrec) return null
-    const period = periodMinutes(satrec)
-    return {
-      past: groundTrack(satrec, now, period * 0.5, 0),
-      future: groundTrack(satrec, now, 0, period),
-    }
-  }, [satrec, trackKey]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Built once per satellite so the halo animation isn't restarted every tick.
-  const icon = useMemo(() => trackedIcon(tle.name), [tle.name])
-
   useSeo(satelliteMeta(id, prettySatName(id, tle.name), observer?.name))
 
   if (tle.status === 'error') {
@@ -65,7 +50,6 @@ export default function Satellite() {
     )
   }
 
-  const period = satrec ? periodMinutes(satrec) : null
   const up = look && look.elevation > 0
 
   return (
@@ -84,52 +68,12 @@ export default function Satellite() {
         )}
       </header>
 
-      <div className="sat-grid">
-        <WorldMap center={pos ? [pos.lat, pos.lon] : undefined} zoom={3} follow={follow && pos ? [pos.lat, pos.lon] : null} className="sat-map">
-          {track?.past.map((seg, i) => <Polyline key={`p${i}`} positions={seg} pathOptions={{ color: '#b06ab8', weight: 1.5, opacity: 0.55 }} />)}
-          {track?.future.map((seg, i) => <Polyline key={`f${i}`} positions={seg} pathOptions={{ color: '#ffffff', weight: 1.5, opacity: 0.85, dashArray: '3 6' }} />)}
-          {pos && (
-            <>
-              <Circle center={[pos.lat, pos.lon]} radius={footprintKm(pos.altKm) * 1000} pathOptions={{ color: '#ffffff', weight: 1, opacity: 0.35, fillColor: '#b06ab8', fillOpacity: 0.08 }} />
-              <Marker position={[pos.lat, pos.lon]} icon={icon} zIndexOffset={1000} />
-            </>
-          )}
-          {observer && (
-            <Marker position={[observer.lat, observer.lon]} icon={dotIcon('you')}>
-              <Tooltip>You</Tooltip>
-            </Marker>
-          )}
-        </WorldMap>
-
-        <aside className="panel">
-          <div className="panel__head">
-            <h2 className="panel__title">Live</h2>
-            <label className="toggle">
-              <input type="checkbox" checked={follow} onChange={(e) => setFollow(e.target.checked)} />
-              <span>Follow on map</span>
-            </label>
-          </div>
-          {pos ? (
-            <dl className="stats">
-              <Stat label="Latitude" value={fmtCoord(pos.lat, 'N', 'S')} />
-              <Stat label="Longitude" value={fmtCoord(pos.lon, 'E', 'W')} />
-              <Stat label="Altitude" value={`${fmtNum(pos.altKm)} km`} />
-              <Stat label="Speed" value={`${fmtNum(pos.speedKmS, 2)} km/s`} />
-              <Stat label="Orbit" value={`${fmtNum(period)} min`} />
-              {look && (
-                <>
-                  <Stat label={<Term hint="Compass direction to look, in degrees clockwise from north.">Azimuth</Term>} value={`${fmtNum(look.azimuth)}° ${compass(look.azimuth)}`} />
-                  <Stat label={<Term hint="Angle above the horizon. 0° is the horizon, 90° is straight up.">Elevation</Term>} value={`${fmtNum(look.elevation)}°`} />
-                  <Stat label="Distance" value={`${fmtNum(look.rangeKm)} km`} />
-                </>
-              )}
-            </dl>
-          ) : (
-            <div className="stats"><Skeleton rows={4} className="stat" /></div>
-          )}
-          <p className="panel__note">Computed in your browser from the satellite&rsquo;s latest orbital elements.</p>
-        </aside>
-      </div>
+      <LiveTracker satrec={satrec} name={tle.name} pos={pos} look={look} observer={observer} now={now} />
+      {Number(id) === TIANGONG_ID && (
+        <p className="sat-crosslink">
+          <Link to={`/tiangong${observerQuery(observer)}`}>Open the Tiangong page: facts, Tiangong vs ISS and where to see it →</Link>
+        </p>
+      )}
 
       <SatelliteFacts id={id} name={prettySatName(id, tle.name)} satrec={satrec} />
 
@@ -203,16 +147,8 @@ function SatelliteFacts({ id, name, satrec }) {
   )
 }
 
-function Stat({ label, value }) {
-  return (
-    <div className="stat">
-      <dt>{label}</dt>
-      <dd>{value}</dd>
-    </div>
-  )
-}
-
-function Passes({ id, observer, satrec, now, look }) {
+// Also used by the Tiangong page.
+export function Passes({ id, observer, satrec, now, look }) {
   const [state, setState] = useState({ status: 'loading', passes: [] })
   const [selected, setSelected] = useState(0)
   const [limit, setLimit] = useState(6)

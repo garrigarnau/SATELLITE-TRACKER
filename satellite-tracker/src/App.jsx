@@ -4,6 +4,7 @@ import Header from './components/Header'
 import Home from './pages/Home'
 import Satellite from './pages/Satellite'
 import About from './pages/About'
+import Starlink from './pages/Starlink'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -22,6 +23,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/satellite/:id" element={<Satellite />} />
+          <Route path="/starlink" element={<Starlink />} />
           <Route path="/about" element={<About />} />
           <Route
             path="*"

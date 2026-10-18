@@ -11,7 +11,7 @@ export const periodMinutes = (satrec) => (2 * Math.PI) / satrec.no
 
 export function positionAt(satrec, date) {
   const pv = sat.propagate(satrec, date)
-  if (!pv.position) return null
+  if (!pv?.position) return null
   const geo = sat.eciToGeodetic(pv.position, sat.gstime(date))
   const v = pv.velocity
   return {
@@ -25,7 +25,7 @@ export function positionAt(satrec, date) {
 
 export function lookAngles(satrec, date, observer) {
   const pv = sat.propagate(satrec, date)
-  if (!pv.position) return null
+  if (!pv?.position) return null
   const ecf = sat.eciToEcf(pv.position, sat.gstime(date))
   const look = sat.ecfToLookAngles(
     {

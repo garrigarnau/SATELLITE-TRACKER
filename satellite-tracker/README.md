@@ -1,3 +1,13 @@
+# Satellite Tracker
+
+## Starlink page data
+
+`/starlink` downloads the whole Starlink catalogue (CelesTrak GP `GROUP=starlink`, OMM JSON, ~5 MB / ~600 KB gzipped)
+from `/api/starlink`, which nginx caches under one key for 2 h. CelesTrak allows one download per ~2 h update per IP
+(repeats get HTTP 403) and firewalls IPs after ~50 errors, so nginx serves the stale copy on 403/errors. In dev,
+`vite.config.js` serves `dev-data/starlink.json` (gitignored); if missing it is downloaded once. Delete it to refresh,
+at most once every 2 hours. Region notes live in `src/data/regions.json` with sources and dates.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

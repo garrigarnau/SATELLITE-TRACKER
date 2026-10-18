@@ -1,0 +1,144 @@
+/* ---------- Starlink over contested regions ---------- */
+.sl-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 10px 24px; margin-bottom: 10px; }
+.sl-head__title {
+  margin: 0; font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.05;
+  background: var(--accent-grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-wrap: balance;
+}
+.sl-head__side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.sl-head__side .chips { margin-bottom: 0; }
+.sl-head__meta { margin: 0; font-size: 12px; color: var(--faint); font-variant-numeric: tabular-nums; text-align: right; }
+
+.sl-lede { margin: 0 0 10px; max-width: 72ch; color: var(--muted); font-size: 15px; }
+.sl-banner {
+  position: relative; margin: 0 0 14px; padding: 9px 14px; border-radius: var(--radius);
+  background: var(--surface); border: 1px solid var(--line); font-size: 13px; color: var(--muted);
+}
+.sl-banner::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, #fff, var(--magenta)); }
+.sl-banner strong { color: var(--text); font-weight: 600; }
+.starlink .notice { margin-bottom: 10px; }
+
+.sl-body { display: flex; flex-direction: column; gap: 10px; }
+.sl-main { order: 1; display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 10px; align-items: stretch; }
+.sl-cards { order: 2; }
+/* The map grows with the side column so the two line up. */
+.sl-map { min-height: 560px; }
+.sl-side { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+
+/* Canvas layer of every satellite (components/SatDots.jsx). */
+.sat-dots { pointer-events: none; }
+
+/* Selected region */
+.sl-detail__name { margin: 0; font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; }
+.sl-detail__name span { margin-left: 4px; font-size: 12px; font-weight: 500; color: var(--faint); letter-spacing: 0; }
+.sl-detail__count { display: flex; align-items: baseline; gap: 10px; margin: 8px 0 6px; font-size: 12px; color: var(--muted); line-height: 1.35; }
+.sl-detail__count strong {
+  font-size: 2.6rem; font-weight: 600; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; color: var(--text);
+}
+.sl-detail__count .skeleton--text { width: 3ch; height: 2.4rem; }
+.sl-detail__stats { grid-template-columns: repeat(4, 1fr); margin-top: 8px; }
+.sl-detail__stats .stat { min-height: 0; padding: 7px 8px; }
+.sl-detail__ctx { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.sl-detail__ctx p { margin: 0; }
+.sl-detail__src { margin-top: 6px !important; font-size: 12px; color: var(--faint); }
+.sl-detail__src a, .sl-sources a, .sl-attrib a { color: var(--text); text-decoration-color: rgba(247, 0, 255, 0.6); text-underline-offset: 3px; }
+.sl-detail__sats { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+.sl-detail__label { margin: 0 0 2px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
+.sl-detail .sats { overflow: visible; }
+.sat--static { cursor: default; }
+.sat--static:hover { background: transparent; }
+
+/* Caveats */
+.sl-caveats__title { margin: 0 0 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+details.sl-caveats summary { cursor: pointer; margin: 0; }
+details.sl-caveats[open] summary { margin-bottom: 6px; }
+.sl-caveats__list { margin: 0; padding-left: 16px; font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+.sl-caveats__list li + li { margin-top: 5px; }
+.sl-caveats__list strong { color: var(--text); font-weight: 600; }
+
+/* Sparkline (components/Sparkline.jsx) */
+.spark { position: relative; display: inline-block; flex: none; line-height: 0; }
+.spark--interactive { display: block; width: 100%; margin-top: 2px; }
+.spark--empty { width: 120px; border-bottom: 1px dashed var(--line-strong); }
+.spark svg { display: block; overflow: visible; }
+.spark__band { fill: rgba(255, 255, 255, 0.05); }
+.spark__line { fill: none; stroke: #fff; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.spark__cross { stroke: var(--line-strong); stroke-width: 1; }
+.spark__now, .spark__hover {
+  position: absolute; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; pointer-events: none;
+}
+.spark__now { background: var(--magenta); box-shadow: 0 0 0 2px var(--surface); }
+.spark__hover { background: #fff; box-shadow: 0 0 0 2px var(--surface); }
+.spark__tip {
+  position: absolute; bottom: calc(100% + 4px); transform: translateX(-50%); padding: 3px 7px; white-space: nowrap; pointer-events: none;
+  border-radius: var(--radius-sm); background: var(--surface-2); border: 1px solid var(--line-strong);
+  font-size: 11px; line-height: 1.4; color: var(--muted); font-variant-numeric: tabular-nums;
+}
+.spark__tip strong { color: var(--text); }
+
+/* Region cards */
+/* Hairlines drawn by each card, so a short last row leaves no grey block. */
+.sl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.sl-cards__label { margin: 14px 0 6px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
+.rcard {
+  position: relative; display: flex; flex-direction: column; gap: 4px; min-width: 0;
+  padding: 12px 14px; border: 0; border-radius: 0; background: var(--surface); text-align: left; cursor: pointer;
+  box-shadow: 1px 0 0 var(--line), 0 1px 0 var(--line);
+  transition: background-color 160ms var(--ease);
+}
+.rcard:hover { background: var(--surface-2); }
+.rcard::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, #fff, var(--magenta)); opacity: 0; transition: opacity 160ms var(--ease); }
+.rcard.is-active { background: linear-gradient(90deg, rgba(176, 106, 184, 0.12), var(--surface-2) 45%); }
+.rcard.is-active::before, .rcard:hover::before { opacity: 1; }
+.rcard__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.rcard__name { font-size: 0.98rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rcard__country { flex: none; font-size: 11px; color: var(--faint); letter-spacing: 0.04em; }
+.rcard__row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.rcard__count { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.rcard__skel { width: 2.5ch; height: 1.4rem; }
+.rcard__meta { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.rcard__ctx {
+  margin-top: 2px; font-size: 12px; color: var(--faint); line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+/* Reference (control) cities: same layout, visually quieter. */
+.sl-grid--ref { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.rcard--ref { background: var(--bg); }
+.rcard--ref .rcard__name, .rcard--ref .rcard__count { color: var(--muted); }
+.rcard--ref .spark__line { stroke: var(--faint); }
+.rcard--ref .spark__now { background: var(--faint); }
+.rcard--ref.is-active .rcard__name, .rcard--ref.is-active .rcard__count { color: var(--text); }
+
+/* Notes */
+.sl-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 40px; margin-top: clamp(28px, 4vw, 44px); padding-top: 14px; border-top: 1px solid var(--line); }
+.sl-note p { margin: 0 0 8px; font-size: 13px; color: var(--muted); max-width: 70ch; }
+.sl-note__title { margin: 0 0 6px; font-size: 1.05rem; font-weight: 600; }
+.sl-sources { margin: 0 0 10px; padding: 0; list-style: none; font-size: 13px; color: var(--muted); }
+.sl-sources li + li { margin-top: 3px; }
+.sl-sources li > span:first-child { color: var(--faint); }
+.sl-attrib { font-size: 12px !important; color: var(--faint) !important; }
+
+@media (max-width: 900px) {
+  .sl-main { grid-template-columns: 1fr; }
+  .sl-map { height: 60vh; min-height: 320px; }
+  .sl-main { align-items: start; }
+  .sl-notes { grid-template-columns: 1fr; }
+}
+
+/* Phones: cards first, as a swipeable strip; then the map and details. */
+@media (max-width: 640px) {
+  .sl-head__side { align-items: flex-start; }
+  .sl-head__meta { text-align: left; }
+  .sl-cards { order: 0; }
+  .sl-grid {
+    display: flex; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+    margin: 0 calc(var(--pad) * -1); border-left: 0; border-right: 0; border-radius: 0;
+    padding: 0 var(--pad); scroll-padding: 0 var(--pad);
+  }
+  .rcard { flex: 0 0 72%; scroll-snap-align: start; box-shadow: 1px 0 0 var(--line); }
+  .sl-cards__label { margin-top: 10px; }
+}
+
+/* The "now" hint sits at the right edge of the panel; open it leftwards. */
+.sl-detail .term__hint { left: auto; right: 0; }

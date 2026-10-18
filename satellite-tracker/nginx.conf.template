@@ -75,6 +75,36 @@ server {
         add_header X-Cache $upstream_cache_status;
     }
 
+    # The whole Starlink catalogue (OMM JSON, ~5 MB, ~600 KB gzipped) for the
+    # /starlink page. One fixed cache key, so every visitor shares one upstream
+    # download per 2 h update; the lock (with a timeout longer than the download)
+    # keeps concurrent misses from each hitting CelesTrak, and stale copies are
+    # served when it answers 403 ("not updated since your last download").
+    location = /api/starlink {
+        rewrite ^ /NORAD/elements/gp.php?GROUP=starlink&FORMAT=json break;
+        proxy_pass https://celestrak.org;
+        proxy_set_header Host celestrak.org;
+        proxy_set_header Accept-Encoding "";
+        proxy_ssl_server_name on;
+        proxy_cache api;
+        proxy_cache_key "celestrak-gp-starlink-json";
+        proxy_cache_valid 200 2h;
+        proxy_cache_lock on;
+        proxy_cache_lock_timeout 60s;
+        proxy_cache_lock_age 60s;
+        proxy_cache_use_stale error timeout updating http_403 http_429 http_500 http_502 http_503 http_504;
+        proxy_cache_background_update on;
+        proxy_read_timeout 60s;
+        proxy_ignore_headers Cache-Control Expires Set-Cookie;
+        proxy_hide_header Content-Disposition;
+        gzip on;
+        gzip_proxied any;
+        gzip_types application/json;
+        gzip_min_length 1024;
+        add_header Cache-Control "public, max-age=1800";
+        add_header X-Cache $upstream_cache_status;
+    }
+
     location /assets/ {
         expires 1y;
         add_header Cache-Control "public, immutable";

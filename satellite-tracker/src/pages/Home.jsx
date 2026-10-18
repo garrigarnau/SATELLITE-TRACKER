@@ -197,6 +197,9 @@ function Overhead({ observer }) {
           <p className="overhead__count" aria-live="polite">
             {state.status === 'loading' ? 'Scanning the sky…' : `${state.list.length} above you`}
           </p>
+          {category === 52 && (
+            <Link className="overhead__more" to={`/starlink${q}`}>How many are over Kyiv, Tehran or Caracas right now? →</Link>
+          )}
           {state.status === 'error' && <Notice tone="error">Couldn&rsquo;t reach the satellite data service.</Notice>}
           {state.status === 'ready' && !state.list.length && <Notice>Nothing in this category is above you right now.</Notice>}
           <Ownership

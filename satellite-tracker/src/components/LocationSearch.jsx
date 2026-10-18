@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { geocode } from '../lib/api'
+import { track } from '../lib/track'
 
 // City search with suggestions, plus "use my location". Calls onSelect({lat, lon, alt, name}).
 export default function LocationSearch({ onSelect, compact = false, autoFocus = false }) {
@@ -37,6 +38,8 @@ export default function LocationSearch({ onSelect, compact = false, autoFocus = 
   const pick = (r) => {
     setQuery('')
     setResults([])
+    // Country only (last part of the place name), never the coordinates.
+    track('location_set', { method: 'search', country: r.name.split(',').pop().trim() })
     onSelect(r)
   }
 
@@ -50,6 +53,7 @@ export default function LocationSearch({ onSelect, compact = false, autoFocus = 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setStatus('idle')
+        track('location_set', { method: 'gps' })
         onSelect({ lat: pos.coords.latitude, lon: pos.coords.longitude, alt: pos.coords.altitude || 0, name: 'My location' })
       },
       () => {

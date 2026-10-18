@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { brightness, fmtCountdown, fmtDay, fmtDuration, fmtTime } from '../lib/format'
 import { CLOUDED_OUT, sky } from '../lib/weather'
+import { track } from '../lib/track'
 import './weather.css'
 
 // One naked-eye pass: when, how long, how high, and where to look.
@@ -13,7 +14,7 @@ export default function PassCard({ pass, now, to, onSelect, selected = false, sh
   const className = ['pass', live && 'pass--live', cloudy && 'pass--cloudy', selected && 'is-active'].filter(Boolean).join(' ')
   const Root = to ? Link : 'div'
   const rootProps = to
-    ? { to }
+    ? { to, onClick: () => track('satellite_opened', { id: pass.satid, from: 'pass' }) }
     : {
         role: 'button',
         tabIndex: 0,

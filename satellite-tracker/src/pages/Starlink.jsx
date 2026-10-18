@@ -12,6 +12,7 @@ import { hasDetailPage } from '../lib/starlink'
 import { fmtNum } from '../lib/format'
 import data from '../data/regions.json'
 import './starlink.css'
+import { track } from '../lib/track'
 
 const REGIONS = data.regions
 const DEFAULT_REGION = REGIONS[0].id
@@ -322,7 +323,7 @@ function Detail({ region, count, values, stepMin, max, threshold, above, loading
               )
               return (
                 <li key={s.id}>
-                  {hasDetailPage(s.id) ? <Link className="sat" to={`/satellite/${s.id}${q}`}>{body}</Link> : <span className="sat sat--static">{body}</span>}
+                  {hasDetailPage(s.id) ? <Link className="sat" to={`/satellite/${s.id}${q}`} onClick={() => track('satellite_opened', { id: s.id, from: 'starlink' })}>{body}</Link> : <span className="sat sat--static">{body}</span>}
                 </li>
               )
             })}

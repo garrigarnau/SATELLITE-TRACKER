@@ -97,10 +97,41 @@ button { font: inherit; color: inherit; }
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
 }
 
+/* EN | ES switch: two short links, the active one solid. */
+.lang { display: flex; margin-left: 8px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); overflow: hidden; }
+.lang__opt {
+  display: flex; align-items: center; justify-content: center; min-width: 32px; height: 28px; padding: 0 8px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-decoration: none; color: var(--muted);
+  transition: color 160ms var(--ease), background-color 160ms var(--ease);
+}
+.lang__opt + .lang__opt { border-left: 1px solid var(--line-strong); }
+.lang__opt:hover { color: var(--text); }
+.lang__opt.is-active { color: #000; background: #fff; }
+
 @media (max-width: 640px) {
   .brand span { display: none; }
   .header__link { padding: 8px 10px; }
   .loc__chip { max-width: 140px; }
+}
+/* Phones: links stay on one line; the location chip shrinks to its pin (the
+   name is still its accessible label) so the EN | ES switch always fits. */
+@media (max-width: 520px) {
+  .header__nav { gap: 0; min-width: 0; }
+  .header__link { padding: 8px 6px; font-size: 12px; white-space: nowrap; }
+  .loc { margin-left: 2px; }
+  .loc__chip { padding: 0; width: 30px; height: 30px; justify-content: center; }
+  .loc__name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .loc__pin { width: 8px; height: 8px; }
+  .lang { margin-left: 6px; }
+  .lang__opt { min-width: 26px; padding: 0 5px; height: 26px; }
+}
+@media (max-width: 360px) {
+  /* Too narrow for four controls; Starlink is still linked from the home page. */
+  .header__link--starlink { display: none; }
+  .header__inner { gap: 8px; }
+  .header__link { padding: 8px 4px; font-size: 11px; }
+  .lang { margin-left: 4px; }
+  .lang__opt { min-width: 24px; padding: 0 4px; }
 }
 
 /* ---------- Hero ---------- */

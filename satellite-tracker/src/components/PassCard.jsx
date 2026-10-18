@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { brightness, fmtCountdown, fmtDay, fmtDuration, fmtTime } from '../lib/format'
+import { brightness, dir, fmtCountdown, fmtDay, fmtDuration, fmtTime } from '../lib/format'
+import { useT } from '../lib/i18n'
 import { CLOUDED_OUT, sky } from '../lib/weather'
 import { track } from '../lib/track'
 import './weather.css'
@@ -8,6 +9,7 @@ import './weather.css'
 // With `to` it's a link; with `onSelect` it's a toggle inside a pass picker.
 // `cloud`: cloud cover % at peak; 'loading' or null show a dash, undefined hides it.
 export default function PassCard({ pass, now, to, onSelect, selected = false, showName = true, cloud }) {
+  const t = useT()
   const b = brightness(pass.mag)
   const live = pass.startUTC * 1000 <= now && now <= pass.endUTC * 1000
   const cloudy = typeof cloud === 'number' && cloud >= CLOUDED_OUT
@@ -33,32 +35,32 @@ export default function PassCard({ pass, now, to, onSelect, selected = false, sh
       <div className="pass__when">
         <span className="pass__day">{fmtDay(pass.startUTC)}</span>
         <span className="pass__time">{fmtTime(pass.startUTC)}</span>
-        <span className="pass__count">{live ? 'Visible now' : fmtCountdown(pass.startUTC, now)}</span>
+        <span className="pass__count">{live ? t('pass.visibleNow') : fmtCountdown(pass.startUTC, now)}</span>
       </div>
 
       <div className="pass__body">
         {showName && <h3 className="pass__name">{pass.satname}</h3>}
         <p className="pass__dir">
-          {pass.startAzCompass} <span aria-hidden="true">→</span><span className="sr-only">to</span> {pass.endAzCompass}
+          {dir(pass.startAzCompass)} <span aria-hidden="true">→</span><span className="sr-only">{t('pass.to')}</span> {dir(pass.endAzCompass)}
           <span className="pass__sep" aria-hidden="true">·</span>
-          peaks at {Math.round(pass.maxEl)}° in the {pass.maxAzCompass}
+          {t('pass.peaks', { el: Math.round(pass.maxEl), dir: dir(pass.maxAzCompass) })}
         </p>
       </div>
 
       <dl className="pass__stats">
         <div>
-          <dt>Duration</dt>
+          <dt>{t('pass.duration')}</dt>
           <dd>{fmtDuration(pass.duration)}</dd>
         </div>
         <div>
-          <dt>Height</dt>
+          <dt>{t('pass.height')}</dt>
           <dd>
             <span className="meter" style={{ '--v': Math.min(pass.maxEl, 90) / 90 }} aria-hidden="true" />
             {Math.round(pass.maxEl)}°
           </dd>
         </div>
         <div>
-          <dt>Brightness</dt>
+          <dt>{t('pass.brightness')}</dt>
           <dd>
             <span className="stars" data-level={b.level} aria-hidden="true"><i /><i /><i /><i /></span>
             {b.label}
@@ -71,15 +73,16 @@ export default function PassCard({ pass, now, to, onSelect, selected = false, sh
 }
 
 function SkyStat({ cloud }) {
+  const t = useT()
   const s = typeof cloud === 'number' ? sky(cloud) : null
-  const title = s ? `${Math.round(cloud)}% cloud cover forecast at peak` : cloud === 'loading' ? 'Loading forecast' : 'No forecast yet'
+  const title = s ? t('pass.cloudTitle', { pct: Math.round(cloud) }) : cloud === 'loading' ? t('pass.loadingForecast') : t('pass.noForecast')
   return (
     <div className="sky-stat" title={title}>
-      <dt>Sky</dt>
+      <dt>{t('pass.sky')}</dt>
       {s ? (
         <dd>
           <SkyIcon level={s.level} />
-          {s.label} {Math.round(cloud)}%
+          {t(`sky.${s.level}`)} {Math.round(cloud)}%
         </dd>
       ) : (
         <dd className="sky-stat--none">

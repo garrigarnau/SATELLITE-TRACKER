@@ -1,16 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSeo } from '../lib/seo'
-import { prettySatName, satelliteMeta } from '../lib/seo-data'
+import { META, prettySatNameFor } from '../lib/seo-data'
+import { useT } from '../lib/i18n'
 import { Link, useParams } from 'react-router-dom'
 import { Circle, Marker, Polyline, Tooltip } from 'react-leaflet'
 import { getTle, getVisualPasses, isQuotaError } from '../lib/api'
 import { footprintKm, groundTrack, lookAngles, periodMinutes, positionAt, skyPath, toSatrec } from '../lib/orbit'
 import { useObserver, observerQuery } from '../lib/observer'
 import { useNow } from '../lib/useNow'
-import { compass, fmtCoord, fmtNum } from '../lib/format'
+import { compass, dir, fmtCoord, fmtNum } from '../lib/format'
 import WorldMap, { dotIcon, trackedIcon } from '../components/WorldMap'
 import PassCard from '../components/PassCard'
-import { passCloud, sky, useCloudForecast } from '../lib/weather'
+import { CLOUDED_OUT, passCloud, sky, useCloudForecast } from '../lib/weather'
 import SkyChart from '../components/SkyChart'
 import LocationSearch from '../components/LocationSearch'
 import { track } from '../lib/track'
@@ -18,6 +19,7 @@ import { Notice, Skeleton, Term } from '../components/Status'
 
 export default function Satellite() {
   const { id } = useParams()
+  const t = useT()
   const [observer, setObserver] = useObserver()
   const now = useNow(1000)
   const [tle, setTle] = useState({ status: 'loading' })
@@ -50,13 +52,13 @@ export default function Satellite() {
   // Built once per satellite so the halo animation isn't restarted every tick.
   const icon = useMemo(() => trackedIcon(tle.name), [tle.name])
 
-  useSeo(satelliteMeta(id, prettySatName(id, tle.name), observer?.name))
+  useSeo(META[t.locale].satellite(id, prettySatNameFor(t.locale, id, tle.name), observer?.name))
 
   if (tle.status === 'error') {
     return (
       <div className="wrap page">
-        <Notice tone="error" title="Satellite not found" action={<Link className="btn btn--ghost" to={`/${observerQuery(observer)}`}>Back to tonight</Link>}>
-          {tle.message}. Check the NORAD ID ({id}).
+        <Notice tone="error" title={t('sat.notFound')} action={<Link className="btn btn--ghost" to={t.lp(`/${observerQuery(observer)}`)}>{t('common.backTonight')}</Link>}>
+          {t('sat.checkId', { message: tle.message, id })}
         </Notice>
       </div>
     )
@@ -67,16 +69,16 @@ export default function Satellite() {
 
   return (
     <div className="wrap page">
-      <Link to={`/${observerQuery(observer)}`} className="back">← Tonight</Link>
+      <Link to={t.lp(`/${observerQuery(observer)}`)} className="back">{t('sat.back')}</Link>
 
       <header className="sat-head">
         <div>
           <p className="eyebrow">NORAD {id}</p>
-          <h1 className="sat-head__title">{tle.name || <span className="skeleton skeleton--text" />}</h1>
+          <h1 className="sat-head__title">{tle.name ? (t.locale === 'es' ? prettySatNameFor('es', id, tle.name) : tle.name) : <span className="skeleton skeleton--text" />}</h1>
         </div>
         {look && (
           <span className={up ? 'badge badge--up' : 'badge'}>
-            {up ? `Above your horizon · ${compass(look.azimuth)}` : 'Below your horizon'}
+            {up ? t('sat.above', { dir: compass(look.azimuth) }) : t('sat.below')}
           </span>
         )}
       </header>
@@ -93,38 +95,38 @@ export default function Satellite() {
           )}
           {observer && (
             <Marker position={[observer.lat, observer.lon]} icon={dotIcon('you')}>
-              <Tooltip>You</Tooltip>
+              <Tooltip>{t('common.you')}</Tooltip>
             </Marker>
           )}
         </WorldMap>
 
         <aside className="panel">
           <div className="panel__head">
-            <h2 className="panel__title">Live</h2>
+            <h2 className="panel__title">{t('sat.live')}</h2>
             <label className="toggle">
               <input type="checkbox" checked={follow} onChange={(e) => setFollow(e.target.checked)} />
-              <span>Follow on map</span>
+              <span>{t('sat.follow')}</span>
             </label>
           </div>
           {pos ? (
             <dl className="stats">
-              <Stat label="Latitude" value={fmtCoord(pos.lat, 'N', 'S')} />
-              <Stat label="Longitude" value={fmtCoord(pos.lon, 'E', 'W')} />
-              <Stat label="Altitude" value={`${fmtNum(pos.altKm)} km`} />
-              <Stat label="Speed" value={`${fmtNum(pos.speedKmS, 2)} km/s`} />
-              <Stat label="Orbit" value={`${fmtNum(period)} min`} />
+              <Stat label={t('sat.lat')} value={fmtCoord(pos.lat, 'N', 'S')} />
+              <Stat label={t('sat.lon')} value={fmtCoord(pos.lon, 'E', dir('W'))} />
+              <Stat label={t('sat.alt')} value={`${fmtNum(pos.altKm)} km`} />
+              <Stat label={t('sat.speed')} value={`${fmtNum(pos.speedKmS, 2)} km/s`} />
+              <Stat label={t('sat.orbit')} value={`${fmtNum(period)} min`} />
               {look && (
                 <>
-                  <Stat label={<Term hint="Compass direction to look, in degrees clockwise from north.">Azimuth</Term>} value={`${fmtNum(look.azimuth)}° ${compass(look.azimuth)}`} />
-                  <Stat label={<Term hint="Angle above the horizon. 0° is the horizon, 90° is straight up.">Elevation</Term>} value={`${fmtNum(look.elevation)}°`} />
-                  <Stat label="Distance" value={`${fmtNum(look.rangeKm)} km`} />
+                  <Stat label={<Term hint={t('sat.azimuthHint')}>{t('sat.azimuth')}</Term>} value={`${fmtNum(look.azimuth)}° ${compass(look.azimuth)}`} />
+                  <Stat label={<Term hint={t('sat.elevationHint')}>{t('sat.elevation')}</Term>} value={`${fmtNum(look.elevation)}°`} />
+                  <Stat label={t('sat.distance')} value={`${fmtNum(look.rangeKm)} km`} />
                 </>
               )}
             </dl>
           ) : (
             <div className="stats"><Skeleton rows={4} className="stat" /></div>
           )}
-          <p className="panel__note">Computed in your browser from the satellite&rsquo;s latest orbital elements.</p>
+          <p className="panel__note">{t('sat.computed')}</p>
         </aside>
       </div>
 
@@ -132,8 +134,8 @@ export default function Satellite() {
         <Passes id={id} observer={observer} satrec={satrec} now={now} look={look} />
       ) : (
         <section className="section">
-          <h2 className="section__title">When can you see it?</h2>
-          <p className="section__note">Set your location to get visible passes and a sky chart.</p>
+          <h2 className="section__title">{t('sat.whenTitle')}</h2>
+          <p className="section__note">{t('sat.whenNote')}</p>
           <LocationSearch onSelect={setObserver} />
         </section>
       )}
@@ -151,6 +153,7 @@ function Stat({ label, value }) {
 }
 
 function Passes({ id, observer, satrec, now, look }) {
+  const t = useT()
   const [state, setState] = useState({ status: 'loading', passes: [] })
   const [selected, setSelected] = useState(0)
   const [limit, setLimit] = useState(6)
@@ -180,24 +183,20 @@ function Passes({ id, observer, satrec, now, look }) {
     <section className="section" aria-labelledby="sat-passes">
       <div className="section__head">
         <div>
-          <p className="eyebrow">From {observer.name}</p>
-          <h2 id="sat-passes" className="section__title">Visible passes</h2>
+          <p className="eyebrow">{t('sat.from', { city: observer.name })}</p>
+          <h2 id="sat-passes" className="section__title">{t('sat.passesTitle')}</h2>
         </div>
-        <p className="section__note">Next 10 days. Pick a pass to see its path across your sky.</p>
+        <p className="section__note">{t('sat.passesNote')}</p>
       </div>
 
       {state.status === 'loading' && <div className="passes"><Skeleton rows={2} /></div>}
       {state.status === 'error' && (
         <Notice tone="error">
-          {state.quota
-            ? 'The free pass-prediction quota for this hour is used up. Predictions will be back within the hour.'
-            : 'Couldn’t load passes for this satellite.'}
+          {state.quota ? t('passes.quota') : t('sat.passesError')}
         </Notice>
       )}
       {state.status === 'ready' && !passes.length && (
-        <Notice title="No naked-eye passes in the next 10 days">
-          It may be too faint, or only crosses your sky in daylight or Earth&rsquo;s shadow. You can still follow it live above.
-        </Notice>
+        <Notice title={t('sat.noneTitle')}>{t('sat.noneBody')}</Notice>
       )}
 
       {pass && (
@@ -205,8 +204,8 @@ function Passes({ id, observer, satrec, now, look }) {
           <div className="sky-card">
             <SkyChart path={path} pass={pass} current={during ? look : null} />
             <p className="sky-card__caption">
-              Face <strong>{pass.startAzCompass}</strong>, it rises to <strong>{Math.round(pass.maxEl)}°</strong> in the {pass.maxAzCompass} and sets in the {pass.endAzCompass}.
-              {passSky && <> Forecast: {passSky.phrase} ({Math.round(passCloudPct)}% cloud).</>}
+              {t('sat.caption', { start: dir(pass.startAzCompass), el: Math.round(pass.maxEl), max: dir(pass.maxAzCompass), end: dir(pass.endAzCompass) })}
+              {passSky && <> {t('sat.forecast', { phrase: skyPhrase(t, passSky, passCloudPct), pct: Math.round(passCloudPct) })}</>}
             </p>
           </div>
           <ol className="pass-list">
@@ -218,7 +217,7 @@ function Passes({ id, observer, satrec, now, look }) {
             {passes.length > limit && (
               <li>
                 <button type="button" className="btn btn--ghost" onClick={() => { track('show_more_passes', { page: 'satellite' }); setLimit((l) => l + 6) }}>
-                  Show more passes ({passes.length - limit})
+                  {t('passes.more', { n: passes.length - limit })}
                 </button>
               </li>
             )}
@@ -227,4 +226,10 @@ function Passes({ id, observer, satrec, now, look }) {
       )}
     </section>
   )
+}
+
+// Forecast phrase for the sky-card caption, e.g. "clear skies".
+function skyPhrase(t, s, pct) {
+  if (s.level === 'cloudy' && pct >= CLOUDED_OUT) return t('skyPhrase.cloudedOut')
+  return t(`skyPhrase.${s.level}`)
 }

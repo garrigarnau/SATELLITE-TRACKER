@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSeo } from '../lib/seo'
-import { STARLINK_META } from '../lib/seo-data'
+import { META } from '../lib/seo-data'
+import { intlLocale, regionText, useT } from '../lib/i18n'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Circle, CircleMarker, Tooltip, useMap } from 'react-leaflet'
 import WorldMap from '../components/WorldMap'
@@ -28,14 +29,18 @@ if (import.meta.env.DEV) {
   }
 }
 
-const monthFmt = new Intl.DateTimeFormat('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' })
-const dayFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
-const utcFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })
+// Day-first dates in both languages ("17 Feb 2026" / "17 feb 2026").
+const dateLocale = (locale) => intlLocale(locale) || 'en-GB'
+const monthFmt = (l) => new Intl.DateTimeFormat(dateLocale(l), { month: 'short', year: 'numeric', timeZone: 'UTC' })
+const dayFmt = (l) => new Intl.DateTimeFormat(dateLocale(l), { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
+const utcFmt = (l) => new Intl.DateTimeFormat(dateLocale(l), { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })
 // "2026-02-17" -> "17 Feb 2026", "2024-02" -> "Feb 2024".
-const fmtAsOf = (s) => (s.length <= 7 ? monthFmt.format(new Date(`${s}-01T00:00Z`)) : dayFmt.format(new Date(`${s}T00:00Z`)))
+const fmtAsOf = (s, l) => (s.length <= 7 ? monthFmt(l).format(new Date(`${s}-01T00:00Z`)) : dayFmt(l).format(new Date(`${s}T00:00Z`)))
 const mean = (v) => (v?.length ? v.reduce((a, b) => a + b, 0) / v.length : null)
 
 export default function Starlink() {
+  const t = useT()
+  const L = t.locale
   const [params, setParams] = useSearchParams()
   const [observer] = useObserver()
   const q = observerQuery(observer)
@@ -51,7 +56,7 @@ export default function Starlink() {
   const series = cov.forecast?.series[tIndex]
   const sharedMax = useMemo(() => (series ? Math.max(...series.flat()) : 0), [series])
 
-  useSeo(STARLINK_META)
+  useSeo(META[L].starlink)
 
   const select = (id) =>
     setParams((prev) => {
@@ -78,11 +83,11 @@ export default function Starlink() {
     <div className="wrap page starlink">
       <header className="sl-head">
         <div>
-          <p className="eyebrow">Right now · computed in your browser</p>
-          <h1 className="sl-head__title">Starlink over contested regions</h1>
+          <p className="eyebrow">{t('sl.eyebrow')}</p>
+          <h1 className="sl-head__title">{t('sl.title')}</h1>
         </div>
         <div className="sl-head__side">
-          <div className="chips" role="radiogroup" aria-label="Minimum elevation">
+          <div className="chips" role="radiogroup" aria-label={t('sl.minElevation')}>
             {THRESHOLDS.map((t, i) => (
               <button key={t} type="button" role="radio" aria-checked={i === tIndex} className="chip" onClick={() => setTIndex(i)}>
                 ≥{t}°
@@ -91,31 +96,22 @@ export default function Starlink() {
           </div>
           <p className="sl-head__meta">
             {meta
-              ? <>Data: CelesTrak · {fmtNum(meta.count)} satellites · elements to {utcFmt.format(meta.newestEpoch)} UTC</>
-              : 'Data: CelesTrak'}
+              ? t('sl.dataFull', { n: fmtNum(meta.count), date: utcFmt(L).format(meta.newestEpoch) })
+              : t('sl.data')}
           </p>
         </div>
       </header>
 
-      <p className="sl-lede">
-        How many Starlink satellites are high enough in the sky over these places to talk to a dish on the ground — right now and over
-        the next 90 minutes. It is a geometry count, computed from public orbital data. It does not tell you whether Starlink service is
-        switched on, legal, or being used there.
-      </p>
+      <p className="sl-lede">{t('sl.lede')}</p>
       <p className="sl-banner">
-        <strong>Coverage is not service.</strong> SpaceX switches service on or off by location in software; satellites pass over every
-        country alike.
+        <strong>{t('sl.bannerStrong')}</strong> {t('sl.banner')}
       </p>
 
       {cov.status === 'error' && (
-        <Notice tone="error" title="Couldn’t load the Starlink orbits">
-          The orbital data service didn&rsquo;t answer ({cov.error}). It refreshes every two hours; try again in a few minutes.
-        </Notice>
+        <Notice tone="error" title={t('sl.errorTitle')}>{t('sl.error', { error: cov.error })}</Notice>
       )}
       {stale && (
-        <Notice title="Orbital data is out of date">
-          The newest elements are from {utcFmt.format(meta.newestEpoch)} UTC, so positions may be off by more than usual.
-        </Notice>
+        <Notice title={t('sl.staleTitle')}>{t('sl.stale', { date: utcFmt(L).format(meta.newestEpoch) })}</Notice>
       )}
 
       <div className="sl-body">
@@ -136,7 +132,7 @@ export default function Starlink() {
                 radius={2.6}
                 pathOptions={{ color: '#ffffff', weight: 0, fillColor: '#ffffff', fillOpacity: 0.95 }}
               >
-                <Tooltip>{`${s.name} · ${Math.round(s.el)}° up`}</Tooltip>
+                <Tooltip>{t('sl.satTip', { name: s.name, el: Math.round(s.el) })}</Tooltip>
               </CircleMarker>
             ))}
             {REGIONS.map((r) => (
@@ -151,7 +147,7 @@ export default function Starlink() {
                 }
                 eventHandlers={{ click: () => select(r.id) }}
               >
-                <Tooltip>{r.label}</Tooltip>
+                <Tooltip>{regionText(r, 'label', L)}</Tooltip>
               </CircleMarker>
             ))}
           </WorldMap>
@@ -172,13 +168,13 @@ export default function Starlink() {
           </div>
         </div>
 
-        <section className="sl-cards" aria-label="Regions">
+        <section className="sl-cards" aria-label={t('sl.regions')}>
           <div className="sl-grid">
             {REGIONS.filter((r) => r.kind !== 'control').map((r) => (
               <RegionCard key={r.id} region={r} index={REGIONS.indexOf(r)} {...{ counts, series, sharedMax, selectedId, select, loading }} />
             ))}
           </div>
-          <p className="sl-cards__label">Reference cities</p>
+          <p className="sl-cards__label">{t('sl.reference')}</p>
           <div className="sl-grid sl-grid--ref">
             {REGIONS.filter((r) => r.kind === 'control').map((r) => (
               <RegionCard key={r.id} region={r} index={REGIONS.indexOf(r)} {...{ counts, series, sharedMax, selectedId, select, loading }} />
@@ -189,25 +185,19 @@ export default function Starlink() {
 
       <section className="sl-notes">
         <div className="sl-note">
-          <h2 className="sl-note__title">How we count</h2>
+          <h2 className="sl-note__title">{t('sl.howTitle')}</h2>
+          <p>{t('sl.how1')}</p>
           <p>
-            We take the public orbital elements of every Starlink satellite (about 11,000, from CelesTrak, refreshed every two hours) and
-            calculate, every few seconds, which ones are at least 25° above the horizon from each city listed. 25° is roughly the lowest
-            angle a Starlink dish is designed to use. At that angle a satellite 550 km up can be as far as ~940 km away across the ground,
-            so a city&rsquo;s count also covers its neighbours.
-          </p>
-          <p>
-            The 90-minute lines share one scale across all cards, so their heights compare directly. Counts at the threshold
-            flicker by a few as satellites cross it; read the trend, not single-digit changes.
-            {cov.plan.lite && ' To save battery on this device, counts refresh every 10 s and the satellite layer shows only the selected region.'}
+            {t('sl.how2')}
+            {cov.plan.lite && t('sl.lite')}
           </p>
         </div>
         <div className="sl-note">
-          <h2 className="sl-note__title">Sources</h2>
+          <h2 className="sl-note__title">{t('sl.sources')}</h2>
           <ul className="sl-sources">
             {REGIONS.filter((r) => r.sources?.length).map((r) => (
               <li key={r.id}>
-                <span>{r.label}:</span>{' '}
+                <span>{regionText(r, 'label', L)}:</span>{' '}
                 {r.sources.map((s, i) => (
                   <span key={s.url}>
                     {i > 0 && ' · '}
@@ -218,9 +208,9 @@ export default function Starlink() {
             ))}
           </ul>
           <p className="sl-attrib">
-            Orbital data: <a href="https://celestrak.org/NORAD/elements/" target="_blank" rel="noreferrer">CelesTrak</a> (GP, derived from
-            18th Space Defense Squadron data). Context notes link to their sources; last reviewed {fmtAsOf(data.reviewed)}.
-            {reviewedDays > REVIEW_MAX_DAYS && ' These notes may be out of date.'}
+            {t('sl.attrib1')} <a href="https://celestrak.org/NORAD/elements/" target="_blank" rel="noreferrer">CelesTrak</a>{' '}
+            {t('sl.attrib2', { date: fmtAsOf(data.reviewed, L) })}
+            {reviewedDays > REVIEW_MAX_DAYS && t('sl.outdated')}
           </p>
         </div>
       </section>
@@ -241,6 +231,7 @@ function FitContainer() {
 }
 
 function RegionCard({ region, index, counts, series, sharedMax, selectedId, select, loading }) {
+  const t = useT()
   const values = series?.[index]
   const avg = mean(values)
   const control = region.kind === 'control'
@@ -253,50 +244,52 @@ function RegionCard({ region, index, counts, series, sharedMax, selectedId, sele
       onClick={() => select(region.id)}
     >
       <span className="rcard__head">
-        <span className="rcard__name">{region.label}</span>
-        <span className="rcard__country">{region.country}</span>
+        <span className="rcard__name">{regionText(region, 'label', t.locale)}</span>
+        <span className="rcard__country">{regionText(region, 'country', t.locale)}</span>
       </span>
       <span className="rcard__row">
         <span className="rcard__count">{loading || counts == null ? <span className="skeleton skeleton--text rcard__skel" /> : counts[index]}</span>
         <Sparkline values={values} max={sharedMax} />
       </span>
-      <span className="rcard__meta">{avg != null ? `avg ${Math.round(avg)} · next 90 min` : 'forecasting…'}</span>
-      {!control && <span className="rcard__ctx">{region.context}</span>}
+      <span className="rcard__meta">{avg != null ? t('sl.avg', { n: Math.round(avg) }) : t('sl.forecasting')}</span>
+      {!control && <span className="rcard__ctx">{regionText(region, 'context', t.locale)}</span>}
     </button>
   )
 }
 
 function Detail({ region, count, values, stepMin, max, threshold, above, loading, q }) {
+  const t = useT()
+  const L = t.locale
   const lo = values ? Math.min(...values) : null
   const hi = values ? Math.max(...values) : null
   const avg = mean(values)
   return (
     <aside className="panel sl-detail" aria-labelledby="sl-detail-title">
-      <p className="eyebrow">Selected · ≥{threshold}° elevation</p>
+      <p className="eyebrow">{t('sl.selected', { t: threshold })}</p>
       <h2 id="sl-detail-title" className="sl-detail__name">
-        {region.label} <span>{region.country}</span>
+        {regionText(region, 'label', L)} <span>{regionText(region, 'country', L)}</span>
       </h2>
       <p className="sl-detail__count" aria-live="polite">
         {loading || count == null ? <span className="skeleton skeleton--text" /> : <strong>{count}</strong>}
         <span>
-          Starlinks at least {threshold}° above the horizon{' '}
-          <Term hint="Counted from one point in the city. The dashed circle on the map is the ground area those satellites sit over.">now</Term>
+          {t('sl.countText', { t: threshold })}{' '}
+          <Term hint={t('sl.nowHint')}>{t('sl.now')}</Term>
         </span>
       </p>
       <Sparkline values={values} max={max} stepMin={stepMin} width={260} height={56} interactive />
       <dl className="stats sl-detail__stats">
-        <div className="stat"><dt>Min</dt><dd>{lo ?? '—'}</dd></div>
-        <div className="stat"><dt>Max</dt><dd>{hi ?? '—'}</dd></div>
-        <div className="stat"><dt>Average</dt><dd>{avg != null ? Math.round(avg) : '—'}</dd></div>
-        <div className="stat"><dt>Window</dt><dd>90 min</dd></div>
+        <div className="stat"><dt>{t('sl.min')}</dt><dd>{lo ?? '—'}</dd></div>
+        <div className="stat"><dt>{t('sl.max')}</dt><dd>{hi ?? '—'}</dd></div>
+        <div className="stat"><dt>{t('sl.average')}</dt><dd>{avg != null ? Math.round(avg) : '—'}</dd></div>
+        <div className="stat"><dt>{t('sl.window')}</dt><dd>90 min</dd></div>
       </dl>
 
       {region.context && (
         <div className="sl-detail__ctx">
-          <p>{region.context}</p>
+          <p>{regionText(region, 'context', L)}</p>
           {region.sources?.length > 0 && (
             <p className="sl-detail__src">
-              {region.asOf && <>As of {fmtAsOf(region.asOf)} · </>}
+              {region.asOf && <>{t('sl.asOf', { date: fmtAsOf(region.asOf, L) })} · </>}
               {region.sources.map((s, i) => (
                 <span key={s.url}>
                   {i > 0 && ' · '}
@@ -310,19 +303,19 @@ function Detail({ region, count, values, stepMin, max, threshold, above, loading
 
       {above.length > 0 && (
         <div className="sl-detail__sats">
-          <p className="sl-detail__label">Highest right now</p>
+          <p className="sl-detail__label">{t('sl.highest')}</p>
           <ul className="sats">
             {above.slice(0, 3).map((s) => {
               const body = (
                 <>
                   <span className="sat__name">{s.name}</span>
-                  <span className="sat__meta">#{s.id} · {fmtNum(s.altKm)} km up</span>
+                  <span className="sat__meta">{t('sl.satMeta', { id: s.id, alt: fmtNum(s.altKm) })}</span>
                   <span className="sat__alt">{Math.round(s.el)}°</span>
                 </>
               )
               return (
                 <li key={s.id}>
-                  {hasDetailPage(s.id) ? <Link className="sat" to={`/satellite/${s.id}${q}`} onClick={() => track('satellite_opened', { id: s.id, from: 'starlink' })}>{body}</Link> : <span className="sat sat--static">{body}</span>}
+                  {hasDetailPage(s.id) ? <Link className="sat" to={t.lp(`/satellite/${s.id}${q}`)} onClick={() => track('satellite_opened', { id: s.id, from: 'starlink' })}>{body}</Link> : <span className="sat sat--static">{body}</span>}
                 </li>
               )
             })}
@@ -335,6 +328,7 @@ function Detail({ region, count, values, stepMin, max, threshold, above, loading
 
 // Always open on desktop; collapsible on phones.
 function Caveats() {
+  const t = useT()
   const query = '(min-width: 900px)'
   const [wide, setWide] = useState(() => window.matchMedia(query).matches)
   useEffect(() => {
@@ -345,24 +339,22 @@ function Caveats() {
   }, [])
   const body = (
     <ul className="sl-caveats__list">
-      <li><strong>Coverage is not service.</strong> SpaceX turns service on or off by location in software (geofencing). Satellites pass over every country, including ones where Starlink is not licensed or has been switched off.</li>
-      <li><strong>No usage data.</strong> Nothing here measures how many dishes are active or who uses them.</li>
-      <li><strong>Military satellites aren&rsquo;t included.</strong> SpaceX&rsquo;s Starshield satellites for governments are a separate system and largely absent from public catalogues.</li>
-      <li><strong>Latitude, not politics.</strong> The numbers mostly reflect how far a place is from the equator. Compare with Madrid and Quito, shown for reference.</li>
-      <li><strong>Predictions drift.</strong> Positions come from orbital models that are accurate to a few kilometres for a day or two; satellites that manoeuvre can be off by more.</li>
+      {[1, 2, 3, 4, 5].map((i) => (
+        <li key={i}><strong>{t(`sl.c${i}s`)}</strong> {t(`sl.c${i}`)}</li>
+      ))}
     </ul>
   )
   if (wide) {
     return (
       <section className="panel sl-caveats" aria-labelledby="sl-caveats-title">
-        <h2 id="sl-caveats-title" className="sl-caveats__title">What this doesn&rsquo;t show</h2>
+        <h2 id="sl-caveats-title" className="sl-caveats__title">{t('sl.caveatsTitle')}</h2>
         {body}
       </section>
     )
   }
   return (
     <details className="panel sl-caveats">
-      <summary className="sl-caveats__title">What this doesn&rsquo;t show</summary>
+      <summary className="sl-caveats__title">{t('sl.caveatsTitle')}</summary>
       {body}
     </details>
   )

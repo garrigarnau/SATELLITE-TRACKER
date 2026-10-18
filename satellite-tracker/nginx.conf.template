@@ -111,6 +111,7 @@ server {
     }
 
     location / {
-        try_files $uri /index.html;
+        # Prerendered routes (scripts/prerender.mjs) live at /route/index.html.
+        try_files $uri $uri/index.html /index.html;
     }
 }

@@ -19,6 +19,7 @@ import WorldMap, { dotIcon, trackedIcon } from '../components/WorldMap'
 import { Notice, Skeleton } from '../components/Status'
 import Ownership from '../components/Ownership'
 import { ownershipBreakdown, useOwnership } from '../lib/celestrak'
+import CityList from '../components/CityList'
 
 export default function Home() {
   const [observer, setObserver] = useObserver()
@@ -52,6 +53,9 @@ export default function Home() {
       <div className="wrap faq--home">
         <Faq />
       </div>
+      <div className="wrap">
+        <CityList />
+      </div>
       </>
     )
   }
@@ -67,7 +71,8 @@ export default function Home() {
 
 const PAGE = 6
 
-function Passes({ observer }) {
+// Also used by the city pages, which set their own metadata (seo={false}).
+export function Passes({ observer, seo = true }) {
   const t = useT()
   const now = useNow(1000).getTime()
   const [state, setState] = useState({ status: 'loading', passes: [] })
@@ -105,7 +110,7 @@ function Passes({ observer }) {
     : t.locale === 'es'
       ? `${nextName}, ${relative ? nextDay.toLowerCase() : `el ${nextDay}`} a las ${fmtTime(next.startUTC)}`
       : `${nextName}, ${relative ? nextDay.toLowerCase() : `on ${nextDay}`} at ${fmtTime(next.startUTC)}`
-  useSeo(META[t.locale].homeFor(observer.name, nextText))
+  useSeo(seo ? META[t.locale].homeFor(observer.name, nextText) : {})
 
   return (
     <section className="section" aria-labelledby="passes-title">

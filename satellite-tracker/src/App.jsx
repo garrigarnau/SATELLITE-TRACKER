@@ -8,6 +8,7 @@ import Satellite from './pages/Satellite'
 import About from './pages/About'
 import Starlink from './pages/Starlink'
 import Tiangong from './pages/Tiangong'
+import City from './pages/City'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -46,11 +47,13 @@ export default function App() {
           <Route path="/starlink" element={<Starlink />} />
           <Route path="/tiangong" element={<Tiangong />} />
           <Route path="/about" element={<About />} />
+          <Route path="/tonight/:slug" element={<City />} />
           <Route path="/es" element={<Home />} />
           <Route path="/es/satelite/:id" element={<Satellite />} />
           <Route path="/es/starlink" element={<Starlink />} />
           <Route path="/es/tiangong" element={<Tiangong />} />
           <Route path="/es/acerca" element={<About />} />
+          <Route path="/es/esta-noche/:slug" element={<City />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

@@ -5,6 +5,7 @@
 //   /satellite/:id    ↔ /es/satelite/:id
 //   /about            ↔ /es/acerca
 //   /starlink         ↔ /es/starlink
+//   /tonight/:slug    ↔ /es/esta-noche/:slug
 
 export const LOCALES = ['en', 'es']
 export const DEFAULT_LOCALE = 'en'
@@ -21,6 +22,7 @@ export function localizePath(path, locale) {
   if (pathname === '/' || pathname === '') out = '/es'
   else if (pathname.startsWith('/satellite/')) out = `/es/satelite/${pathname.slice('/satellite/'.length)}`
   else if (pathname === '/about') out = '/es/acerca'
+  else if (pathname.startsWith('/tonight/')) out = `/es/esta-noche/${pathname.slice('/tonight/'.length)}`
   else out = `/es${pathname}`
   return out + query
 }
@@ -31,6 +33,7 @@ export function toEnglishPath(pathname) {
   const rest = pathname.slice(3) || '/'
   if (rest.startsWith('/satelite/')) return `/satellite/${rest.slice('/satelite/'.length)}`
   if (rest === '/acerca') return '/about'
+  if (rest.startsWith('/esta-noche/')) return `/tonight/${rest.slice('/esta-noche/'.length)}`
   return rest
 }
 

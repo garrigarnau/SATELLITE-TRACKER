@@ -15,6 +15,9 @@ import SkyChart from '../components/SkyChart'
 import LocationSearch from '../components/LocationSearch'
 import { track } from '../lib/track'
 import { Notice, Skeleton, Term } from '../components/Status'
+import { FACTS, factRows, genericSummary } from '../lib/satellite-facts'
+import satcatFallback from '../data/satcat-fallback.json'
+import '../lib/satellite-facts.css'
 
 export default function Satellite() {
   const { id } = useParams()
@@ -128,6 +131,8 @@ export default function Satellite() {
         </aside>
       </div>
 
+      <SatelliteFacts id={id} name={prettySatName(id, tle.name)} satrec={satrec} />
+
       {observer ? (
         <Passes id={id} observer={observer} satrec={satrec} now={now} look={look} />
       ) : (
@@ -138,6 +143,63 @@ export default function Satellite() {
         </section>
       )}
     </div>
+  )
+}
+
+// Citable "About this satellite" block. Spotlight satellites get hand-checked
+// facts plus the CelesTrak SATCAT record the build fetched (/data/satcat.json,
+// falling back to the committed snapshot); others get only what the TLE tells us.
+let satcatPromise
+const loadSatcat = () =>
+  (satcatPromise ??= fetch('/data/satcat.json')
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error('no satcat'))))
+    .catch(() => satcatFallback))
+
+function SatelliteFacts({ id, name, satrec }) {
+  const [catalog, setCatalog] = useState(null)
+  useEffect(() => {
+    let alive = true
+    loadSatcat().then((c) => alive && setCatalog(c))
+    return () => { alive = false }
+  }, [])
+
+  const rec = catalog?.records?.[id] || null
+  const facts = FACTS[id]
+  const live = useMemo(() => {
+    if (!satrec) return null
+    const p = positionAt(satrec, new Date())
+    return p && { altKm: p.altKm, periodMin: periodMinutes(satrec), inclination: (satrec.inclo * 180) / Math.PI }
+  }, [satrec])
+
+  const rows = factRows(id, rec, live)
+  const summary = facts?.summary || genericSummary(name, live)
+  if (!rows.length && !summary) return null
+
+  return (
+    <section className="facts" aria-labelledby="facts-title">
+      <h2 id="facts-title" className="facts__title">About this satellite</h2>
+      {summary && <p className="facts__summary">{summary}</p>}
+      <dl className="facts__list">
+        {rows.map(([k, v]) => (
+          <div className="facts__row" key={k}>
+            <dt>{k}</dt>
+            <dd>{v}</dd>
+          </div>
+        ))}
+      </dl>
+      <p className="facts__meta">
+        {rec
+          ? `Orbit and catalogue data: CelesTrak SATCAT, updated ${catalog.fetched}.`
+          : 'Computed in your browser from the satellite\u2019s latest orbital elements.'}
+      </p>
+      {facts?.sources && (
+        <ul className="facts__sources">
+          {facts.sources.map((s) => (
+            <li key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{s.label}</a></li>
+          ))}
+        </ul>
+      )}
+    </section>
   )
 }
 

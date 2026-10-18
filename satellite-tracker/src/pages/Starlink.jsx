@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useSeo } from '../lib/seo'
+import { STARLINK_META } from '../lib/seo-data'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Circle, CircleMarker, Tooltip, useMap } from 'react-leaflet'
 import WorldMap from '../components/WorldMap'
@@ -49,10 +51,7 @@ export default function Starlink() {
   const series = cov.forecast?.series[tIndex]
   const sharedMax = useMemo(() => (series ? Math.max(...series.flat()) : 0), [series])
 
-  useEffect(() => {
-    document.title = 'Starlink over contested regions · Satellite Tracker'
-    return () => { document.title = 'Satellite Tracker' }
-  }, [])
+  useSeo(STARLINK_META)
 
   const select = (id) =>
     setParams((prev) => {

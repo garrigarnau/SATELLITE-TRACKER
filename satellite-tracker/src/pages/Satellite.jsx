@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useSeo } from '../lib/seo'
+import { prettySatName, satelliteMeta } from '../lib/seo-data'
 import { Link, useParams } from 'react-router-dom'
 import { Circle, Marker, Polyline, Tooltip } from 'react-leaflet'
 import { getTle, getVisualPasses, isQuotaError } from '../lib/api'
@@ -48,9 +50,7 @@ export default function Satellite() {
   // Built once per satellite so the halo animation isn't restarted every tick.
   const icon = useMemo(() => trackedIcon(tle.name), [tle.name])
 
-  useEffect(() => {
-    document.title = tle.name ? `${tle.name} · Satellite Tracker` : 'Satellite Tracker'
-  }, [tle.name])
+  useSeo(satelliteMeta(id, prettySatName(id, tle.name), observer?.name))
 
   if (tle.status === 'error') {
     return (

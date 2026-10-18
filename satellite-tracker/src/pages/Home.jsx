@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useSeo } from '../lib/seo'
+import { DEFAULT_META, homeMetaFor, prettySatName } from '../lib/seo-data'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Marker, Polyline, Tooltip } from 'react-leaflet'
 import { CATEGORIES, SPOTLIGHT, getAbove, getTle, getVisualPasses, isQuotaError } from '../lib/api'
 import { groundTrack, periodMinutes, positionAt, toSatrec } from '../lib/orbit'
 import { useObserver, observerQuery } from '../lib/observer'
 import { useNow } from '../lib/useNow'
-import { fmtNum } from '../lib/format'
+import { fmtDay, fmtNum, fmtTime } from '../lib/format'
 import LocationSearch from '../components/LocationSearch'
 import { track } from '../lib/track'
 import HeroSky from '../components/HeroSky'
@@ -18,6 +20,7 @@ import { ownershipBreakdown, useOwnership } from '../lib/celestrak'
 
 export default function Home() {
   const [observer, setObserver] = useObserver()
+  useSeo(observer ? homeMetaFor(observer.name) : DEFAULT_META)
 
   if (!observer) {
     return (
@@ -51,6 +54,7 @@ export default function Home() {
 
   return (
     <div className="wrap page">
+      <h1 className="sr-only">ISS and satellite passes over {observer.name}</h1>
       <Passes observer={observer} />
       <Overhead observer={observer} />
     </div>
@@ -85,6 +89,16 @@ function Passes({ observer }) {
   const isCloudy = (p) => { const c = passCloud(weather, p); return typeof c === 'number' && c >= CLOUDED_OUT }
   const cloudyCount = future.filter(isCloudy).length
   const upcoming = hideCloudy ? future.filter((p) => !isCloudy(p)) : future
+
+  // Once passes are known, the page description names the next one.
+  const next = future[0]
+  const nextDay = next && fmtDay(next.startUTC)
+  useSeo(
+    homeMetaFor(
+      observer.name,
+      next && `${prettySatName(next.satid, next.satname)}, ${/^(Tonight|Tomorrow)$/.test(nextDay) ? nextDay.toLowerCase() : `on ${nextDay}`} at ${fmtTime(next.startUTC)}`,
+    ),
+  )
 
   return (
     <section className="section" aria-labelledby="passes-title">

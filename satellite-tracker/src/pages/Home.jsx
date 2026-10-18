@@ -30,6 +30,8 @@ export default function Home() {
           </p>
           <LocationSearch onSelect={setObserver} autoFocus />
 
+          <div className="hero__sep" role="separator" aria-hidden="true"><span>Also on Satellite Tracker</span></div>
+
           <aside className="promo" aria-labelledby="promo-title">
             <div className="promo__text">
               <p className="eyebrow">New · Starlink over contested regions</p>

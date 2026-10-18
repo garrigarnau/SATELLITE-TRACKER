@@ -10,4 +10,5 @@ FROM nginx:1.27-alpine
 # N2YO_API_KEY and OPENCAGE_API_KEY from the container environment.
 COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/generated/nginx-redirects.conf /etc/nginx/redirects/cities.conf
 EXPOSE 80

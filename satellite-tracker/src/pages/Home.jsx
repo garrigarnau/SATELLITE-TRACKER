@@ -7,6 +7,7 @@ import { useObserver, observerQuery } from '../lib/observer'
 import { useNow } from '../lib/useNow'
 import { fmtNum } from '../lib/format'
 import LocationSearch from '../components/LocationSearch'
+import HeroSky from '../components/HeroSky'
 import PassCard from '../components/PassCard'
 import WorldMap, { dotIcon, trackedIcon } from '../components/WorldMap'
 import { Notice, Skeleton } from '../components/Status'
@@ -17,6 +18,7 @@ export default function Home() {
   if (!observer) {
     return (
       <section className="hero">
+        <HeroSky />
         <div className="wrap hero__inner">
           <p className="eyebrow">Look up tonight</p>
           <h1 className="hero__title">See what&rsquo;s flying over you.</h1>

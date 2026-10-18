@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Circle, Marker, Polyline, Tooltip } from 'react-leaflet'
-import { getTle, getVisualPasses } from '../lib/api'
+import { getTle, getVisualPasses, isQuotaError } from '../lib/api'
 import { footprintKm, groundTrack, lookAngles, periodMinutes, positionAt, skyPath, toSatrec } from '../lib/orbit'
 import { useObserver, observerQuery } from '../lib/observer'
 import { useNow } from '../lib/useNow'
 import { compass, fmtCoord, fmtNum } from '../lib/format'
 import WorldMap, { dotIcon, trackedIcon } from '../components/WorldMap'
 import PassCard from '../components/PassCard'
+import { passCloud, sky, useCloudForecast } from '../lib/weather'
 import SkyChart from '../components/SkyChart'
 import LocationSearch from '../components/LocationSearch'
 import { Notice, Skeleton, Term } from '../components/Status'
@@ -159,7 +160,7 @@ function Passes({ id, observer, satrec, now, look }) {
     setSelected(0)
     getVisualPasses(id, observer)
       .then((r) => alive && setState({ status: 'ready', passes: r.passes }))
-      .catch(() => alive && setState({ status: 'error', passes: [] }))
+      .catch((e) => alive && setState({ status: 'error', passes: [], quota: isQuotaError(e) }))
     return () => { alive = false }
   }, [id, observer.lat, observer.lon]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -170,6 +171,9 @@ function Passes({ id, observer, satrec, now, look }) {
     [satrec, pass?.startUTC, observer.lat, observer.lon], // eslint-disable-line react-hooks/exhaustive-deps
   )
   const during = pass && now.getTime() >= pass.startUTC * 1000 && now.getTime() <= pass.endUTC * 1000
+  const weather = useCloudForecast(observer)
+  const passCloudPct = pass ? passCloud(weather, pass) : undefined
+  const passSky = typeof passCloudPct === 'number' ? sky(passCloudPct) : null
 
   return (
     <section className="section" aria-labelledby="sat-passes">
@@ -182,7 +186,13 @@ function Passes({ id, observer, satrec, now, look }) {
       </div>
 
       {state.status === 'loading' && <div className="passes"><Skeleton rows={2} /></div>}
-      {state.status === 'error' && <Notice tone="error">Couldn&rsquo;t load passes for this satellite.</Notice>}
+      {state.status === 'error' && (
+        <Notice tone="error">
+          {state.quota
+            ? 'The free pass-prediction quota for this hour is used up. Predictions will be back within the hour.'
+            : 'Couldn’t load passes for this satellite.'}
+        </Notice>
+      )}
       {state.status === 'ready' && !passes.length && (
         <Notice title="No naked-eye passes in the next 10 days">
           It may be too faint, or only crosses your sky in daylight or Earth&rsquo;s shadow. You can still follow it live above.
@@ -195,12 +205,13 @@ function Passes({ id, observer, satrec, now, look }) {
             <SkyChart path={path} pass={pass} current={during ? look : null} />
             <p className="sky-card__caption">
               Face <strong>{pass.startAzCompass}</strong>, it rises to <strong>{Math.round(pass.maxEl)}°</strong> in the {pass.maxAzCompass} and sets in the {pass.endAzCompass}.
+              {passSky && <> Forecast: {passSky.phrase} ({Math.round(passCloudPct)}% cloud).</>}
             </p>
           </div>
           <ol className="pass-list">
             {passes.slice(0, limit).map((p, i) => (
               <li key={p.startUTC}>
-                <PassCard pass={p} now={now.getTime()} showName={false} selected={p === pass} onSelect={() => setSelected(i)} />
+                <PassCard pass={p} now={now.getTime()} showName={false} selected={p === pass} onSelect={() => setSelected(i)} cloud={passCloud(weather, p)} />
               </li>
             ))}
             {passes.length > limit && (

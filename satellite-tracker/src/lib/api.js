@@ -17,6 +17,9 @@ async function getJson(url, { ttlMs = 60_000 } = {}) {
 }
 
 const n2yo = (path) => `/api/n2yo/${path}`
+
+// N2YO's free plan caps some endpoints per hour; worth telling the user plainly.
+export const isQuotaError = (e) => /exceeded|transactions allowed/i.test(e?.message || '')
 const fix = (n, d = 4) => Number(n).toFixed(d)
 
 // N2YO "above" categories worth exposing as filters.
@@ -47,9 +50,11 @@ export async function getAbove({ lat, lon, alt = 0 }, category, radius = 70) {
   return data.above || []
 }
 
-export async function getVisualPasses(id, { lat, lon, alt = 0 }, days = 10, minVisibility = 60) {
+export async function getVisualPasses(id, { lat, lon }, days = 10, minVisibility = 60) {
+  // Rounded to ~1 km and at sea level: pass times barely change, and nearby
+  // visitors then share nginx's cached answer instead of each spending quota.
   const data = await getJson(
-    n2yo(`visualpasses/${id}/${fix(lat)}/${fix(lon)}/${Math.round(alt)}/${days}/${minVisibility}/`),
+    n2yo(`visualpasses/${id}/${fix(lat, 2)}/${fix(lon, 2)}/0/${days}/${minVisibility}/`),
     { ttlMs: 30 * 60_000 },
   )
   return {

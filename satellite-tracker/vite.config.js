@@ -19,6 +19,12 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api\/geocode/, '/geocode/v1/json') + `&key=${env.OPENCAGE_API_KEY}`,
         },
+        // CelesTrak SATCAT / GP: no key; proxied so prod nginx can cache it for a day.
+        '/api/celestrak': {
+          target: 'https://celestrak.org',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api\/celestrak/, ''),
+        },
       },
     },
   }

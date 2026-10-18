@@ -53,7 +53,7 @@ function makeState(satrec, observer) {
   return function state(t, full = false) {
     const date = new Date(t * 1000)
     const pv = sat.propagate(satrec, date)
-    if (!pv.position) return null
+    if (!pv?.position) return null
     const gmst = sat.gstime(date)
     const look = sat.ecfToLookAngles(gd, sat.eciToEcf(pv.position, gmst))
     const el = look.elevation / RAD

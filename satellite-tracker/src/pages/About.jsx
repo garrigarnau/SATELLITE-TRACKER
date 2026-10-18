@@ -21,6 +21,13 @@ export default function About() {
         <a href="https://opencagedata.com" target="_blank" rel="noreferrer">OpenCage</a> and cloud forecasts from{' '}
         <a href="https://open-meteo.com" target="_blank" rel="noreferrer">Open-Meteo</a>.
       </p>
+      <h2>Starlink over contested regions</h2>
+      <p>
+        The <Link to={`/starlink${observerQuery(observer)}`}>Starlink page</Link> counts how many Starlink satellites are at least 25° above
+        the horizon from a handful of cities in conflict zones, now and over the next 90 minutes, with Madrid and Quito as references. It
+        propagates every Starlink&rsquo;s public orbital elements from CelesTrak in your browser. That is geometry, not service: SpaceX turns
+        Starlink on or off by location, and nothing here measures who uses it. The counts mostly follow latitude, not politics.
+      </p>
       <h2>Spotting a satellite</h2>
       <ul>
         <li>Look for a steady, non-blinking point of light moving smoothly across the sky.</li>

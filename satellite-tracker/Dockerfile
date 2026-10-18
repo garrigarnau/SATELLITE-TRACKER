@@ -1,15 +1,13 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
-# The lock file is out of sync with package.json, so install like Vercel did.
-RUN npm install --no-audit --no-fund
+RUN npm ci --no-audit --no-fund
 COPY . .
-# CRA inlines REACT_APP_* at build time, so the keys come in as build args.
-ARG REACT_APP_N2YO_API_KEY
-ARG REACT_APP_OPENCAGE_API_KEY
 RUN npm run build
 
 FROM nginx:1.27-alpine
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/build /usr/share/nginx/html
+# The official image runs envsubst on /etc/nginx/templates at startup, filling in
+# N2YO_API_KEY and OPENCAGE_API_KEY from the container environment.
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
+COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80

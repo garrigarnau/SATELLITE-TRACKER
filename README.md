@@ -38,78 +38,38 @@ This is not a production-ready application but a fun and educational project.
 
 ## Built With
 
-- **Frontend:** React, JavaScript, CSS
-- **API:** [N2YO API](https://www.n2yo.com/)
-- **Backend (Optional):** Python for additional functionality
-- **Deployment:** (Specify services like Netlify, Vercel, or others if applicable)
-
----
-
-## Prerequisites
-
-- **Node.js**: v14 or later
-- **NPM**: v6 or later
-- An API key from [N2YO](https://www.n2yo.com/).
+- **Frontend:** React 18, Vite, React Router, Leaflet
+- **Orbits:** [satellite.js](https://github.com/shashwatak/satellite-js) computes live positions and sky paths in the browser
+- **APIs:** [N2YO](https://www.n2yo.com/) for passes and what's overhead, [OpenCage](https://opencagedata.com/) for city search
+- **Deployment:** Docker (nginx) on Dokploy, at [satellitetracker.arnaugarriga.com](https://satellitetracker.arnaugarriga.com)
 
 ---
 
 ## Getting Started
 
-1. **Clone the Repository**:
+The app lives in `satellite-tracker/`.
 
-   ```bash
-   git clone https://github.com/garrigarnau/SATELLITE-TRACKER.git
-   cd SATELLITE-TRACKER
-   ```
+```bash
+cd satellite-tracker
+npm install
+```
 
-2. **Install Dependencies**:
+Create `satellite-tracker/.env.local` with your keys. The dev server's proxy adds them to API calls, so they never reach the browser:
 
-   ```bash
-   npm install
-   ```
+```bash
+N2YO_API_KEY=your-n2yo-key
+OPENCAGE_API_KEY=your-opencage-key
+```
 
-3. **Set Up Your API Key**:
-   - Create a `.env` file in the root directory and add your N2YO API key:
-     ```
-     REACT_APP_N2YO_API_KEY=your_api_key_here
-     ```
+```bash
+npm run dev
+```
 
-4. **Run the Application**:
+## Production
 
-   ```bash
-   npm start
-   ```
+`satellite-tracker/Dockerfile` builds the app and serves it with nginx. Pass `N2YO_API_KEY` and `OPENCAGE_API_KEY` as **runtime** environment variables. nginx adds them to `/api/*` requests and caches responses briefly to save API quota.
 
-   The app will be available at [http://localhost:3000](http://localhost:3000).
-
----
-
-## Future Plans
-
-As this is a learning project, future improvements may include:
-
-- Adding interactive maps to display satellite locations in real-time.
-- Allowing users to save preferences (e.g., favorite satellites).
-- Optimizing performance for handling large datasets.
-
----
-
-## Contribution
-
-This project is open to contributions, especially if you’re also learning React or JavaScript. To contribute:
-
-1. Fork the repository.
-2. Create a new branch for your feature or fix.
-3. Submit a pull request explaining your changes.
-
----
-
-## License
-
-Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
-
----
-
-## Contact
-
-For questions, feedback, or suggestions, feel free to contact me through [GitHub](https://github.com/garrigarnau).
+```bash
+docker build -t satellite-tracker satellite-tracker
+docker run -p 8080:80 -e N2YO_API_KEY=... -e OPENCAGE_API_KEY=... satellite-tracker
+```

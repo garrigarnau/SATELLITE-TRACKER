@@ -37,7 +37,7 @@ export default function App() {
       </main>
       <footer className="footer">
         <div className="wrap footer__inner">
-          <span>Data from N2YO · Orbits by satellite.js · <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Weather by Open-Meteo</a></span>
+          <span>Orbits from CelesTrak · Overhead from N2YO · <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Weather by Open-Meteo</a></span>
           <a href="https://github.com/garrigarnau/SATELLITE-TRACKER" target="_blank" rel="noreferrer">Source on GitHub</a>
         </div>
       </footer>

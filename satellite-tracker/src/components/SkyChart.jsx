@@ -49,12 +49,18 @@ export default function SkyChart({ path, pass, current }) {
       <text x={C + 4} y={C - R * (1 - 30 / 90) - 4} className="sky__deg">30°</text>
 
       {d && <path d={d} className="sky__path" />}
-      {marks?.map((m) => {
+      {marks?.map((m, i) => {
         const [x, y] = project(m.az, m.el)
+        // A pass can become visible at its peak (leaving Earth's shadow); don't
+        // stack labels on top of each other.
+        const crowded = marks.slice(0, i).some((o) => {
+          const [ox, oy] = project(o.az, o.el)
+          return Math.hypot(ox - x, oy - y) < 16
+        })
         return (
           <g key={m.key} className={`sky__mark sky__mark--${m.key}`}>
             <circle cx={x} cy={y} r={m.key === 'max' ? 5 : 4} />
-            <text x={x} y={y - 9}>{m.label}</text>
+            {!crowded && <text x={x} y={y - 9}>{m.label}</text>}
           </g>
         )
       })}

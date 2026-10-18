@@ -1,24 +1,11 @@
 # Keeps the API keys server-side: the browser calls /api/*, nginx adds the key.
 # Responses are cached (per endpoint, see below) so visitors share upstream calls
 # and don't burn the N2YO hourly quotas.
-proxy_cache_path /var/cache/nginx/api levels=1:2 keys_zone=api:10m max_size=100m inactive=6h;
+proxy_cache_path /var/cache/nginx/api levels=1:2 keys_zone=api:10m max_size=200m inactive=2d;
 
 server {
     listen 80;
     root /usr/share/nginx/html;
-
-    # Pass predictions barely change and N2YO allows only 100 an hour, so cache them longest.
-    location /api/n2yo/visualpasses/ {
-        rewrite ^/api/n2yo/(.*)$ /rest/v1/satellite/$1&apiKey=${N2YO_API_KEY} break;
-        proxy_pass https://api.n2yo.com;
-        proxy_set_header Host api.n2yo.com;
-        proxy_ssl_server_name on;
-        proxy_cache api;
-        proxy_cache_valid 200 20m;
-        proxy_cache_lock on;
-        proxy_ignore_headers Cache-Control Expires Set-Cookie;
-        add_header X-Cache $upstream_cache_status;
-    }
 
     # Orbital elements are refreshed a few times a day.
     location /api/n2yo/tle/ {
@@ -56,9 +43,8 @@ server {
         proxy_ignore_headers Cache-Control Expires Set-Cookie;
     }
 
-    # CelesTrak (no key). Only the two endpoints the app uses; cached for a day,
-    # since SATCAT changes daily and CelesTrak blocks clients that over-fetch.
-    location ~ ^/api/celestrak/(satcat/records\.php|NORAD/elements/gp\.php)$ {
+    # CelesTrak (no key). SATCAT changes daily, so cache it for a day.
+    location = /api/celestrak/satcat/records.php {
         rewrite ^/api/celestrak/(.*)$ /$1 break;
         proxy_pass https://celestrak.org;
         proxy_set_header Host celestrak.org;
@@ -67,6 +53,24 @@ server {
         proxy_cache_valid 200 1d;
         proxy_cache_valid 404 1h;
         proxy_cache_lock on;
+        proxy_cache_use_stale error timeout updating http_403 http_429 http_500 http_502 http_503;
+        proxy_ignore_headers Cache-Control Expires Set-Cookie;
+        add_header X-Cache $upstream_cache_status;
+    }
+
+    # Orbital elements update every ~2 h. CelesTrak answers 403 to repeat
+    # downloads within an update and firewalls clients that keep erroring, so
+    # cache for 2 h and keep serving the stale copy if it refuses.
+    location = /api/celestrak/NORAD/elements/gp.php {
+        rewrite ^/api/celestrak/(.*)$ /$1 break;
+        proxy_pass https://celestrak.org;
+        proxy_set_header Host celestrak.org;
+        proxy_ssl_server_name on;
+        proxy_cache api;
+        proxy_cache_valid 200 2h;
+        proxy_cache_lock on;
+        proxy_cache_use_stale error timeout updating http_403 http_429 http_500 http_502 http_503;
+        proxy_cache_background_update on;
         proxy_ignore_headers Cache-Control Expires Set-Cookie;
         add_header X-Cache $upstream_cache_status;
     }

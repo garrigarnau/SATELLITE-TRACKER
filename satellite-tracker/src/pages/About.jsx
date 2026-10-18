@@ -13,10 +13,13 @@ export default function About() {
       </p>
       <h2>How it works</h2>
       <p>
-        Pass predictions and the list of what&rsquo;s overhead come from the <a href="https://www.n2yo.com" target="_blank" rel="noreferrer">N2YO</a> API.
-        Live positions and sky paths are computed in your browser from each satellite&rsquo;s orbital elements with{' '}
-        <a href="https://github.com/shashwatak/satellite-js" target="_blank" rel="noreferrer">satellite.js</a>. City search uses{' '}
-        <a href="https://opencagedata.com" target="_blank" rel="noreferrer">OpenCage</a>.
+        Orbital elements come from <a href="https://celestrak.org" target="_blank" rel="noreferrer">CelesTrak</a>. Pass predictions, live
+        positions and sky paths are computed in your browser from them with{' '}
+        <a href="https://github.com/shashwatak/satellite-js" target="_blank" rel="noreferrer">satellite.js</a>: a pass counts as visible
+        when the satellite is at least 10° up, lit by the sun and your sky is dark. The live list of what&rsquo;s overhead comes from{' '}
+        <a href="https://www.n2yo.com" target="_blank" rel="noreferrer">N2YO</a>, city search from{' '}
+        <a href="https://opencagedata.com" target="_blank" rel="noreferrer">OpenCage</a> and cloud forecasts from{' '}
+        <a href="https://open-meteo.com" target="_blank" rel="noreferrer">Open-Meteo</a>.
       </p>
       <h2>Spotting a satellite</h2>
       <ul>

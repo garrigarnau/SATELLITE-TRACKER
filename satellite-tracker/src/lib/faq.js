@@ -23,7 +23,7 @@ export const FAQ = [
   },
   {
     q: 'How fast does the ISS move and how high is it?',
-    a: 'The International Space Station orbits about 400 km above Earth at roughly 28,000 km/h (about 7.7 km/s), circling the planet every 90 to 92 minutes, or about 16 times a day. Its exact height varies over time as it is periodically reboosted.',
+    a: 'The International Space Station orbits about 400 km above Earth at about 28,800 km/h (roughly 8 km/s, or five miles per second), circling the planet every 90 to 92 minutes, or about 16 times a day. Its exact height varies over time as it is periodically reboosted.',
     sources: [NASA_FACTS, ESA_WHERE],
   },
   {

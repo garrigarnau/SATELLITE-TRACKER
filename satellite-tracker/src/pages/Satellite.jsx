@@ -3,19 +3,22 @@ import { useSeo } from '../lib/seo'
 import { META, prettySatNameFor } from '../lib/seo-data'
 import { useT } from '../lib/i18n'
 import { Link, useParams } from 'react-router-dom'
-import { Circle, Marker, Polyline, Tooltip } from 'react-leaflet'
 import { getTle, getVisualPasses, isQuotaError } from '../lib/api'
-import { footprintKm, groundTrack, lookAngles, periodMinutes, positionAt, skyPath, toSatrec } from '../lib/orbit'
+import { lookAngles, periodMinutes, positionAt, skyPath, toSatrec } from '../lib/orbit'
 import { useObserver, observerQuery } from '../lib/observer'
 import { useNow } from '../lib/useNow'
-import { compass, dir, fmtCoord, fmtNum } from '../lib/format'
-import WorldMap, { dotIcon, trackedIcon } from '../components/WorldMap'
+import { compass, dir } from '../lib/format'
+import LiveTracker from '../components/LiveTracker'
+import { TIANGONG_ID } from '../lib/tiangong'
 import PassCard from '../components/PassCard'
 import { CLOUDED_OUT, passCloud, sky, useCloudForecast } from '../lib/weather'
 import SkyChart from '../components/SkyChart'
 import LocationSearch from '../components/LocationSearch'
 import { track } from '../lib/track'
-import { Notice, Skeleton, Term } from '../components/Status'
+import { Notice, Skeleton } from '../components/Status'
+import { FACTS, factRows, factSummary, genericSummary, sourceLabel } from '../lib/satellite-facts'
+import satcatFallback from '../data/satcat-fallback.json'
+import '../lib/satellite-facts.css'
 
 export default function Satellite() {
   const { id } = useParams()
@@ -23,7 +26,6 @@ export default function Satellite() {
   const [observer, setObserver] = useObserver()
   const now = useNow(1000)
   const [tle, setTle] = useState({ status: 'loading' })
-  const [follow, setFollow] = useState(true)
 
   useEffect(() => {
     let alive = true
@@ -38,20 +40,6 @@ export default function Satellite() {
   const pos = satrec ? positionAt(satrec, now) : null
   const look = satrec && observer ? lookAngles(satrec, now, observer) : null
 
-  // The ground track only needs refreshing every half minute.
-  const trackKey = Math.floor(now.getTime() / 30_000)
-  const track = useMemo(() => {
-    if (!satrec) return null
-    const period = periodMinutes(satrec)
-    return {
-      past: groundTrack(satrec, now, period * 0.5, 0),
-      future: groundTrack(satrec, now, 0, period),
-    }
-  }, [satrec, trackKey]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Built once per satellite so the halo animation isn't restarted every tick.
-  const icon = useMemo(() => trackedIcon(tle.name), [tle.name])
-
   useSeo(META[t.locale].satellite(id, prettySatNameFor(t.locale, id, tle.name), observer?.name))
 
   if (tle.status === 'error') {
@@ -64,7 +52,6 @@ export default function Satellite() {
     )
   }
 
-  const period = satrec ? periodMinutes(satrec) : null
   const up = look && look.elevation > 0
 
   return (
@@ -83,52 +70,14 @@ export default function Satellite() {
         )}
       </header>
 
-      <div className="sat-grid">
-        <WorldMap center={pos ? [pos.lat, pos.lon] : undefined} zoom={3} follow={follow && pos ? [pos.lat, pos.lon] : null} className="sat-map">
-          {track?.past.map((seg, i) => <Polyline key={`p${i}`} positions={seg} pathOptions={{ color: '#b06ab8', weight: 1.5, opacity: 0.55 }} />)}
-          {track?.future.map((seg, i) => <Polyline key={`f${i}`} positions={seg} pathOptions={{ color: '#ffffff', weight: 1.5, opacity: 0.85, dashArray: '3 6' }} />)}
-          {pos && (
-            <>
-              <Circle center={[pos.lat, pos.lon]} radius={footprintKm(pos.altKm) * 1000} pathOptions={{ color: '#ffffff', weight: 1, opacity: 0.35, fillColor: '#b06ab8', fillOpacity: 0.08 }} />
-              <Marker position={[pos.lat, pos.lon]} icon={icon} zIndexOffset={1000} />
-            </>
-          )}
-          {observer && (
-            <Marker position={[observer.lat, observer.lon]} icon={dotIcon('you')}>
-              <Tooltip>{t('common.you')}</Tooltip>
-            </Marker>
-          )}
-        </WorldMap>
+      <LiveTracker satrec={satrec} name={tle.name} pos={pos} look={look} observer={observer} now={now} />
+      {Number(id) === TIANGONG_ID && (
+        <p className="sat-crosslink">
+          <Link to={t.lp(`/tiangong${observerQuery(observer)}`)}>{t('sat.tiangongLink')}</Link>
+        </p>
+      )}
 
-        <aside className="panel">
-          <div className="panel__head">
-            <h2 className="panel__title">{t('sat.live')}</h2>
-            <label className="toggle">
-              <input type="checkbox" checked={follow} onChange={(e) => setFollow(e.target.checked)} />
-              <span>{t('sat.follow')}</span>
-            </label>
-          </div>
-          {pos ? (
-            <dl className="stats">
-              <Stat label={t('sat.lat')} value={fmtCoord(pos.lat, 'N', 'S')} />
-              <Stat label={t('sat.lon')} value={fmtCoord(pos.lon, 'E', dir('W'))} />
-              <Stat label={t('sat.alt')} value={`${fmtNum(pos.altKm)} km`} />
-              <Stat label={t('sat.speed')} value={`${fmtNum(pos.speedKmS, 2)} km/s`} />
-              <Stat label={t('sat.orbit')} value={`${fmtNum(period)} min`} />
-              {look && (
-                <>
-                  <Stat label={<Term hint={t('sat.azimuthHint')}>{t('sat.azimuth')}</Term>} value={`${fmtNum(look.azimuth)}° ${compass(look.azimuth)}`} />
-                  <Stat label={<Term hint={t('sat.elevationHint')}>{t('sat.elevation')}</Term>} value={`${fmtNum(look.elevation)}°`} />
-                  <Stat label={t('sat.distance')} value={`${fmtNum(look.rangeKm)} km`} />
-                </>
-              )}
-            </dl>
-          ) : (
-            <div className="stats"><Skeleton rows={4} className="stat" /></div>
-          )}
-          <p className="panel__note">{t('sat.computed')}</p>
-        </aside>
-      </div>
+      <SatelliteFacts id={id} name={prettySatNameFor(t.locale, id, tle.name)} satrec={satrec} />
 
       {observer ? (
         <Passes id={id} observer={observer} satrec={satrec} now={now} look={look} />
@@ -143,16 +92,64 @@ export default function Satellite() {
   )
 }
 
-function Stat({ label, value }) {
+// Citable "About this satellite" block. Spotlight satellites get hand-checked
+// facts plus the CelesTrak SATCAT record the build fetched (/data/satcat.json,
+// falling back to the committed snapshot); others get only what the TLE tells us.
+let satcatPromise
+const loadSatcat = () =>
+  (satcatPromise ??= fetch('/data/satcat.json')
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error('no satcat'))))
+    .catch(() => satcatFallback))
+
+function SatelliteFacts({ id, name, satrec }) {
+  const t = useT()
+  const [catalog, setCatalog] = useState(null)
+  useEffect(() => {
+    let alive = true
+    loadSatcat().then((c) => alive && setCatalog(c))
+    return () => { alive = false }
+  }, [])
+
+  const rec = catalog?.records?.[id] || null
+  const facts = FACTS[id]
+  const live = useMemo(() => {
+    if (!satrec) return null
+    const p = positionAt(satrec, new Date())
+    return p && { altKm: p.altKm, periodMin: periodMinutes(satrec), inclination: (satrec.inclo * 180) / Math.PI }
+  }, [satrec])
+
+  const rows = factRows(id, rec, live, t.locale)
+  const summary = factSummary(id, t.locale) || genericSummary(name, live, t.locale)
+  if (!rows.length && !summary) return null
+
   return (
-    <div className="stat">
-      <dt>{label}</dt>
-      <dd>{value}</dd>
-    </div>
+    <section className="facts" aria-labelledby="facts-title">
+      <h2 id="facts-title" className="facts__title">{t('facts.title')}</h2>
+      {summary && <p className="facts__summary">{summary}</p>}
+      <dl className="facts__list">
+        {rows.map(([k, v]) => (
+          <div className="facts__row" key={k}>
+            <dt>{k}</dt>
+            <dd>{v}</dd>
+          </div>
+        ))}
+      </dl>
+      <p className="facts__meta">
+        {rec ? t('facts.meta', { date: catalog.fetched }) : t('sat.computed')}
+      </p>
+      {facts?.sources && (
+        <ul className="facts__sources">
+          {facts.sources.map((s) => (
+            <li key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{sourceLabel(s, t.locale)}</a></li>
+          ))}
+        </ul>
+      )}
+    </section>
   )
 }
 
-function Passes({ id, observer, satrec, now, look }) {
+// Also used by the Tiangong page.
+export function Passes({ id, observer, satrec, now, look }) {
   const t = useT()
   const [state, setState] = useState({ status: 'loading', passes: [] })
   const [selected, setSelected] = useState(0)

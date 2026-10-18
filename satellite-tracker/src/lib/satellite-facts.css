@@ -1,0 +1,23 @@
+/* "About this satellite": a formal facts sheet under the live panel. */
+.facts {
+  position: relative; margin-top: 10px; padding: 14px 16px;
+  border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface-grad);
+}
+.facts::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--edge-grad); }
+.facts__title { margin: 0 0 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.facts__summary { margin: 0 0 12px; max-width: 72ch; color: var(--text); font-size: 14px; line-height: 1.6; text-wrap: pretty; }
+.facts__list {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); margin: 0;
+  background: var(--surface); border-top: 1px solid var(--line); border-left: 1px solid var(--line);
+  border-radius: var(--radius-sm); overflow: hidden;
+}
+.facts__row {
+  min-width: 0; padding: 8px 10px;
+  border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+}
+.facts__row dt { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+.facts__row dd { margin: 2px 0 0; font-size: 13px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.facts__meta { margin: 10px 0 0; font-size: 12px; color: var(--faint); }
+.facts__sources { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 6px 0 0; padding: 0; list-style: none; font-size: 12px; }
+.facts__sources a { color: var(--muted); text-underline-offset: 3px; text-decoration-color: rgba(247, 0, 255, 0.5); }
+.facts__sources a:hover { color: var(--text); }

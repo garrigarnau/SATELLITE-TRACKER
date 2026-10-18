@@ -215,6 +215,18 @@ const en = {
   'sl.c4': 'The numbers mostly reflect how far a place is from the equator. Compare with Madrid and Quito, shown for reference.',
   'sl.c5s': 'Predictions drift.',
   'sl.c5': 'Positions come from orbital models that are accurate to a few kilometres for a day or two; satellites that manoeuvre can be off by more.',
+  // Additions: footer link, FAQ, facts block, Tiangong page
+  'footer.tiangong': 'Tiangong tracker',
+  'passes.stations': 'Space stations:',
+  'faq.title': 'Questions about spotting satellites',
+  'faq.updated': 'Last updated',
+  'faq.refreshed': 'orbital data refreshed every few hours',
+  'faq.source': 'Source',
+  'faq.sources': 'Sources',
+  'facts.title': 'About this satellite',
+  'facts.meta': 'Orbit and catalogue data: CelesTrak SATCAT, updated {date}.',
+  'sat.tiangongLink': 'Open the Tiangong page: facts, Tiangong vs ISS and where to see it →',
+  'tg.unavailable': 'Live position unavailable',
 }
 
 const es = {
@@ -416,6 +428,17 @@ const es = {
   'sl.c4': 'Las cifras reflejan sobre todo la distancia de cada lugar al ecuador. Compáralas con Madrid y Quito, que se muestran como referencia.',
   'sl.c5s': 'Las predicciones se desvían.',
   'sl.c5': 'Las posiciones salen de modelos orbitales con una precisión de pocos kilómetros durante uno o dos días; los satélites que maniobran pueden desviarse más.',
+  'footer.tiangong': 'Tiangong en directo',
+  'passes.stations': 'Estaciones espaciales:',
+  'faq.title': 'Preguntas sobre cómo ver satélites',
+  'faq.updated': 'Última actualización:',
+  'faq.refreshed': 'datos orbitales actualizados cada pocas horas',
+  'faq.source': 'Fuente',
+  'faq.sources': 'Fuentes',
+  'facts.title': 'Sobre este satélite',
+  'facts.meta': 'Datos orbitales y de catálogo: CelesTrak SATCAT, actualizados el {date}.',
+  'sat.tiangongLink': 'Abrir la página de Tiangong: datos, Tiangong frente a la ISS y dónde verla →',
+  'tg.unavailable': 'Posición en directo no disponible',
 }
 
 export const DICTS = { en, es }

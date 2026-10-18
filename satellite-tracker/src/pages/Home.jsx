@@ -12,6 +12,7 @@ import { fmtDay, fmtNum, fmtTime } from '../lib/format'
 import LocationSearch from '../components/LocationSearch'
 import { track } from '../lib/track'
 import HeroSky from '../components/HeroSky'
+import Faq from '../components/Faq'
 import PassCard from '../components/PassCard'
 import { CLOUDED_OUT, passCloud, useCloudForecast } from '../lib/weather'
 import WorldMap, { dotIcon, trackedIcon } from '../components/WorldMap'
@@ -27,6 +28,7 @@ export default function Home() {
 
   if (!observer) {
     return (
+      <>
       <section className="hero">
         <HeroSky />
         <div className="wrap hero__inner">
@@ -47,6 +49,10 @@ export default function Home() {
           </aside>
         </div>
       </section>
+      <div className="wrap faq--home">
+        <Faq />
+      </div>
+      </>
     )
   }
 
@@ -109,7 +115,10 @@ function Passes({ observer }) {
           <h2 id="passes-title" className="section__title">{t('passes.title', { city: observer.name })}</h2>
         </div>
         <div>
-          <p className="section__note">{t('passes.note')}</p>
+          <p className="section__note">
+            {t('passes.note')}
+            {' '}{t('passes.stations')} <Link to={t.lp(`/satellite/25544${q}`)}>ISS</Link> · <Link to={t.lp(`/tiangong${q}`)}>Tiangong</Link>.
+          </p>
           {(cloudyCount > 0 || hideCloudy) && (
             <label className="sky-toggle">
               <input type="checkbox" checked={hideCloudy} onChange={(e) => setHideCloudy(e.target.checked)} />

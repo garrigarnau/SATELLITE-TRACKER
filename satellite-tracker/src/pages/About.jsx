@@ -3,6 +3,7 @@ import { useObserver, observerQuery } from '../lib/observer'
 import { useSeo } from '../lib/seo'
 import { META } from '../lib/seo-data'
 import { useT } from '../lib/i18n'
+import Faq from '../components/Faq'
 
 const A = ({ href, children }) => <a href={href} target="_blank" rel="noreferrer">{children}</a>
 
@@ -16,6 +17,7 @@ export default function About() {
     <div className="wrap page prose">
       <Body starlink={<Link to={t.lp(`/starlink${q}`)}>{t.locale === 'es' ? 'página de Starlink' : 'Starlink page'}</Link>} />
       <Link className="btn" to={t.lp(`/${q}`)}>{t.locale === 'es' ? 'Ver los pasos de esta noche' : 'See tonight’s passes'}</Link>
+      <Faq />
     </div>
   )
 }

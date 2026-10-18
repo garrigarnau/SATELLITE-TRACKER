@@ -72,6 +72,13 @@ export const STARLINK_META = {
   path: '/starlink',
 }
 
+export const TIANGONG_META = {
+  title: `Tiangong tracker: where is China's space station right now · ${SITE_NAME}`,
+  description:
+    "Live position of Tiangong, China's space station, on a map, when you can see it from your city tonight, and how it compares with the ISS.",
+  path: '/tiangong',
+}
+
 // ---------- Spanish ----------
 // Spain searches in Spanish ("estación espacial", "satélites hoy"); English
 // terms barely register there, so the /es pages target those phrases.
@@ -129,10 +136,17 @@ export const STARLINK_META_ES = {
   path: '/starlink',
 }
 
+export const TIANGONG_META_ES = {
+  title: `Tiangong en directo: dónde está la estación espacial china ahora · ${SITE_NAME}`,
+  description:
+    'Posición en directo de Tiangong, la estación espacial china, en el mapa; cuándo podrás verla desde tu ciudad esta noche y en qué se diferencia de la ISS.',
+  path: '/tiangong',
+}
+
 // Picks the right metadata builder for a locale.
 export const META = {
-  en: { home: DEFAULT_META, homeFor: homeMetaFor, satellite: satelliteMeta, about: ABOUT_META, starlink: STARLINK_META },
-  es: { home: DEFAULT_META_ES, homeFor: homeMetaForEs, satellite: satelliteMetaEs, about: ABOUT_META_ES, starlink: STARLINK_META_ES },
+  en: { home: DEFAULT_META, homeFor: homeMetaFor, satellite: satelliteMeta, about: ABOUT_META, starlink: STARLINK_META, tiangong: TIANGONG_META },
+  es: { home: DEFAULT_META_ES, homeFor: homeMetaForEs, satellite: satelliteMetaEs, about: ABOUT_META_ES, starlink: STARLINK_META_ES, tiangong: TIANGONG_META_ES },
 }
 
 // Site-wide structured data, per language.

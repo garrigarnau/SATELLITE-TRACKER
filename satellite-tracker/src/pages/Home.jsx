@@ -29,6 +29,18 @@ export default function Home() {
             Find the next time the ISS and other bright satellites cross your sky, and track anything in orbit live.
           </p>
           <LocationSearch onSelect={setObserver} autoFocus />
+
+          <aside className="promo" aria-labelledby="promo-title">
+            <div className="promo__text">
+              <p className="eyebrow">New · Starlink over contested regions</p>
+              <p id="promo-title" className="promo__title">Who&rsquo;s overhead in Kyiv, Tehran or Caracas?</p>
+              <p className="promo__body">
+                Starlink has become part of wars and politics, from Ukraine&rsquo;s front line to Iran&rsquo;s ban. We count how
+                many of its satellites are above these places right now, and explain why coverage isn&rsquo;t the same as service.
+              </p>
+            </div>
+            <Link to="/starlink" className="btn promo__cta">Open the Starlink page →</Link>
+          </aside>
         </div>
       </section>
     )

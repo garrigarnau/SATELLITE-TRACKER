@@ -130,6 +130,17 @@ button { font: inherit; color: inherit; }
   background: var(--accent-grad); -webkit-background-clip: text; background-clip: text; color: transparent;
   text-wrap: balance;
 }
+.promo {
+  position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 24px;
+  max-width: 620px; margin-top: 18px; padding: 14px 16px;
+  border: 1px solid var(--line-strong); border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(16, 16, 16, 0.92) 0%, rgba(16, 16, 16, 0.92) 55%, rgba(92, 48, 94, 0.35) 100%);
+}
+.promo::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--edge-grad); }
+.promo__text { flex: 1 1 320px; min-width: 0; }
+.promo__title { margin: 0 0 4px; font-size: 1rem; font-weight: 600; }
+.promo__body { margin: 0; font-size: 13px; color: var(--muted); }
+.promo__cta { margin-top: 0; flex: none; }
 .hero__lede { margin: 0 0 26px; max-width: 46ch; font-size: clamp(1rem, 1.6vw, 1.15rem); color: var(--muted); }
 
 /* ---------- Location search ---------- */

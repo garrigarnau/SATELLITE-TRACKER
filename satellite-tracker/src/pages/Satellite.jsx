@@ -13,6 +13,7 @@ import PassCard from '../components/PassCard'
 import { passCloud, sky, useCloudForecast } from '../lib/weather'
 import SkyChart from '../components/SkyChart'
 import LocationSearch from '../components/LocationSearch'
+import { track } from '../lib/track'
 import { Notice, Skeleton, Term } from '../components/Status'
 
 export default function Satellite() {
@@ -211,12 +212,12 @@ function Passes({ id, observer, satrec, now, look }) {
           <ol className="pass-list">
             {passes.slice(0, limit).map((p, i) => (
               <li key={p.startUTC}>
-                <PassCard pass={p} now={now.getTime()} showName={false} selected={p === pass} onSelect={() => setSelected(i)} cloud={passCloud(weather, p)} />
+                <PassCard pass={p} now={now.getTime()} showName={false} selected={p === pass} onSelect={() => { track('pass_selected', { id }); setSelected(i) }} cloud={passCloud(weather, p)} />
               </li>
             ))}
             {passes.length > limit && (
               <li>
-                <button type="button" className="btn btn--ghost" onClick={() => setLimit((l) => l + 6)}>
+                <button type="button" className="btn btn--ghost" onClick={() => { track('show_more_passes', { page: 'satellite' }); setLimit((l) => l + 6) }}>
                   Show more passes ({passes.length - limit})
                 </button>
               </li>

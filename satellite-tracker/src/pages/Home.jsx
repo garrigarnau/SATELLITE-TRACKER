@@ -9,6 +9,7 @@ import { useObserver, observerQuery } from '../lib/observer'
 import { useNow } from '../lib/useNow'
 import { fmtDay, fmtNum, fmtTime } from '../lib/format'
 import LocationSearch from '../components/LocationSearch'
+import { track } from '../lib/track'
 import HeroSky from '../components/HeroSky'
 import PassCard from '../components/PassCard'
 import { CLOUDED_OUT, passCloud, useCloudForecast } from '../lib/weather'
@@ -141,7 +142,7 @@ function Passes({ observer }) {
             ))}
           </div>
           {upcoming.length > limit && (
-            <button type="button" className="btn btn--ghost" onClick={() => setLimit((l) => l + PAGE)}>
+            <button type="button" className="btn btn--ghost" onClick={() => { track('show_more_passes', { page: 'home' }); setLimit((l) => l + PAGE) }}>
               Show more passes ({upcoming.length - limit})
             </button>
           )}
@@ -201,7 +202,7 @@ function Overhead({ observer }) {
             role="radio"
             aria-checked={c.id === category}
             className="chip"
-            onClick={() => setCategory(c.id)}
+            onClick={() => { track('category_selected', { category: c.label }); setCategory(c.id) }}
           >
             {c.label}
           </button>
@@ -309,7 +310,7 @@ function SelectedCard({ sat, to, onClose }) {
         </p>
       </div>
       <div className="picked__actions">
-        <Link to={to} className="btn">Track live →</Link>
+        <Link to={to} className="btn" onClick={() => track('satellite_opened', { id: sat.satid, from: 'overhead' })}>Track live →</Link>
         <button type="button" className="btn btn--ghost" onClick={onClose}>Clear</button>
       </div>
     </div>

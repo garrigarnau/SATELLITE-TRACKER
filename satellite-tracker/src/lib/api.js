@@ -20,14 +20,15 @@ const n2yo = (path) => `/api/n2yo/${path}`
 const fix = (n, d = 4) => Number(n).toFixed(d)
 
 // N2YO "above" categories worth exposing as filters.
-// The first is the default: Starlink is the one category that is never empty.
+// The first is the default view. GPS always has several satellites above any
+// point on Earth (the constellation is designed that way), so it's never empty.
 export const CATEGORIES = [
+  { id: 20, label: 'GPS' },
+  { id: 18, label: 'Amateur radio' },
   { id: 52, label: 'Starlink' },
   { id: 2, label: 'Space stations' },
   { id: 1, label: 'Brightest' },
   { id: 3, label: 'Weather' },
-  { id: 20, label: 'GPS' },
-  { id: 18, label: 'Amateur radio' },
 ]
 
 // Objects bright enough to spot with the naked eye; their passes fill the home page.

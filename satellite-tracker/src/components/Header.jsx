@@ -11,7 +11,7 @@ export default function Header() {
   return (
     <header className="header">
       <div className="wrap header__inner">
-        <Link to={`/${q}`} className="brand" aria-label="Satellite Tracker, home">
+        <Link to="/" className="brand" aria-label="Satellite Tracker, home">
           <img src="/logo.png" alt="" width="28" height="28" />
           <span>Satellite Tracker</span>
         </Link>

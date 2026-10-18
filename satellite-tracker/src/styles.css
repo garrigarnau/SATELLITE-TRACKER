@@ -276,10 +276,22 @@ button { font: inherit; color: inherit; }
   padding: 7px 6px; border-radius: var(--radius-sm); text-decoration: none;
   transition: background-color 160ms var(--ease);
 }
+.sat { width: 100%; border: 0; background: transparent; text-align: left; cursor: pointer; }
 .sat:hover { background: var(--surface-2); }
+.sat.is-active { background: linear-gradient(90deg, rgba(176, 106, 184, 0.16), var(--surface-2) 60%); box-shadow: inset 2px 0 0 #fff; }
 .sat__name { grid-area: name; font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sat__meta { grid-area: meta; font-size: 12px; color: var(--faint); font-variant-numeric: tabular-nums; }
 .sat__alt { grid-area: alt; align-self: center; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.picked {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px;
+  margin-top: 10px; padding: 12px 14px; border-radius: var(--radius);
+  background: var(--surface-grad); border: 1px solid var(--line); position: relative;
+}
+.picked::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--edge-grad); }
+.picked__name { margin: 0; font-size: 1.05rem; font-weight: 600; }
+.picked__meta { margin: 2px 0 0; font-size: 12px; color: var(--muted); }
+.picked__actions { display: flex; gap: 8px; }
+.picked__actions .btn { margin-top: 0; }
 @media (max-width: 900px) {
   .overhead { grid-template-columns: 1fr; }
   .overhead__map { height: 340px; }

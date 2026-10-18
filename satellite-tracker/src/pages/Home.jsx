@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { Marker, Tooltip } from 'react-leaflet'
-import { CATEGORIES, SPOTLIGHT, getAbove, getVisualPasses } from '../lib/api'
+import { Marker, Polyline, Tooltip } from 'react-leaflet'
+import { CATEGORIES, SPOTLIGHT, getAbove, getTle, getVisualPasses } from '../lib/api'
+import { groundTrack, periodMinutes, positionAt, toSatrec } from '../lib/orbit'
 import { useObserver, observerQuery } from '../lib/observer'
 import { useNow } from '../lib/useNow'
 import { fmtNum } from '../lib/format'
 import LocationSearch from '../components/LocationSearch'
 import PassCard from '../components/PassCard'
-import WorldMap, { dotIcon } from '../components/WorldMap'
+import WorldMap, { dotIcon, trackedIcon } from '../components/WorldMap'
 import { Notice, Skeleton } from '../components/Status'
 
 export default function Home() {
@@ -103,10 +104,12 @@ function Overhead({ observer }) {
   const [params, setParams] = useSearchParams()
   const category = Number(params.get('cat')) || CATEGORIES[0].id
   const [state, setState] = useState({ status: 'loading', list: [] })
+  const [selected, setSelected] = useState(null)
   const q = observerQuery(observer)
 
   useEffect(() => {
     let alive = true
+    setSelected(null)
     setState((s) => ({ status: 'loading', list: s.list }))
     getAbove(observer, category)
       .then((list) => alive && setState({ status: 'ready', list: [...list].sort((a, b) => a.satalt - b.satalt) }))
@@ -151,11 +154,14 @@ function Overhead({ observer }) {
           <Marker position={[observer.lat, observer.lon]} icon={dotIcon('you')}>
             <Tooltip>You</Tooltip>
           </Marker>
-          {state.list.map((s) => (
-            <Marker key={s.satid} position={[s.satlat, s.satlng]} icon={dotIcon('sat')}>
-              <Tooltip>{s.satname}</Tooltip>
-            </Marker>
-          ))}
+          {state.list.map((s) =>
+            s.satid === selected?.satid ? null : (
+              <Marker key={s.satid} position={[s.satlat, s.satlng]} icon={dotIcon('sat')} eventHandlers={{ click: () => setSelected(s) }}>
+                <Tooltip>{s.satname}</Tooltip>
+              </Marker>
+            ),
+          )}
+          {selected && <Trajectory sat={selected} />}
         </WorldMap>
 
         <div className="overhead__list">
@@ -167,16 +173,75 @@ function Overhead({ observer }) {
           <ul className="sats">
             {state.list.map((s) => (
               <li key={s.satid}>
-                <Link to={`/satellite/${s.satid}${q}`} className="sat">
+                <button
+                  type="button"
+                  className={s.satid === selected?.satid ? 'sat is-active' : 'sat'}
+                  aria-pressed={s.satid === selected?.satid}
+                  onClick={() => setSelected(s.satid === selected?.satid ? null : s)}
+                >
                   <span className="sat__name">{s.satname}</span>
                   <span className="sat__meta">#{s.satid}</span>
                   <span className="sat__alt">{fmtNum(s.satalt)} km</span>
-                </Link>
+                </button>
               </li>
             ))}
           </ul>
         </div>
       </div>
+      {selected && <SelectedCard sat={selected} to={`/satellite/${selected.satid}${q}`} onClose={() => setSelected(null)} />}
     </section>
+  )
+}
+
+// Orbit of the satellite picked on the overhead map: where it has been, where
+// it is going, and where it is now, all propagated locally from its TLE.
+function Trajectory({ sat }) {
+  const [satrec, setSatrec] = useState(null)
+  const now = useNow(1000)
+
+  useEffect(() => {
+    let alive = true
+    setSatrec(null)
+    getTle(sat.satid)
+      .then((t) => alive && setSatrec(toSatrec(t)))
+      .catch(() => {})
+    return () => { alive = false }
+  }, [sat.satid])
+
+  const icon = useMemo(() => trackedIcon(sat.satname), [sat.satname])
+  const trackKey = Math.floor(now.getTime() / 30_000)
+  const track = useMemo(() => {
+    if (!satrec) return null
+    const period = periodMinutes(satrec)
+    return { past: groundTrack(satrec, now, period * 0.5, 0), future: groundTrack(satrec, now, 0, period) }
+  }, [satrec, trackKey]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const pos = satrec ? positionAt(satrec, now) : null
+  const at = pos ? [pos.lat, pos.lon] : [sat.satlat, sat.satlng]
+
+  return (
+    <>
+      {track?.past.map((seg, i) => <Polyline key={`p${i}`} positions={seg} pathOptions={{ color: '#b06ab8', weight: 1.5, opacity: 0.55 }} />)}
+      {track?.future.map((seg, i) => <Polyline key={`f${i}`} positions={seg} pathOptions={{ color: '#ffffff', weight: 1.5, opacity: 0.85, dashArray: '3 6' }} />)}
+      <Marker position={at} icon={icon} zIndexOffset={1000} />
+    </>
+  )
+}
+
+function SelectedCard({ sat, to, onClose }) {
+  return (
+    <div className="picked" role="status">
+      <div className="picked__info">
+        <p className="eyebrow">Selected · NORAD {sat.satid}</p>
+        <p className="picked__name">{sat.satname}</p>
+        <p className="picked__meta">
+          {fmtNum(sat.satalt)} km up · solid line: last half orbit · dashed: next orbit
+        </p>
+      </div>
+      <div className="picked__actions">
+        <Link to={to} className="btn">Track live →</Link>
+        <button type="button" className="btn btn--ghost" onClick={onClose}>Clear</button>
+      </div>
+    </div>
   )
 }

@@ -12,6 +12,7 @@ import { localizePath } from '../src/lib/paths.js'
 import { TIANGONG_COPY, tiangongFaqJsonLd } from '../src/lib/tiangong.js'
 import { FACTS, factRows, factSummary, factsJsonLd } from '../src/lib/satellite-facts.js'
 import { FAQ, faqFor, faqJsonLd } from '../src/lib/faq.js'
+import { CITIES, cityCopy, cityJsonLd, cityMeta, cityPath, cityQuery, nearbyCities } from '../src/lib/cities.js'
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist')
 const template = readFileSync(join(dist, 'index.html'), 'utf8')
@@ -59,6 +60,31 @@ function tiangongBody(locale) {
     + `<h2>${esc(t.compareTitle)}</h2><table><thead><tr><td></td><th>Tiangong</th><th>ISS</th></tr></thead><tbody>${rows}</tbody></table>`
     + `<p>${esc(t.compareFootnote)}</p><h2>${esc(t.faqTitle)}</h2>${faq}<h2>${esc(t.sourcesTitle)}</h2><ul>${sources}</ul></div>`
 }
+
+// ---- City pages: intro, links and FAQ as real HTML (no pass times: those are
+// computed live in the browser, so nothing stale is baked in). React replaces #root.
+const PASSES_TITLE = { en: (c) => `Visible passes from ${c}`, es: (c) => `Pasos visibles desde ${c}` }
+function cityBody(city, locale) {
+  const c = cityCopy(city, locale)
+  const name = city.name[locale]
+  const q = cityQuery(city, locale)
+  const link = (path, text) => `<a href="${localizePath(path, locale)}">${esc(text)}</a>`
+  return `<div class="wrap page city"><p class="eyebrow">${esc(c.eyebrow)}</p><h1 class="sat-head__title">${esc(c.h1)}</h1>`
+    + `<div class="city__intro">${c.intro.map((p) => `<p>${esc(p)}</p>`).join('')}</div>`
+    + `<p>${link(`/${q}`, c.openFull)} · ${link(`/satellite/25544${q}`, c.issLink)} · ${link(`/tiangong${q}`, c.tgLink)}</p>`
+    + `<h2>${esc(PASSES_TITLE[locale](name))}</h2><p>${esc(c.passesNote)}</p>`
+    + `<h2>${esc(c.faqTitle)}</h2>${c.faq.map(({ q: question, a }) => `<h3>${esc(question)}</h3><p>${esc(a)}</p>`).join('')}`
+    + `<h2>${esc(c.nearbyTitle)}</h2><ul>${nearbyCities(city).map((n) => `<li>${link(cityPath(n.slug), n.name[locale])}</li>`).join('')}</ul></div>`
+}
+
+const cityRoutes = (locale) => CITIES.map((city) => ({
+  meta: cityMeta(city, locale),
+  locale,
+  extra: {
+    root: cityBody(city, locale),
+    head: `    <script type="application/ld+json" id="ld-city">${json(cityJsonLd(city, locale))}</script>`,
+  },
+}))
 
 // ---- Satellite pages: citable facts in the raw HTML -------------------------
 // CelesTrak SATCAT records (owner, launch date, status, orbit) fetched once per
@@ -128,6 +154,7 @@ const routesFor = (locale) => [
   // Tiangong: intro, comparison and FAQ (with its FAQPage JSON-LD) inside #root.
   { meta: META[locale].tiangong, locale, extra: { root: tiangongBody(locale) } },
   ...satRoutes(locale),
+  ...cityRoutes(locale),
 ]
 const routes = [...routesFor('en'), ...routesFor('es')]
 
@@ -186,7 +213,12 @@ Made by Arnau Garriga Torné (https://arnaugarriga.com). Source code: https://gi
 - [Hubble Space Telescope](${SITE}/satellite/20580)
 - [Starlink over contested regions](${SITE}/starlink): how many Starlink satellites are overhead in Kyiv, Tehran, Caracas and other cities, now and over the next 90 minutes. Coverage geometry, not service.
 - [About](${SITE}/about): methods, data sources and FAQ.
+- Visible passes by city, e.g. [ISS tonight over Madrid](${SITE}/tonight/madrid) and [Barcelona](${SITE}/tonight/barcelona). In Spanish: ${SITE}/es/esta-noche/{city}.
 - [En español](${SITE}/es): the same app in Spanish — when to see the ISS ("cuándo ver la Estación Espacial"), Tiangong (${SITE}/es/tiangong) and the satellites visible tonight ("satélites hoy").
+
+## Cities
+
+${CITIES.map((c) => `- [ISS and satellites tonight over ${c.name.en}, ${c.country.en}](${SITE}${cityPath(c.slug)})`).join('\n')}
 
 ## FAQ
 

@@ -1,0 +1,602 @@
+[
+ {
+  "slug": "madrid",
+  "name": {
+   "en": "Madrid",
+   "es": "Madrid"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 40.4168,
+  "lon": -3.7035,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "barcelona",
+  "name": {
+   "en": "Barcelona",
+   "es": "Barcelona"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 41.3826,
+  "lon": 2.1771,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "valencia",
+  "name": {
+   "en": "Valencia",
+   "es": "Valencia"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 39.4697,
+  "lon": -0.3763,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "seville",
+  "name": {
+   "en": "Seville",
+   "es": "Sevilla"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 37.3886,
+  "lon": -5.9953,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "zaragoza",
+  "name": {
+   "en": "Zaragoza",
+   "es": "Zaragoza"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 41.6916,
+  "lon": -0.9101,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "malaga",
+  "name": {
+   "en": "Málaga",
+   "es": "Málaga"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 36.7648,
+  "lon": -4.4422,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "murcia",
+  "name": {
+   "en": "Murcia",
+   "es": "Murcia"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 37.9348,
+  "lon": -1.1131,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "palma",
+  "name": {
+   "en": "Palma",
+   "es": "Palma"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 39.5696,
+  "lon": 2.6501,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "las-palmas",
+  "name": {
+   "en": "Las Palmas de Gran Canaria",
+   "es": "Las Palmas de Gran Canaria"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 28.1289,
+  "lon": -15.4349,
+  "tz": "Atlantic/Canary"
+ },
+ {
+  "slug": "bilbao",
+  "name": {
+   "en": "Bilbao",
+   "es": "Bilbao"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 43.263,
+  "lon": -2.935,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "alicante",
+  "name": {
+   "en": "Alicante",
+   "es": "Alicante"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 38.3436,
+  "lon": -0.4882,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "cordoba",
+  "name": {
+   "en": "Córdoba",
+   "es": "Córdoba"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 37.8846,
+  "lon": -4.776,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "valladolid",
+  "name": {
+   "en": "Valladolid",
+   "es": "Valladolid"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 41.62,
+  "lon": -4.726,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "vigo",
+  "name": {
+   "en": "Vigo",
+   "es": "Vigo"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 42.1986,
+  "lon": -8.728,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "gijon",
+  "name": {
+   "en": "Gijón",
+   "es": "Gijón"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 43.5449,
+  "lon": -5.6627,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "granada",
+  "name": {
+   "en": "Granada",
+   "es": "Granada"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 37.1735,
+  "lon": -3.5995,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "a-coruna",
+  "name": {
+   "en": "A Coruña",
+   "es": "A Coruña"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 43.3455,
+  "lon": -8.4139,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "vitoria-gasteiz",
+  "name": {
+   "en": "Vitoria-Gasteiz",
+   "es": "Vitoria-Gasteiz"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 42.8506,
+  "lon": -2.6614,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "santa-cruz-de-tenerife",
+  "name": {
+   "en": "Santa Cruz de Tenerife",
+   "es": "Santa Cruz de Tenerife"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 28.4672,
+  "lon": -16.2508,
+  "tz": "Atlantic/Canary"
+ },
+ {
+  "slug": "pamplona",
+  "name": {
+   "en": "Pamplona",
+   "es": "Pamplona"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 42.8157,
+  "lon": -1.6522,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "san-sebastian",
+  "name": {
+   "en": "San Sebastián",
+   "es": "San Sebastián"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 43.3224,
+  "lon": -1.9839,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "santander",
+  "name": {
+   "en": "Santander",
+   "es": "Santander"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 43.4619,
+  "lon": -3.81,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "girona",
+  "name": {
+   "en": "Girona",
+   "es": "Girona"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 41.9793,
+  "lon": 2.8199,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "lleida",
+  "name": {
+   "en": "Lleida",
+   "es": "Lleida"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 41.6148,
+  "lon": 0.6268,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "tarragona",
+  "name": {
+   "en": "Tarragona",
+   "es": "Tarragona"
+  },
+  "country": {
+   "en": "Spain",
+   "es": "España"
+  },
+  "cc": "es",
+  "lat": 41.1172,
+  "lon": 1.2546,
+  "tz": "Europe/Madrid"
+ },
+ {
+  "slug": "mexico-city",
+  "name": {
+   "en": "Mexico City",
+   "es": "Ciudad de México"
+  },
+  "country": {
+   "en": "Mexico",
+   "es": "México"
+  },
+  "cc": "mx",
+  "lat": 19.3208,
+  "lon": -99.1515,
+  "tz": "America/Mexico_City"
+ },
+ {
+  "slug": "buenos-aires",
+  "name": {
+   "en": "Buenos Aires",
+   "es": "Buenos Aires"
+  },
+  "country": {
+   "en": "Argentina",
+   "es": "Argentina"
+  },
+  "cc": "ar",
+  "lat": -34.6096,
+  "lon": -58.3888,
+  "tz": "America/Argentina/Buenos_Aires"
+ },
+ {
+  "slug": "bogota",
+  "name": {
+   "en": "Bogotá",
+   "es": "Bogotá"
+  },
+  "country": {
+   "en": "Colombia",
+   "es": "Colombia"
+  },
+  "cc": "co",
+  "lat": 4.6534,
+  "lon": -74.0836,
+  "tz": "America/Bogota"
+ },
+ {
+  "slug": "lima",
+  "name": {
+   "en": "Lima",
+   "es": "Lima"
+  },
+  "country": {
+   "en": "Peru",
+   "es": "Perú"
+  },
+  "cc": "pe",
+  "lat": -12.046,
+  "lon": -77.0306,
+  "tz": "America/Lima"
+ },
+ {
+  "slug": "santiago",
+  "name": {
+   "en": "Santiago",
+   "es": "Santiago de Chile"
+  },
+  "country": {
+   "en": "Chile",
+   "es": "Chile"
+  },
+  "cc": "cl",
+  "lat": -33.4377,
+  "lon": -70.6511,
+  "tz": "America/Santiago"
+ },
+ {
+  "slug": "london",
+  "name": {
+   "en": "London",
+   "es": "Londres"
+  },
+  "country": {
+   "en": "United Kingdom",
+   "es": "Reino Unido"
+  },
+  "cc": "gb",
+  "lat": 51.5074,
+  "lon": -0.1278,
+  "tz": "Europe/London"
+ },
+ {
+  "slug": "new-york",
+  "name": {
+   "en": "New York",
+   "es": "Nueva York"
+  },
+  "country": {
+   "en": "United States",
+   "es": "Estados Unidos"
+  },
+  "cc": "us",
+  "lat": 40.7127,
+  "lon": -74.006,
+  "tz": "America/New_York"
+ },
+ {
+  "slug": "los-angeles",
+  "name": {
+   "en": "Los Angeles",
+   "es": "Los Ángeles"
+  },
+  "country": {
+   "en": "United States",
+   "es": "Estados Unidos"
+  },
+  "cc": "us",
+  "lat": 34.0537,
+  "lon": -118.2428,
+  "tz": "America/Los_Angeles"
+ },
+ {
+  "slug": "chicago",
+  "name": {
+   "en": "Chicago",
+   "es": "Chicago"
+  },
+  "country": {
+   "en": "United States",
+   "es": "Estados Unidos"
+  },
+  "cc": "us",
+  "lat": 41.8756,
+  "lon": -87.6244,
+  "tz": "America/Chicago"
+ },
+ {
+  "slug": "miami",
+  "name": {
+   "en": "Miami",
+   "es": "Miami"
+  },
+  "country": {
+   "en": "United States",
+   "es": "Estados Unidos"
+  },
+  "cc": "us",
+  "lat": 25.7742,
+  "lon": -80.1936,
+  "tz": "America/New_York"
+ },
+ {
+  "slug": "toronto",
+  "name": {
+   "en": "Toronto",
+   "es": "Toronto"
+  },
+  "country": {
+   "en": "Canada",
+   "es": "Canadá"
+  },
+  "cc": "ca",
+  "lat": 43.6535,
+  "lon": -79.3839,
+  "tz": "America/Toronto"
+ },
+ {
+  "slug": "sydney",
+  "name": {
+   "en": "Sydney",
+   "es": "Sídney"
+  },
+  "country": {
+   "en": "Australia",
+   "es": "Australia"
+  },
+  "cc": "au",
+  "lat": -33.8698,
+  "lon": 151.2083,
+  "tz": "Australia/Sydney"
+ },
+ {
+  "slug": "dublin",
+  "name": {
+   "en": "Dublin",
+   "es": "Dublín"
+  },
+  "country": {
+   "en": "Ireland",
+   "es": "Irlanda"
+  },
+  "cc": "ie",
+  "lat": 53.3494,
+  "lon": -6.2606,
+  "tz": "Europe/Dublin"
+ },
+ {
+  "slug": "paris",
+  "name": {
+   "en": "Paris",
+   "es": "París"
+  },
+  "country": {
+   "en": "France",
+   "es": "Francia"
+  },
+  "cc": "fr",
+  "lat": 48.8589,
+  "lon": 2.32,
+  "tz": "Europe/Paris"
+ },
+ {
+  "slug": "lisbon",
+  "name": {
+   "en": "Lisbon",
+   "es": "Lisboa"
+  },
+  "country": {
+   "en": "Portugal",
+   "es": "Portugal"
+  },
+  "cc": "pt",
+  "lat": 38.7078,
+  "lon": -9.1366,
+  "tz": "Europe/Lisbon"
+ }
+]

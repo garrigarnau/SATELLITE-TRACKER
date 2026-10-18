@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { tr } from '../lib/i18n'
 
 // Counts over the next 90 minutes as a thin line. Every sparkline on a page
 // shares `max` so their heights are comparable. `interactive` adds a hover
@@ -14,7 +15,7 @@ export default function Sparkline({ values, max, stepMin = 2, width = 120, heigh
   const lo = Math.min(...values)
   const hi = Math.max(...values)
   const d = values.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join('')
-  const summary = label || `Between ${lo} and ${hi} over the next ${(values.length - 1) * stepMin} minutes`
+  const summary = label || tr('spark.summary', { lo, hi, min: (values.length - 1) * stepMin })
 
   const onMove = (e) => {
     const box = e.currentTarget.getBoundingClientRect()
@@ -50,7 +51,7 @@ export default function Sparkline({ values, max, stepMin = 2, width = 120, heigh
       )}
       {hover != null && (
         <span className="spark__tip" style={{ left: `${(x(hover) / width) * 100}%` }} aria-hidden="true">
-          {hover === 0 ? 'Now' : `+${hover * stepMin} min`} · <strong>{values[hover]}</strong>
+          {hover === 0 ? tr('spark.now') : `+${hover * stepMin} min`} · <strong>{values[hover]}</strong>
         </span>
       )}
     </span>

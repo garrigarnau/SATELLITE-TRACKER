@@ -2,7 +2,8 @@
 // loaded: local dev, ad blockers, or Umami being down. Never send coordinates.
 export function track(event, data) {
   try {
-    window.umami?.track(event, data)
+    // The page language rides along on every event, to compare EN and ES use.
+    window.umami?.track(event, { ...data, locale: document.documentElement.lang || 'en' })
   } catch {
     // Analytics must never break the app.
   }

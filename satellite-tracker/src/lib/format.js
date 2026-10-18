@@ -1,28 +1,37 @@
-const timeFmt = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' })
-const dayFmt = new Intl.DateTimeFormat(undefined, { weekday: 'short', day: 'numeric', month: 'short' })
-const num = (d) => new Intl.NumberFormat(undefined, { maximumFractionDigits: d, minimumFractionDigits: d })
+import { getLocale, intlLocale, localCompass, tr } from './i18n'
 
-export const fmtTime = (unix) => timeFmt.format(new Date(unix * 1000))
+// Formatters per active locale (see i18n.setLocale), built once each.
+const cache = new Map()
+function fmt(key, make) {
+  const k = `${getLocale()}:${key}`
+  if (!cache.has(k)) cache.set(k, make(intlLocale()))
+  return cache.get(k)
+}
+const timeFmt = () => fmt('time', (l) => new Intl.DateTimeFormat(l, { hour: '2-digit', minute: '2-digit' }))
+const dayFmt = () => fmt('day', (l) => new Intl.DateTimeFormat(l, { weekday: 'short', day: 'numeric', month: 'short' }))
+const num = (d) => fmt(`num${d}`, (l) => new Intl.NumberFormat(l, { maximumFractionDigits: d, minimumFractionDigits: d }))
+
+export const fmtTime = (unix) => timeFmt().format(new Date(unix * 1000))
 
 export function fmtDay(unix) {
   const d = new Date(unix * 1000)
   const today = new Date()
   const tomorrow = new Date(today.getTime() + 86_400_000)
-  if (d.toDateString() === today.toDateString()) return 'Tonight'
-  if (d.toDateString() === tomorrow.toDateString()) return 'Tomorrow'
-  return dayFmt.format(d)
+  if (d.toDateString() === today.toDateString()) return tr('day.tonight')
+  if (d.toDateString() === tomorrow.toDateString()) return tr('day.tomorrow')
+  return dayFmt().format(d)
 }
 
 export function fmtCountdown(unix, now = Date.now()) {
   const s = Math.round(unix - now / 1000)
-  if (s <= 0) return 'now'
+  if (s <= 0) return tr('count.now')
   const d = Math.floor(s / 86400)
   const h = Math.floor((s % 86400) / 3600)
   const m = Math.floor((s % 3600) / 60)
-  if (d > 0) return `in ${d}d ${h}h`
-  if (h > 0) return `in ${h}h ${m}m`
-  if (m > 0) return `in ${m}m`
-  return `in ${s}s`
+  if (d > 0) return tr('count.d', { d, h })
+  if (h > 0) return tr('count.h', { h, m })
+  if (m > 0) return tr('count.m', { m })
+  return tr('count.s', { s })
 }
 
 export function fmtDuration(seconds) {
@@ -39,12 +48,15 @@ export function fmtCoord(value, pos, neg) {
 
 // Visual magnitude: lower is brighter. N2YO uses 100000 when it is unknown.
 export function brightness(mag) {
-  if (mag == null || mag >= 100000) return { label: 'Unknown', level: 0 }
-  if (mag <= -2) return { label: 'Very bright', level: 4 }
-  if (mag <= 1) return { label: 'Bright', level: 3 }
-  if (mag <= 3) return { label: 'Visible', level: 2 }
-  return { label: 'Faint', level: 1 }
+  if (mag == null || mag >= 100000) return { label: tr('bright.unknown'), level: 0 }
+  if (mag <= -2) return { label: tr('bright.veryBright'), level: 4 }
+  if (mag <= 1) return { label: tr('bright.bright'), level: 3 }
+  if (mag <= 3) return { label: tr('bright.visible'), level: 2 }
+  return { label: tr('bright.faint'), level: 1 }
 }
 
 const COMPASS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
-export const compass = (deg) => COMPASS[Math.round(((deg % 360) + 360) % 360 / 45) % 8]
+export const compass = (deg) => localCompass(COMPASS[Math.round(((deg % 360) + 360) % 360 / 45) % 8])
+
+// Translates the 16-point compass labels that pass predictions carry ("SSW").
+export const dir = (label) => localCompass(label)

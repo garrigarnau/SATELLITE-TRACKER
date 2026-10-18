@@ -5,116 +5,179 @@
     {
       "id": "kyiv",
       "label": "Kyiv",
+      "label_es": "Kiev",
       "country": "Ukraine",
+      "country_es": "Ucrania",
       "lat": 50.45,
       "lon": 30.523,
       "kind": "region",
       "context": "In February 2026 Ukraine required Starlink terminals to be registered and SpaceX cut off unregistered ones, which Ukraine said were used by Russian forces; a Russian deputy defence minister acknowledged the outage on 17 Feb.",
+      "context_es": "En febrero de 2026 Ucrania obligó a registrar los terminales de Starlink y SpaceX desconectó los no registrados, que según Ucrania usaban las fuerzas rusas; un viceministro de Defensa ruso reconoció el corte el 17 de febrero.",
       "asOf": "2026-02-17",
       "sources": [
-        { "title": "bne IntelliNews, Feb 2026", "url": "https://www.intellinews.com/ukraine-says-russian-frontline-activity-drops-after-starlink-terminals-blocked-424675/" },
-        { "title": "Anadolu Agency, Feb 2026", "url": "https://www.aa.com.tr/en/world/senior-russian-military-official-acknowledges-starlink-terminals-disabled-for-2-weeks/3833306" }
+        {
+          "title": "bne IntelliNews, Feb 2026",
+          "url": "https://www.intellinews.com/ukraine-says-russian-frontline-activity-drops-after-starlink-terminals-blocked-424675/"
+        },
+        {
+          "title": "Anadolu Agency, Feb 2026",
+          "url": "https://www.aa.com.tr/en/world/senior-russian-military-official-acknowledges-starlink-terminals-disabled-for-2-weeks/3833306"
+        }
       ]
     },
     {
       "id": "kramatorsk",
       "label": "Kramatorsk",
+      "label_es": "Kramatorsk",
       "country": "Ukraine, eastern front",
+      "country_es": "Ucrania, frente oriental",
       "lat": 48.723,
       "lon": 37.556,
       "kind": "region",
       "context": "Front-line area; Ukraine said Russian units there relied on unregistered Starlink terminals, including on drones, until the February 2026 whitelist.",
+      "context_es": "Zona del frente; Ucrania afirmó que allí las unidades rusas dependían de terminales de Starlink no registrados, incluso en drones, hasta la lista blanca de febrero de 2026.",
       "asOf": "2026-02-17",
       "sources": [
-        { "title": "Novaya Gazeta Europe, 5 Feb 2026", "url": "https://novayagazeta.eu/en/articles/2026/02/05/starlink-outage-leaves-russian-military-without-satellite-internet-access-within-ukraines-borders-en-news" },
-        { "title": "bne IntelliNews, Feb 2026", "url": "https://www.intellinews.com/ukraine-says-russian-frontline-activity-drops-after-starlink-terminals-blocked-424675/" },
-        { "title": "Anadolu Agency, Feb 2026", "url": "https://www.aa.com.tr/en/world/senior-russian-military-official-acknowledges-starlink-terminals-disabled-for-2-weeks/3833306" }
+        {
+          "title": "Novaya Gazeta Europe, 5 Feb 2026",
+          "url": "https://novayagazeta.eu/en/articles/2026/02/05/starlink-outage-leaves-russian-military-without-satellite-internet-access-within-ukraines-borders-en-news"
+        },
+        {
+          "title": "bne IntelliNews, Feb 2026",
+          "url": "https://www.intellinews.com/ukraine-says-russian-frontline-activity-drops-after-starlink-terminals-blocked-424675/"
+        },
+        {
+          "title": "Anadolu Agency, Feb 2026",
+          "url": "https://www.aa.com.tr/en/world/senior-russian-military-official-acknowledges-starlink-terminals-disabled-for-2-weeks/3833306"
+        }
       ]
     },
     {
       "id": "tehran",
       "label": "Tehran",
+      "label_es": "Teherán",
       "country": "Iran",
+      "country_es": "Irán",
       "lat": 35.689,
       "lon": 51.389,
       "kind": "region",
       "context": "Using or distributing Starlink is punishable by fines and prison in Iran; in October 2026 a Supreme National Cyberspace Council official called it a \"tool of war\" amid the war that began on 28 Feb 2026.",
+      "context_es": "Usar o distribuir Starlink se castiga con multas y cárcel en Irán; en octubre de 2026 un responsable del Consejo Supremo del Ciberespacio lo llamó «herramienta de guerra», en plena guerra iniciada el 28 de febrero de 2026.",
       "asOf": "2026-10-14",
       "sources": [
-        { "title": "Al Jazeera, 14 Oct 2026", "url": "https://www.aljazeera.com/news/2026/10/14/iran-targets-starlink-as-tool-of-war-with-hints-at-internet-restrictions" }
+        {
+          "title": "Al Jazeera, 14 Oct 2026",
+          "url": "https://www.aljazeera.com/news/2026/10/14/iran-targets-starlink-as-tool-of-war-with-hints-at-internet-restrictions"
+        }
       ]
     },
     {
       "id": "caracas",
       "label": "Caracas",
+      "label_es": "Caracas",
       "country": "Venezuela",
+      "country_es": "Venezuela",
       "lat": 10.481,
       "lon": -66.904,
       "kind": "region",
       "context": "On 4 Jan 2026, after US strikes and Maduro's capture, Starlink offered free service credits to users in Venezuela until 3 Feb; it is not sold there.",
+      "context_es": "El 4 de enero de 2026, tras los ataques de EE. UU. y la captura de Maduro, Starlink ofreció créditos de servicio gratuitos a los usuarios de Venezuela hasta el 3 de febrero; no se vende allí.",
       "asOf": "2026-01-05",
       "sources": [
-        { "title": "The Register, 5 Jan 2026", "url": "https://www.theregister.com/2026/01/05/starlink_free_service_venezuela/" }
+        {
+          "title": "The Register, 5 Jan 2026",
+          "url": "https://www.theregister.com/2026/01/05/starlink_free_service_venezuela/"
+        }
       ]
     },
     {
       "id": "gaza",
       "label": "Gaza City",
+      "label_es": "Ciudad de Gaza",
       "country": "Gaza",
+      "country_es": "Gaza",
       "lat": 31.502,
       "lon": 34.467,
       "kind": "region",
       "context": "Musk pledged Starlink for aid groups in Gaza in October 2023; Israel opposed it and later approved limited use for a field hospital in Rafah.",
+      "context_es": "Musk prometió Starlink para las organizaciones humanitarias de Gaza en octubre de 2023; Israel se opuso y más tarde aprobó un uso limitado para un hospital de campaña en Rafah.",
       "asOf": "2024-02",
       "sources": [
-        { "title": "Dawn", "url": "https://www.dawn.com/news/1814371" },
-        { "title": "Benton Institute", "url": "https://www.benton.org/headlines/israel-and-un-negotiate-deploying-musks-starlink-gaza" }
+        {
+          "title": "Dawn",
+          "url": "https://www.dawn.com/news/1814371"
+        },
+        {
+          "title": "Benton Institute",
+          "url": "https://www.benton.org/headlines/israel-and-un-negotiate-deploying-musks-starlink-gaza"
+        }
       ]
     },
     {
       "id": "taipei",
       "label": "Taipei",
+      "label_es": "Taipéi",
       "country": "Taiwan",
+      "country_es": "Taiwán",
       "lat": 25.033,
       "lon": 121.565,
       "kind": "region",
       "context": "Starlink is not offered in Taiwan; in July 2026 lawmakers approved changes allowing case-by-case exemptions from the foreign-ownership rules that had kept it out.",
+      "context_es": "Starlink no se ofrece en Taiwán; en julio de 2026 los legisladores aprobaron cambios que permiten excepciones caso por caso a las normas de propiedad extranjera que lo habían dejado fuera.",
       "asOf": "2026-07",
       "sources": [
-        { "title": "Citizen Digital / AFP, Jul 2026", "url": "https://citizen.digital/article/taiwan-lawmakers-remove-legal-hurdles-for-starlink-to-operate-n386806" }
+        {
+          "title": "Citizen Digital / AFP, Jul 2026",
+          "url": "https://citizen.digital/article/taiwan-lawmakers-remove-legal-hurdles-for-starlink-to-operate-n386806"
+        }
       ]
     },
     {
       "id": "khartoum",
       "label": "Khartoum",
+      "label_es": "Jartum",
       "country": "Sudan",
+      "country_es": "Sudán",
       "lat": 15.501,
       "lon": 32.56,
       "kind": "region",
       "context": "Starlink is not licensed in Sudan, but terminals smuggled via neighbouring countries have been widely reported in use by civilians and the RSF since 2023.",
+      "context_es": "Starlink no tiene licencia en Sudán, pero se han documentado ampliamente terminales introducidos de contrabando desde países vecinos y usados por civiles y por las RSF desde 2023.",
       "asOf": "2024-04-11",
       "sources": [
-        { "title": "Geeska", "url": "https://www.geeska.com/en/starlink-ruins-sudans-networks" },
-        { "title": "Gigazine, 11 Apr 2024", "url": "https://gigazine.net/gsc_news/en/20240411-starlink-russia-sudan-black-market" }
+        {
+          "title": "Geeska",
+          "url": "https://www.geeska.com/en/starlink-ruins-sudans-networks"
+        },
+        {
+          "title": "Gigazine, 11 Apr 2024",
+          "url": "https://gigazine.net/gsc_news/en/20240411-starlink-russia-sudan-black-market"
+        }
       ]
     },
     {
       "id": "madrid",
       "label": "Madrid",
+      "label_es": "Madrid",
       "country": "Spain · reference",
+      "country_es": "España · referencia",
       "lat": 40.417,
       "lon": -3.704,
       "kind": "control",
-      "context": "Reference city at a similar latitude, to show what \"normal\" looks like."
+      "context": "Reference city at a similar latitude, to show what \"normal\" looks like.",
+      "context_es": "Ciudad de referencia a una latitud parecida, para mostrar qué es lo «normal»."
     },
     {
       "id": "quito",
       "label": "Quito",
+      "label_es": "Quito",
       "country": "Ecuador · reference",
+      "country_es": "Ecuador · referencia",
       "lat": -0.18,
       "lon": -78.468,
       "kind": "control",
-      "context": "Near-equatorial reference, to compare with Caracas."
+      "context": "Near-equatorial reference, to compare with Caracas.",
+      "context_es": "Referencia casi ecuatorial, para comparar con Caracas."
     }
   ]
 }

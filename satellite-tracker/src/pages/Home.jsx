@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSeo } from '../lib/seo'
-import { DEFAULT_META, homeMetaFor, prettySatName } from '../lib/seo-data'
+import { META, prettySatNameFor } from '../lib/seo-data'
+import { useT } from '../lib/i18n'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Marker, Polyline, Tooltip } from 'react-leaflet'
 import { CATEGORIES, SPOTLIGHT, getAbove, getTle, getVisualPasses, isQuotaError } from '../lib/api'
@@ -21,7 +22,9 @@ import { ownershipBreakdown, useOwnership } from '../lib/celestrak'
 
 export default function Home() {
   const [observer, setObserver] = useObserver()
-  useSeo(observer ? homeMetaFor(observer.name) : DEFAULT_META)
+  const t = useT()
+  const meta = META[t.locale]
+  useSeo(observer ? meta.homeFor(observer.name) : meta.home)
 
   if (!observer) {
     return (
@@ -29,25 +32,20 @@ export default function Home() {
       <section className="hero">
         <HeroSky />
         <div className="wrap hero__inner">
-          <p className="eyebrow">Look up tonight</p>
-          <h1 className="hero__title">See what&rsquo;s flying over you.</h1>
-          <p className="hero__lede">
-            Find the next time the ISS and other bright satellites cross your sky, and track anything in orbit live.
-          </p>
+          <p className="eyebrow">{t('hero.eyebrow')}</p>
+          <h1 className="hero__title">{t('hero.title')}</h1>
+          <p className="hero__lede">{t('hero.lede')}</p>
           <LocationSearch onSelect={setObserver} autoFocus />
 
-          <div className="hero__sep" role="separator" aria-hidden="true"><span>Also on Satellite Tracker</span></div>
+          <div className="hero__sep" role="separator" aria-hidden="true"><span>{t('hero.also')}</span></div>
 
           <aside className="promo" aria-labelledby="promo-title">
             <div className="promo__text">
-              <p className="eyebrow">New · Starlink over contested regions</p>
-              <p id="promo-title" className="promo__title">Who&rsquo;s overhead in Kyiv, Tehran or Caracas?</p>
-              <p className="promo__body">
-                Starlink has become part of wars and politics, from Ukraine&rsquo;s front line to Iran&rsquo;s ban. We count how
-                many of its satellites are above these places right now, and explain why coverage isn&rsquo;t the same as service.
-              </p>
+              <p className="eyebrow">{t('promo.eyebrow')}</p>
+              <p id="promo-title" className="promo__title">{t('promo.title')}</p>
+              <p className="promo__body">{t('promo.body')}</p>
             </div>
-            <Link to="/starlink" className="btn promo__cta">Open the Starlink page →</Link>
+            <Link to={t.lp('/starlink')} className="btn promo__cta">{t('promo.cta')}</Link>
           </aside>
         </div>
       </section>
@@ -60,7 +58,7 @@ export default function Home() {
 
   return (
     <div className="wrap page">
-      <h1 className="sr-only">ISS and satellite passes over {observer.name}</h1>
+      <h1 className="sr-only">{t('home.h1', { city: observer.name })}</h1>
       <Passes observer={observer} />
       <Overhead observer={observer} />
     </div>
@@ -70,6 +68,7 @@ export default function Home() {
 const PAGE = 6
 
 function Passes({ observer }) {
+  const t = useT()
   const now = useNow(1000).getTime()
   const [state, setState] = useState({ status: 'loading', passes: [] })
   const [limit, setLimit] = useState(PAGE)
@@ -99,29 +98,31 @@ function Passes({ observer }) {
   // Once passes are known, the page description names the next one.
   const next = future[0]
   const nextDay = next && fmtDay(next.startUTC)
-  useSeo(
-    homeMetaFor(
-      observer.name,
-      next && `${prettySatName(next.satid, next.satname)}, ${/^(Tonight|Tomorrow)$/.test(nextDay) ? nextDay.toLowerCase() : `on ${nextDay}`} at ${fmtTime(next.startUTC)}`,
-    ),
-  )
+  const relative = next && [t('day.tonight'), t('day.tomorrow')].includes(nextDay)
+  const nextName = next && prettySatNameFor(t.locale, next.satid, next.satname)
+  const nextText = !next
+    ? undefined
+    : t.locale === 'es'
+      ? `${nextName}, ${relative ? nextDay.toLowerCase() : `el ${nextDay}`} a las ${fmtTime(next.startUTC)}`
+      : `${nextName}, ${relative ? nextDay.toLowerCase() : `on ${nextDay}`} at ${fmtTime(next.startUTC)}`
+  useSeo(META[t.locale].homeFor(observer.name, nextText))
 
   return (
     <section className="section" aria-labelledby="passes-title">
       <div className="section__head">
         <div>
-          <p className="eyebrow">Next 10 days</p>
-          <h2 id="passes-title" className="section__title">Visible passes from {observer.name}</h2>
+          <p className="eyebrow">{t('passes.eyebrow')}</p>
+          <h2 id="passes-title" className="section__title">{t('passes.title', { city: observer.name })}</h2>
         </div>
         <div>
           <p className="section__note">
-            Bright satellites you can spot with the naked eye. Passes cluster around dusk and dawn, when your sky is dark but the satellite is still in sunlight.
-            {' '}Space stations: <Link to={`/satellite/25544${q}`}>ISS</Link> · <Link to={`/tiangong${q}`}>Tiangong</Link>.
+            {t('passes.note')}
+            {' '}{t('passes.stations')} <Link to={t.lp(`/satellite/25544${q}`)}>ISS</Link> · <Link to={t.lp(`/tiangong${q}`)}>Tiangong</Link>.
           </p>
           {(cloudyCount > 0 || hideCloudy) && (
             <label className="sky-toggle">
               <input type="checkbox" checked={hideCloudy} onChange={(e) => setHideCloudy(e.target.checked)} />
-              Hide cloudy passes ({cloudyCount})
+              {t('passes.hideCloudy', { n: cloudyCount })}
             </label>
           )}
         </div>
@@ -129,28 +130,24 @@ function Passes({ observer }) {
 
       {state.status === 'loading' && <div className="passes"><Skeleton rows={3} /></div>}
       {state.status === 'error' && (
-        <Notice tone="error" title="Couldn't load passes">
-          {state.quota
-            ? 'The free pass-prediction quota for this hour is used up. Predictions will be back within the hour.'
-            : "The satellite data service didn't respond. Try again in a few minutes."}
+        <Notice tone="error" title={t('passes.errorTitle')}>
+          {state.quota ? t('passes.quota') : t('passes.error')}
         </Notice>
       )}
-      {future.length > 0 && !upcoming.length && <Notice>Every pass in the forecast window looks clouded out.</Notice>}
+      {future.length > 0 && !upcoming.length && <Notice>{t('passes.allCloudy')}</Notice>}
       {state.status === 'ready' && !future.length && (
-        <Notice title="No visible passes in the next 10 days">
-          That happens around midsummer at high latitudes, when the sky never gets dark enough. Check what&rsquo;s overhead below instead.
-        </Notice>
+        <Notice title={t('passes.noneTitle')}>{t('passes.noneBody')}</Notice>
       )}
       {upcoming.length > 0 && (
         <>
           <div className="passes">
             {upcoming.slice(0, limit).map((p) => (
-              <PassCard key={`${p.satid}-${p.startUTC}`} pass={p} now={now} to={`/satellite/${p.satid}${q}`} cloud={passCloud(weather, p)} />
+              <PassCard key={`${p.satid}-${p.startUTC}`} pass={p} now={now} to={t.lp(`/satellite/${p.satid}${q}`)} cloud={passCloud(weather, p)} />
             ))}
           </div>
           {upcoming.length > limit && (
             <button type="button" className="btn btn--ghost" onClick={() => { track('show_more_passes', { page: 'home' }); setLimit((l) => l + PAGE) }}>
-              Show more passes ({upcoming.length - limit})
+              {t('passes.more', { n: upcoming.length - limit })}
             </button>
           )}
         </>
@@ -160,6 +157,7 @@ function Passes({ observer }) {
 }
 
 function Overhead({ observer }) {
+  const t = useT()
   const [params, setParams] = useSearchParams()
   const category = Number(params.get('cat')) || CATEGORIES[0].id
   const [state, setState] = useState({ status: 'loading', list: [] })
@@ -195,13 +193,13 @@ function Overhead({ observer }) {
     <section className="section" aria-labelledby="overhead-title">
       <div className="section__head">
         <div>
-          <p className="eyebrow">Right now</p>
-          <h2 id="overhead-title" className="section__title">Overhead</h2>
+          <p className="eyebrow">{t('overhead.eyebrow')}</p>
+          <h2 id="overhead-title" className="section__title">{t('overhead.title')}</h2>
         </div>
-        <p className="section__note">Satellites currently within 70° of straight up from you. Pick one to follow it live.</p>
+        <p className="section__note">{t('overhead.note')}</p>
       </div>
 
-      <div className="chips" role="radiogroup" aria-label="Satellite category">
+      <div className="chips" role="radiogroup" aria-label={t('overhead.categories')}>
         {CATEGORIES.map((c) => (
           <button
             key={c.id}
@@ -211,7 +209,7 @@ function Overhead({ observer }) {
             className="chip"
             onClick={() => { track('category_selected', { category: c.label }); setCategory(c.id) }}
           >
-            {c.label}
+            {t(`cat.${c.id}`)}
           </button>
         ))}
       </div>
@@ -219,7 +217,7 @@ function Overhead({ observer }) {
       <div className="overhead">
         <WorldMap center={[observer.lat, observer.lon]} zoom={3} className="overhead__map">
           <Marker position={[observer.lat, observer.lon]} icon={dotIcon('you')}>
-            <Tooltip>You</Tooltip>
+            <Tooltip>{t('common.you')}</Tooltip>
           </Marker>
           {shown.map((s) =>
             s.satid === selected?.satid ? null : (
@@ -233,13 +231,13 @@ function Overhead({ observer }) {
 
         <div className="overhead__list">
           <p className="overhead__count" aria-live="polite">
-            {state.status === 'loading' ? 'Scanning the sky…' : `${state.list.length} above you`}
+            {state.status === 'loading' ? t('overhead.scanning') : t('overhead.count', { n: state.list.length })}
           </p>
           {category === 52 && (
-            <Link className="overhead__more" to={`/starlink${q}`}>How many are over Kyiv, Tehran or Caracas right now? →</Link>
+            <Link className="overhead__more" to={t.lp(`/starlink${q}`)}>{t('overhead.starlinkMore')}</Link>
           )}
-          {state.status === 'error' && <Notice tone="error">Couldn&rsquo;t reach the satellite data service.</Notice>}
-          {state.status === 'ready' && !state.list.length && <Notice>Nothing in this category is above you right now.</Notice>}
+          {state.status === 'error' && <Notice tone="error">{t('overhead.error')}</Notice>}
+          {state.status === 'ready' && !state.list.length && <Notice>{t('overhead.empty')}</Notice>}
           <Ownership
             status={state.status === 'ready' ? ownership.status : 'idle'}
             buckets={buckets}
@@ -266,7 +264,7 @@ function Overhead({ observer }) {
           </ul>
         </div>
       </div>
-      {selected && <SelectedCard sat={selected} to={`/satellite/${selected.satid}${q}`} onClose={() => setSelected(null)} />}
+      {selected && <SelectedCard sat={selected} to={t.lp(`/satellite/${selected.satid}${q}`)} onClose={() => setSelected(null)} />}
     </section>
   )
 }
@@ -307,18 +305,17 @@ function Trajectory({ sat }) {
 }
 
 function SelectedCard({ sat, to, onClose }) {
+  const t = useT()
   return (
     <div className="picked" role="status">
       <div className="picked__info">
-        <p className="eyebrow">Selected · NORAD {sat.satid}</p>
+        <p className="eyebrow">{t('picked.eyebrow', { id: sat.satid })}</p>
         <p className="picked__name">{sat.satname}</p>
-        <p className="picked__meta">
-          {fmtNum(sat.satalt)} km up · solid line: last half orbit · dashed: next orbit
-        </p>
+        <p className="picked__meta">{t('picked.meta', { alt: fmtNum(sat.satalt) })}</p>
       </div>
       <div className="picked__actions">
-        <Link to={to} className="btn" onClick={() => track('satellite_opened', { id: sat.satid, from: 'overhead' })}>Track live →</Link>
-        <button type="button" className="btn btn--ghost" onClick={onClose}>Clear</button>
+        <Link to={to} className="btn" onClick={() => track('satellite_opened', { id: sat.satid, from: 'overhead' })}>{t('picked.track')}</Link>
+        <button type="button" className="btn btn--ghost" onClick={onClose}>{t('picked.clear')}</button>
       </div>
     </div>
   )

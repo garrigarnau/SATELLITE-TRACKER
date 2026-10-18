@@ -6,7 +6,8 @@ import { useObserver, observerQuery } from '../lib/observer'
 import { useNow } from '../lib/useNow'
 import { compass } from '../lib/format'
 import { useSeo } from '../lib/seo'
-import { TIANGONG_META } from '../lib/seo-data'
+import { META } from '../lib/seo-data'
+import { useT } from '../lib/i18n'
 import { TIANGONG_COPY, TIANGONG_ID, tiangongFaqJsonLd } from '../lib/tiangong'
 import { track } from '../lib/track'
 import LiveTracker from '../components/LiveTracker'
@@ -18,12 +19,13 @@ import './tiangong.css'
 // Landing page for people searching for China's space station: what it is,
 // where it is right now, when to see it, and how it compares with the ISS.
 export default function Tiangong() {
-  const t = TIANGONG_COPY.en
+  const tr = useT()
+  const t = TIANGONG_COPY[tr.locale] || TIANGONG_COPY.en
   const [observer, setObserver] = useObserver()
   const now = useNow(1000)
   const [tle, setTle] = useState({ status: 'loading' })
 
-  useSeo(TIANGONG_META)
+  useSeo(META[tr.locale].tiangong)
 
   useEffect(() => {
     track('tiangong_opened')
@@ -45,7 +47,7 @@ export default function Tiangong() {
   return (
     <div className="wrap page tiangong">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(tiangongFaqJsonLd(t)) }} />
-      <Link to={`/${observerQuery(observer)}`} className="back">← Tonight</Link>
+      <Link to={tr.lp(`/${observerQuery(observer)}`)} className="back">{tr('sat.back')}</Link>
 
       <header className="sat-head">
         <div>
@@ -54,7 +56,7 @@ export default function Tiangong() {
         </div>
         {look && (
           <span className={up ? 'badge badge--up' : 'badge'}>
-            {up ? `Above your horizon · ${compass(look.azimuth)}` : 'Below your horizon'}
+            {up ? tr('sat.above', { dir: compass(look.azimuth) }) : tr('sat.below')}
           </span>
         )}
       </header>
@@ -64,7 +66,7 @@ export default function Tiangong() {
       </div>
 
       {tle.status === 'error' ? (
-        <Notice tone="error" title="Live position unavailable">{tle.message}</Notice>
+        <Notice tone="error" title={tr('tg.unavailable')}>{tle.message}</Notice>
       ) : (
         <LiveTracker satrec={satrec} name="Tiangong" pos={pos} look={look} observer={observer} now={now} />
       )}

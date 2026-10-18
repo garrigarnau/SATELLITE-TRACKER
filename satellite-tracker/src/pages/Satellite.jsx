@@ -1,26 +1,28 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSeo } from '../lib/seo'
-import { prettySatName, satelliteMeta } from '../lib/seo-data'
+import { META, prettySatNameFor } from '../lib/seo-data'
+import { useT } from '../lib/i18n'
 import { Link, useParams } from 'react-router-dom'
 import { getTle, getVisualPasses, isQuotaError } from '../lib/api'
 import { lookAngles, periodMinutes, positionAt, skyPath, toSatrec } from '../lib/orbit'
 import { useObserver, observerQuery } from '../lib/observer'
 import { useNow } from '../lib/useNow'
-import { compass } from '../lib/format'
+import { compass, dir } from '../lib/format'
 import LiveTracker from '../components/LiveTracker'
 import { TIANGONG_ID } from '../lib/tiangong'
 import PassCard from '../components/PassCard'
-import { passCloud, sky, useCloudForecast } from '../lib/weather'
+import { CLOUDED_OUT, passCloud, sky, useCloudForecast } from '../lib/weather'
 import SkyChart from '../components/SkyChart'
 import LocationSearch from '../components/LocationSearch'
 import { track } from '../lib/track'
 import { Notice, Skeleton } from '../components/Status'
-import { FACTS, factRows, genericSummary } from '../lib/satellite-facts'
+import { FACTS, factRows, factSummary, genericSummary, sourceLabel } from '../lib/satellite-facts'
 import satcatFallback from '../data/satcat-fallback.json'
 import '../lib/satellite-facts.css'
 
 export default function Satellite() {
   const { id } = useParams()
+  const t = useT()
   const [observer, setObserver] = useObserver()
   const now = useNow(1000)
   const [tle, setTle] = useState({ status: 'loading' })
@@ -38,13 +40,13 @@ export default function Satellite() {
   const pos = satrec ? positionAt(satrec, now) : null
   const look = satrec && observer ? lookAngles(satrec, now, observer) : null
 
-  useSeo(satelliteMeta(id, prettySatName(id, tle.name), observer?.name))
+  useSeo(META[t.locale].satellite(id, prettySatNameFor(t.locale, id, tle.name), observer?.name))
 
   if (tle.status === 'error') {
     return (
       <div className="wrap page">
-        <Notice tone="error" title="Satellite not found" action={<Link className="btn btn--ghost" to={`/${observerQuery(observer)}`}>Back to tonight</Link>}>
-          {tle.message}. Check the NORAD ID ({id}).
+        <Notice tone="error" title={t('sat.notFound')} action={<Link className="btn btn--ghost" to={t.lp(`/${observerQuery(observer)}`)}>{t('common.backTonight')}</Link>}>
+          {t('sat.checkId', { message: tle.message, id })}
         </Notice>
       </div>
     )
@@ -54,16 +56,16 @@ export default function Satellite() {
 
   return (
     <div className="wrap page">
-      <Link to={`/${observerQuery(observer)}`} className="back">← Tonight</Link>
+      <Link to={t.lp(`/${observerQuery(observer)}`)} className="back">{t('sat.back')}</Link>
 
       <header className="sat-head">
         <div>
           <p className="eyebrow">NORAD {id}</p>
-          <h1 className="sat-head__title">{tle.name || <span className="skeleton skeleton--text" />}</h1>
+          <h1 className="sat-head__title">{tle.name ? (t.locale === 'es' ? prettySatNameFor('es', id, tle.name) : tle.name) : <span className="skeleton skeleton--text" />}</h1>
         </div>
         {look && (
           <span className={up ? 'badge badge--up' : 'badge'}>
-            {up ? `Above your horizon · ${compass(look.azimuth)}` : 'Below your horizon'}
+            {up ? t('sat.above', { dir: compass(look.azimuth) }) : t('sat.below')}
           </span>
         )}
       </header>
@@ -71,18 +73,18 @@ export default function Satellite() {
       <LiveTracker satrec={satrec} name={tle.name} pos={pos} look={look} observer={observer} now={now} />
       {Number(id) === TIANGONG_ID && (
         <p className="sat-crosslink">
-          <Link to={`/tiangong${observerQuery(observer)}`}>Open the Tiangong page: facts, Tiangong vs ISS and where to see it →</Link>
+          <Link to={t.lp(`/tiangong${observerQuery(observer)}`)}>{t('sat.tiangongLink')}</Link>
         </p>
       )}
 
-      <SatelliteFacts id={id} name={prettySatName(id, tle.name)} satrec={satrec} />
+      <SatelliteFacts id={id} name={prettySatNameFor(t.locale, id, tle.name)} satrec={satrec} />
 
       {observer ? (
         <Passes id={id} observer={observer} satrec={satrec} now={now} look={look} />
       ) : (
         <section className="section">
-          <h2 className="section__title">When can you see it?</h2>
-          <p className="section__note">Set your location to get visible passes and a sky chart.</p>
+          <h2 className="section__title">{t('sat.whenTitle')}</h2>
+          <p className="section__note">{t('sat.whenNote')}</p>
           <LocationSearch onSelect={setObserver} />
         </section>
       )}
@@ -100,6 +102,7 @@ const loadSatcat = () =>
     .catch(() => satcatFallback))
 
 function SatelliteFacts({ id, name, satrec }) {
+  const t = useT()
   const [catalog, setCatalog] = useState(null)
   useEffect(() => {
     let alive = true
@@ -115,13 +118,13 @@ function SatelliteFacts({ id, name, satrec }) {
     return p && { altKm: p.altKm, periodMin: periodMinutes(satrec), inclination: (satrec.inclo * 180) / Math.PI }
   }, [satrec])
 
-  const rows = factRows(id, rec, live)
-  const summary = facts?.summary || genericSummary(name, live)
+  const rows = factRows(id, rec, live, t.locale)
+  const summary = factSummary(id, t.locale) || genericSummary(name, live, t.locale)
   if (!rows.length && !summary) return null
 
   return (
     <section className="facts" aria-labelledby="facts-title">
-      <h2 id="facts-title" className="facts__title">About this satellite</h2>
+      <h2 id="facts-title" className="facts__title">{t('facts.title')}</h2>
       {summary && <p className="facts__summary">{summary}</p>}
       <dl className="facts__list">
         {rows.map(([k, v]) => (
@@ -132,14 +135,12 @@ function SatelliteFacts({ id, name, satrec }) {
         ))}
       </dl>
       <p className="facts__meta">
-        {rec
-          ? `Orbit and catalogue data: CelesTrak SATCAT, updated ${catalog.fetched}.`
-          : 'Computed in your browser from the satellite\u2019s latest orbital elements.'}
+        {rec ? t('facts.meta', { date: catalog.fetched }) : t('sat.computed')}
       </p>
       {facts?.sources && (
         <ul className="facts__sources">
           {facts.sources.map((s) => (
-            <li key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{s.label}</a></li>
+            <li key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{sourceLabel(s, t.locale)}</a></li>
           ))}
         </ul>
       )}
@@ -149,6 +150,7 @@ function SatelliteFacts({ id, name, satrec }) {
 
 // Also used by the Tiangong page.
 export function Passes({ id, observer, satrec, now, look }) {
+  const t = useT()
   const [state, setState] = useState({ status: 'loading', passes: [] })
   const [selected, setSelected] = useState(0)
   const [limit, setLimit] = useState(6)
@@ -178,24 +180,20 @@ export function Passes({ id, observer, satrec, now, look }) {
     <section className="section" aria-labelledby="sat-passes">
       <div className="section__head">
         <div>
-          <p className="eyebrow">From {observer.name}</p>
-          <h2 id="sat-passes" className="section__title">Visible passes</h2>
+          <p className="eyebrow">{t('sat.from', { city: observer.name })}</p>
+          <h2 id="sat-passes" className="section__title">{t('sat.passesTitle')}</h2>
         </div>
-        <p className="section__note">Next 10 days. Pick a pass to see its path across your sky.</p>
+        <p className="section__note">{t('sat.passesNote')}</p>
       </div>
 
       {state.status === 'loading' && <div className="passes"><Skeleton rows={2} /></div>}
       {state.status === 'error' && (
         <Notice tone="error">
-          {state.quota
-            ? 'The free pass-prediction quota for this hour is used up. Predictions will be back within the hour.'
-            : 'Couldn’t load passes for this satellite.'}
+          {state.quota ? t('passes.quota') : t('sat.passesError')}
         </Notice>
       )}
       {state.status === 'ready' && !passes.length && (
-        <Notice title="No naked-eye passes in the next 10 days">
-          It may be too faint, or only crosses your sky in daylight or Earth&rsquo;s shadow. You can still follow it live above.
-        </Notice>
+        <Notice title={t('sat.noneTitle')}>{t('sat.noneBody')}</Notice>
       )}
 
       {pass && (
@@ -203,8 +201,8 @@ export function Passes({ id, observer, satrec, now, look }) {
           <div className="sky-card">
             <SkyChart path={path} pass={pass} current={during ? look : null} />
             <p className="sky-card__caption">
-              Face <strong>{pass.startAzCompass}</strong>, it rises to <strong>{Math.round(pass.maxEl)}°</strong> in the {pass.maxAzCompass} and sets in the {pass.endAzCompass}.
-              {passSky && <> Forecast: {passSky.phrase} ({Math.round(passCloudPct)}% cloud).</>}
+              {t('sat.caption', { start: dir(pass.startAzCompass), el: Math.round(pass.maxEl), max: dir(pass.maxAzCompass), end: dir(pass.endAzCompass) })}
+              {passSky && <> {t('sat.forecast', { phrase: skyPhrase(t, passSky, passCloudPct), pct: Math.round(passCloudPct) })}</>}
             </p>
           </div>
           <ol className="pass-list">
@@ -216,7 +214,7 @@ export function Passes({ id, observer, satrec, now, look }) {
             {passes.length > limit && (
               <li>
                 <button type="button" className="btn btn--ghost" onClick={() => { track('show_more_passes', { page: 'satellite' }); setLimit((l) => l + 6) }}>
-                  Show more passes ({passes.length - limit})
+                  {t('passes.more', { n: passes.length - limit })}
                 </button>
               </li>
             )}
@@ -225,4 +223,10 @@ export function Passes({ id, observer, satrec, now, look }) {
       )}
     </section>
   )
+}
+
+// Forecast phrase for the sky-card caption, e.g. "clear skies".
+function skyPhrase(t, s, pct) {
+  if (s.level === 'cloudy' && pct >= CLOUDED_OUT) return t('skyPhrase.cloudedOut')
+  return t(`skyPhrase.${s.level}`)
 }

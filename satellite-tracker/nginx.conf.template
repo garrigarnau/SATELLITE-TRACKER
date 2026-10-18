@@ -114,4 +114,10 @@ server {
         # Prerendered routes (scripts/prerender.mjs) live at /route/index.html.
         try_files $uri $uri/index.html /index.html;
     }
+
+    # Spanish pages without their own prerendered file get the Spanish shell
+    # (lang="es", Spanish title) instead of the English one.
+    location /es/ {
+        try_files $uri $uri/index.html /es/index.html;
+    }
 }

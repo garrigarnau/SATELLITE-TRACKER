@@ -37,8 +37,8 @@ export const CATEGORIES = [
 // Objects bright enough to spot with the naked eye; their passes fill the home page.
 export const SPOTLIGHT = [25544, 48274, 20580, 27386, 25994, 27424]
 
-export async function geocode(query) {
-  const data = await getJson(`/api/geocode?q=${encodeURIComponent(query)}&limit=5&no_annotations=1`, { ttlMs: 86_400_000 })
+export async function geocode(query, language = 'en') {
+  const data = await getJson(`/api/geocode?q=${encodeURIComponent(query)}&limit=5&no_annotations=1&language=${language}`, { ttlMs: 86_400_000 })
   return (data.results || []).map((r) => ({
     name: r.formatted,
     lat: r.geometry.lat,

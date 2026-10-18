@@ -1,28 +1,39 @@
-// After `vite build`: writes a copy of dist/index.html for each important route
-// with that route's title, description, canonical and Open Graph tags baked in,
-// plus sitemap.xml. Google runs the SPA's JavaScript, but most link-preview bots
+// After `vite build`: writes a copy of dist/index.html for each important route,
+// in English and Spanish (/es/...), with that route's title, description,
+// canonical, hreflang and Open Graph tags baked in, plus sitemap.xml. Google runs the SPA's JavaScript, but most link-preview bots
 // (LinkedIn, X, Slack, WhatsApp) and other crawlers only read the raw HTML.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
-  ABOUT_META, DEFAULT_META, SAT_NAMES, SITE, SITEMAP_SATELLITES, STARLINK_META, TIANGONG_META, satelliteMeta,
+  META, OG_LOCALE, SAT_NAMES, SAT_NAMES_ES, SITE, SITEMAP_SATELLITES, siteJsonLd,
 } from '../src/lib/seo-data.js'
+import { localizePath } from '../src/lib/paths.js'
 import { TIANGONG_COPY, tiangongFaqJsonLd } from '../src/lib/tiangong.js'
-import { FACTS, factRows, factsJsonLd } from '../src/lib/satellite-facts.js'
-import { FAQ, faqJsonLd } from '../src/lib/faq.js'
+import { FACTS, factRows, factSummary, factsJsonLd } from '../src/lib/satellite-facts.js'
+import { FAQ, faqFor, faqJsonLd } from '../src/lib/faq.js'
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist')
 const template = readFileSync(join(dist, 'index.html'), 'utf8')
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
 
-function render({ title, description, path }, extra = {}) {
-  const url = `${SITE}${path}`
+const json = (o) => JSON.stringify(o).replace(/</g, '\\u003c')
+
+// `meta.path` is the English path; the page is written at its localized path.
+function render({ title, description, path }, locale = 'en', extra = {}) {
+  const url = `${SITE}${localizePath(path, locale)}`
   const swaps = [
+    [/<html lang="[^"]*"/, `<html lang="${locale}"`],
     [/<title>[^<]*<\/title>/, `<title>${esc(title)}</title>`],
     [/(<meta name="description" content=")[^"]*/, `$1${esc(description)}`],
     [/(<link rel="canonical" href=")[^"]*/, `$1${url}`],
+    [/(<link rel="alternate" hreflang="en" href=")[^"]*/, `$1${SITE}${path}`],
+    [/(<link rel="alternate" hreflang="es" href=")[^"]*/, `$1${SITE}${localizePath(path, 'es')}`],
+    [/(<link rel="alternate" hreflang="x-default" href=")[^"]*/, `$1${SITE}${path}`],
+    [/(<meta property="og:locale" content=")[^"]*/, `$1${OG_LOCALE[locale]}`],
+    [/(<meta property="og:locale:alternate" content=")[^"]*/, `$1${OG_LOCALE[locale === 'es' ? 'en' : 'es']}`],
+    [/(<script type="application\/ld\+json" id="ld-site">)[^<]*/, `$1${json(siteJsonLd(locale))}`],
     [/(<meta property="og:title" content=")[^"]*/, `$1${esc(title)}`],
     [/(<meta property="og:description" content=")[^"]*/, `$1${esc(description)}`],
     [/(<meta property="og:url" content=")[^"]*/, `$1${url}`],
@@ -37,8 +48,8 @@ function render({ title, description, path }, extra = {}) {
   }, template)
 }
 
-function tiangongBody() {
-  const t = TIANGONG_COPY.en
+function tiangongBody(locale) {
+  const t = TIANGONG_COPY[locale]
   const rows = t.compare.map(([l, a, b]) => `<tr><th scope="row">${esc(l)}</th><td>${esc(a)}</td><td>${esc(b)}</td></tr>`).join('')
   const faq = t.faq.map(({ q, a }) => `<h3>${esc(q)}</h3><p>${esc(a)}</p>`).join('')
   const sources = t.sources.map((s) => `<li><a href="${s.url}">${esc(s.label)}</a></li>`).join('')
@@ -72,15 +83,22 @@ async function fetchSatcat(ids) {
   return { fetched: live === ids.length ? new Date().toISOString().slice(0, 10) : snapshot.fetched, live, records }
 }
 
-function factsHtml(id, name, rec, updated) {
+const FACTS_TEXT = {
+  en: { title: 'About this satellite', meta: (d) => `Orbit and catalogue data: CelesTrak SATCAT, updated ${d}.` },
+  es: { title: 'Sobre este satélite', meta: (d) => `Datos orbitales y de catálogo: CelesTrak SATCAT, actualizados el ${d}.` },
+}
+
+function factsHtml(id, name, rec, updated, locale) {
   const f = FACTS[id]
-  const rows = factRows(id, rec, null).map(([k, v]) => `<div class="facts__row"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')
+  const T = FACTS_TEXT[locale]
+  const summary = factSummary(id, locale)
+  const rows = factRows(id, rec, null, locale).map(([k, v]) => `<div class="facts__row"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')
   const sources = (f?.sources || []).map((s) => `<li><a href="${s.url}" rel="noreferrer">${esc(s.label)}</a></li>`).join('')
   return `<div class="wrap page"><p class="eyebrow">NORAD ${id}</p><h1 class="sat-head__title">${esc(name)}</h1>`
-    + `<section class="facts" aria-labelledby="facts-title"><h2 id="facts-title" class="facts__title">About this satellite</h2>`
-    + (f ? `<p class="facts__summary">${esc(f.summary)}</p>` : '')
+    + `<section class="facts" aria-labelledby="facts-title"><h2 id="facts-title" class="facts__title">${T.title}</h2>`
+    + (summary ? `<p class="facts__summary">${esc(summary)}</p>` : '')
     + `<dl class="facts__list">${rows}</dl>`
-    + `<p class="facts__meta">Orbit and catalogue data: CelesTrak SATCAT, updated ${updated}.</p>`
+    + `<p class="facts__meta">${esc(T.meta(updated))}</p>`
     + (sources ? `<ul class="facts__sources">${sources}</ul>` : '')
     + `</section></div>`
 }
@@ -89,30 +107,34 @@ const satcat = await fetchSatcat(SITEMAP_SATELLITES)
 mkdirSync(join(dist, 'data'), { recursive: true })
 writeFileSync(join(dist, 'data', 'satcat.json'), JSON.stringify({ fetched: satcat.fetched, records: satcat.records }))
 
-const satRoutes = SITEMAP_SATELLITES.map((id) => {
-  const meta = satelliteMeta(id, SAT_NAMES[id])
-  const ld = factsJsonLd({ id, name: SAT_NAMES[id], satcat: satcat.records[id], url: `${SITE}${meta.path}`, updated: satcat.fetched })
+const satRoutes = (locale) => SITEMAP_SATELLITES.map((id) => {
+  const name = (locale === 'es' && SAT_NAMES_ES[id]) || SAT_NAMES[id]
+  const meta = META[locale].satellite(id, name)
+  const url = `${SITE}${localizePath(meta.path, locale)}`
+  const ld = factsJsonLd({ id, name, satcat: satcat.records[id], url, updated: satcat.fetched, locale })
   return {
     meta,
+    locale,
     extra: {
-      root: factsHtml(id, SAT_NAMES[id], satcat.records[id], satcat.fetched),
-      head: `    <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`,
+      root: factsHtml(id, name, satcat.records[id], satcat.fetched, locale),
+      head: `    <script type="application/ld+json">${json(ld)}</script>`,
     },
   }
 })
 
-const routes = [
-  { meta: ABOUT_META },
-  { meta: STARLINK_META },
+const routesFor = (locale) => [
+  { meta: META[locale].about, locale },
+  { meta: META[locale].starlink, locale },
   // Tiangong: intro, comparison and FAQ (with its FAQPage JSON-LD) inside #root.
-  { meta: TIANGONG_META, extra: { root: tiangongBody() } },
-  ...satRoutes,
+  { meta: META[locale].tiangong, locale, extra: { root: tiangongBody(locale) } },
+  ...satRoutes(locale),
 ]
+const routes = [...routesFor('en'), ...routesFor('es')]
 
-for (const { meta, extra } of routes) {
-  const dir = join(dist, meta.path)
+for (const { meta, locale, extra } of routes) {
+  const dir = join(dist, localizePath(meta.path, locale))
   mkdirSync(dir, { recursive: true })
-  writeFileSync(join(dir, 'index.html'), render(meta, extra))
+  writeFileSync(join(dir, 'index.html'), render(meta, locale, extra))
 }
 
 const today = new Date().toISOString().slice(0, 10)
@@ -120,18 +142,29 @@ const today = new Date().toISOString().slice(0, 10)
 // --- / and /about: FAQ as plain HTML + FAQPage JSON-LD for crawlers that don't
 // run JavaScript (AI answer engines included). It sits inside #root, so React
 // replaces it on mount. Also writes llms.txt / llms-full.txt from the same data.
-const faqHtml =
-  `<section aria-label="Questions about spotting satellites"><h2>Questions about spotting satellites</h2>` +
-  `<p>Last updated ${today}.</p>` +
-  FAQ.map(({ q, a }) => `<h3>${esc(q)}</h3><p>${esc(a)}</p>`).join('') +
-  `</section>`
-const faqLd = `<script type="application/ld+json" id="faq-jsonld">${JSON.stringify(faqJsonLd()).replace(/</g, '\\u003c')}</script>`
-const withFaq = (html) => {
+const FAQ_TEXT = {
+  en: { title: 'Questions about spotting satellites', updated: 'Last updated' },
+  es: { title: 'Preguntas sobre cómo ver satélites', updated: 'Última actualización:' },
+}
+const withFaq = (html, locale) => {
+  const T = FAQ_TEXT[locale]
+  const items = faqFor(locale)
+  const faqHtml =
+    `<section aria-label="${T.title}"><h2>${T.title}</h2><p>${T.updated} ${today}.</p>` +
+    items.map(({ q, a }) => `<h3>${esc(q)}</h3><p>${esc(a)}</p>`).join('') +
+    `</section>`
+  const faqLd = `<script type="application/ld+json" id="faq-jsonld">${json(faqJsonLd(items))}</script>`
   if (!html.includes('<div id="root"></div>') || !html.includes('</head>')) throw new Error('prerender: FAQ anchors not found')
   return html.replace('</head>', `    ${faqLd}\n  </head>`).replace('<div id="root"></div>', `<div id="root">${faqHtml}</div>`)
 }
-writeFileSync(join(dist, 'index.html'), withFaq(render(DEFAULT_META)))
-writeFileSync(join(dist, ABOUT_META.path, 'index.html'), withFaq(render(ABOUT_META)))
+for (const locale of ['en', 'es']) {
+  const m = META[locale]
+  for (const meta of [m.home, m.about]) {
+    const dir = join(dist, localizePath(meta.path, locale))
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(join(dir, 'index.html'), withFaq(render(meta, locale), locale))
+  }
+}
 
 const llms = `# Satellite Tracker
 
@@ -153,6 +186,7 @@ Made by Arnau Garriga Torné (https://arnaugarriga.com). Source code: https://gi
 - [Hubble Space Telescope](${SITE}/satellite/20580)
 - [Starlink over contested regions](${SITE}/starlink): how many Starlink satellites are overhead in Kyiv, Tehran, Caracas and other cities, now and over the next 90 minutes. Coverage geometry, not service.
 - [About](${SITE}/about): methods, data sources and FAQ.
+- [En español](${SITE}/es): the same app in Spanish — when to see the ISS ("cuándo ver la Estación Espacial"), Tiangong (${SITE}/es/tiangong) and the satellites visible tonight ("satélites hoy").
 
 ## FAQ
 
@@ -166,11 +200,17 @@ writeFileSync(
   llms.replace(/## FAQ[\s\S]*$/, '') +
     `## FAQ\n\n${FAQ.map(({ q, a, sources }) => `### ${q}\n\n${a}\n\nSources: ${sources.join(', ')}\n`).join('\n')}`,
 )
-const urls = [DEFAULT_META, ...routes.map((r) => r.meta)]
-  .map((m) => `  <url><loc>${SITE}${m.path}</loc><lastmod>${today}</lastmod></url>`)
+// One <url> per page and language, each listing both language versions.
+const enPaths = [META.en.home, ...routesFor('en').map((r) => r.meta)].map((m) => m.path)
+const alt = (path) =>
+  ['en', 'es'].map((l) => `    <xhtml:link rel="alternate" hreflang="${l}" href="${SITE}${localizePath(path, l)}"/>`)
+    .concat(`    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE}${path}"/>`)
+    .join('\n')
+const urls = enPaths
+  .flatMap((path) => ['en', 'es'].map((l) => `  <url>\n    <loc>${SITE}${localizePath(path, l)}</loc>\n    <lastmod>${today}</lastmod>\n${alt(path)}\n  </url>`))
   .join('\n')
 writeFileSync(
   join(dist, 'sitemap.xml'),
-  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`,
 )
-console.log(`prerendered ${routes.length} routes, / and /about with FAQ, sitemap.xml, llms.txt (SATCAT: ${satcat.live}/${SITEMAP_SATELLITES.length} live, data ${satcat.fetched})`)
+console.log(`prerendered ${routes.length} routes (en + es), home and about with FAQ, sitemap.xml, llms.txt (SATCAT: ${satcat.live}/${SITEMAP_SATELLITES.length} live, data ${satcat.fetched})`)

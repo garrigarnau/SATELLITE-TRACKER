@@ -58,6 +58,57 @@ export const FAQ = [
   },
 ]
 
+// Same questions in Spanish, same order and sources.
+export const FAQ_ES = [
+  {
+    q: '¿Cuándo puedo ver la ISS desde mi ciudad?',
+    a: 'Busca tu ciudad en Satellite Tracker y verás todos los pasos visibles a simple vista de la Estación Espacial Internacional y otros satélites brillantes durante los próximos 10 días, con la hora, la dirección hacia la que mirar, la altura que alcanza y la previsión de nubes. Un paso aparece en la lista cuando el satélite sube al menos 10° sobre el horizonte, está iluminado por el Sol y tu cielo está oscuro.',
+    sources: [NASA_SPOT],
+  },
+  {
+    q: '¿Por qué solo se ven los satélites al amanecer y al anochecer?',
+    a: 'Los satélites no emiten luz propia: lo que ves es la luz del Sol reflejada en ellos. Eso solo ocurre cuando tu cielo está oscuro pero el satélite, a cientos de kilómetros de altura, sigue iluminado por el Sol, algo que sucede en las horas posteriores a la puesta de sol y anteriores al amanecer. En plena noche, la mayoría de los satélites bajos están dentro de la sombra de la Tierra.',
+    sources: [NASA_SPOT],
+  },
+  {
+    q: '¿A qué velocidad se mueve la ISS y a qué altura está?',
+    a: 'La Estación Espacial Internacional orbita a unos 400 km sobre la Tierra a unos 28.800 km/h (casi 8 km/s) y da una vuelta al planeta cada 90 a 92 minutos, unas 16 veces al día. Su altura exacta varía con el tiempo porque se eleva periódicamente con encendidos de motor.',
+    sources: [NASA_FACTS, ESA_WHERE],
+  },
+  {
+    q: '¿Cómo se ve la ISS en el cielo?',
+    a: 'Como una estrella muy brillante y fija que cruza el cielo con suavidad, más deprisa que un avión y sin luces parpadeantes. Un paso visible típico dura unos minutos, y la estación puede desvanecerse en mitad del cielo al entrar en la sombra de la Tierra.',
+    sources: [NASA_SPOT],
+  },
+  {
+    q: '¿Necesito un telescopio o unos prismáticos?',
+    a: 'No. La ISS y los demás satélites marcados como visibles se ven a simple vista. Unos prismáticos ayudan con los más tenues, pero es difícil mantener un satélite en movimiento dentro del campo de un telescopio.',
+    sources: [NASA_SPOT],
+  },
+  {
+    q: '¿Qué significa la magnitud de un paso?',
+    a: 'La magnitud es la escala de brillo de los astrónomos: cuanto más baja, más brillante. Sirio, la estrella más brillante, tiene unos −1,5 y Venus unos −4,2; desde un lugar oscuro el ojo llega a +6,5, mucho menos en una ciudad. La ISS puede alcanzar unos −5,9 en su momento más brillante. Satellite Tracker clasifica los pasos de tenue a muy brillante con esta escala.',
+    sources: [WIKI_MAG],
+  },
+  {
+    q: '¿Qué es un tren de Starlink?',
+    a: 'Poco después de un lanzamiento, un grupo de satélites Starlink viaja muy junto en una órbita baja y puede parecer una fila de luces cruzando el cielo. En los días y semanas siguientes elevan su órbita y se separan, y el tren desaparece. Los Starlink también son más brillantes antes de llegar a su órbita definitiva.',
+    sources: [WIKI_STARLINK],
+  },
+  {
+    q: '¿Qué precisión tienen las predicciones de pasos?',
+    a: 'Las posiciones se calculan con los elementos orbitales públicos más recientes (datos TLE/OMM de CelesTrak) y el modelo estándar SGP4, que suele acertar con un margen de un minuto para los pasos de los próximos días. La precisión baja cuanto más lejos en el tiempo, y la ISS puede desplazarse un poco tras elevar su órbita, así que vuelve a consultarlo el mismo día.',
+    sources: ['https://celestrak.org/'],
+  },
+  {
+    q: '¿Qué significan acimut y elevación?',
+    a: 'El acimut es la dirección de la brújula hacia la que mirar, en grados desde el norte en sentido horario: 0° es el norte, 90° el este, 180° el sur y 270° el oeste. La elevación es el ángulo sobre el horizonte: 0° es el horizonte y 90°, justo encima de ti. Cuanto mayor sea la elevación máxima, mejor será el paso.',
+    sources: [NASA_SPOT],
+  },
+]
+
+export const faqFor = (locale) => (locale === 'es' ? FAQ_ES : FAQ)
+
 export function faqJsonLd(items = FAQ) {
   return {
     '@context': 'https://schema.org',

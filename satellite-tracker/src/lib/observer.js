@@ -2,6 +2,7 @@
 // including a satellite's detail page, can be refreshed and shared.
 import { useCallback, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { tr } from './i18n'
 
 export function useObserver() {
   const [params, setParams] = useSearchParams()
@@ -10,7 +11,7 @@ export function useObserver() {
     const lat = parseFloat(params.get('lat'))
     const lon = parseFloat(params.get('lon'))
     if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null
-    return { lat, lon, alt: parseFloat(params.get('alt')) || 0, name: params.get('name') || 'Your location' }
+    return { lat, lon, alt: parseFloat(params.get('alt')) || 0, name: params.get('name') || tr('common.yourLocation') }
   }, [params])
 
   const setObserver = useCallback(

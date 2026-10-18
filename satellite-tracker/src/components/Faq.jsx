@@ -1,31 +1,34 @@
-import { FAQ, faqJsonLd } from '../lib/faq'
+import { faqFor, faqJsonLd } from '../lib/faq'
+import { intlLocale, useT } from '../lib/i18n'
 import { useJsonLd } from '../lib/seo'
 import './faq.css'
 
 // Build date injected by Vite (see vite.config.js); shown as a freshness line.
 const UPDATED = typeof __BUILD_DATE__ === 'string' ? __BUILD_DATE__ : null
-const fmtDate = (iso) => new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${iso}T00:00:00Z`))
+const fmtDate = (iso, locale) => new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${iso}T00:00:00Z`))
 
 export default function Faq({ id = 'faq' }) {
-  useJsonLd('faq-jsonld', faqJsonLd())
+  const t = useT()
+  const items = faqFor(t.locale)
+  useJsonLd('faq-jsonld', faqJsonLd(items))
   return (
     <section className="faq" aria-labelledby={`${id}-title`}>
       <div className="faq__head">
-        <h2 id={`${id}-title`} className="section__title">Questions about spotting satellites</h2>
+        <h2 id={`${id}-title`} className="section__title">{t('faq.title')}</h2>
         {UPDATED && (
           <p className="faq__updated">
-            Last updated <time dateTime={UPDATED}>{fmtDate(UPDATED)}</time> · orbital data refreshed every few hours
+            {t('faq.updated')} <time dateTime={UPDATED}>{fmtDate(UPDATED, t.locale)}</time> · {t('faq.refreshed')}
           </p>
         )}
       </div>
       <div className="faq__list">
-        {FAQ.map(({ q, a, sources }) => (
+        {items.map(({ q, a, sources }) => (
           <details key={q} className="faq__item">
             <summary>{q}</summary>
             <p>{a}</p>
             {sources?.length > 0 && (
               <p className="faq__sources">
-                Source{sources.length > 1 ? 's' : ''}:{' '}
+                {t(sources.length > 1 ? 'faq.sources' : 'faq.source')}:{' '}
                 {sources.map((s, i) => (
                   <span key={s}>
                     {i > 0 && ', '}

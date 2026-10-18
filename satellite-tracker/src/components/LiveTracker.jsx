@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Circle, Marker, Polyline, Tooltip } from 'react-leaflet'
 import { footprintKm, groundTrack, periodMinutes } from '../lib/orbit'
-import { compass, fmtCoord, fmtNum } from '../lib/format'
+import { compass, dir, fmtCoord, fmtNum } from '../lib/format'
+import { useT } from '../lib/i18n'
 import WorldMap, { dotIcon, trackedIcon } from './WorldMap'
 import { Skeleton, Term } from './Status'
 
@@ -10,6 +11,7 @@ import { Skeleton, Term } from './Status'
 // Shared by the satellite page and the Tiangong page.
 export default function LiveTracker({ satrec, name, pos, look, observer, now }) {
   const [follow, setFollow] = useState(true)
+  const t = useT()
 
   // The ground track only needs refreshing every half minute.
   const trackKey = Math.floor(now.getTime() / 30_000)
@@ -39,38 +41,38 @@ export default function LiveTracker({ satrec, name, pos, look, observer, now }) 
         )}
         {observer && (
           <Marker position={[observer.lat, observer.lon]} icon={dotIcon('you')}>
-            <Tooltip>You</Tooltip>
+            <Tooltip>{t('common.you')}</Tooltip>
           </Marker>
         )}
       </WorldMap>
 
       <aside className="panel">
         <div className="panel__head">
-          <h2 className="panel__title">Live</h2>
+          <h2 className="panel__title">{t('sat.live')}</h2>
           <label className="toggle">
             <input type="checkbox" checked={follow} onChange={(e) => setFollow(e.target.checked)} />
-            <span>Follow on map</span>
+            <span>{t('sat.follow')}</span>
           </label>
         </div>
         {pos ? (
           <dl className="stats">
-            <Stat label="Latitude" value={fmtCoord(pos.lat, 'N', 'S')} />
-            <Stat label="Longitude" value={fmtCoord(pos.lon, 'E', 'W')} />
-            <Stat label="Altitude" value={`${fmtNum(pos.altKm)} km`} />
-            <Stat label="Speed" value={`${fmtNum(pos.speedKmS, 2)} km/s`} />
-            <Stat label="Orbit" value={`${fmtNum(period)} min`} />
+            <Stat label={t('sat.lat')} value={fmtCoord(pos.lat, 'N', 'S')} />
+            <Stat label={t('sat.lon')} value={fmtCoord(pos.lon, 'E', dir('W'))} />
+            <Stat label={t('sat.alt')} value={`${fmtNum(pos.altKm)} km`} />
+            <Stat label={t('sat.speed')} value={`${fmtNum(pos.speedKmS, 2)} km/s`} />
+            <Stat label={t('sat.orbit')} value={`${fmtNum(period)} min`} />
             {look && (
               <>
-                <Stat label={<Term hint="Compass direction to look, in degrees clockwise from north.">Azimuth</Term>} value={`${fmtNum(look.azimuth)}° ${compass(look.azimuth)}`} />
-                <Stat label={<Term hint="Angle above the horizon. 0° is the horizon, 90° is straight up.">Elevation</Term>} value={`${fmtNum(look.elevation)}°`} />
-                <Stat label="Distance" value={`${fmtNum(look.rangeKm)} km`} />
+                <Stat label={<Term hint={t('sat.azimuthHint')}>{t('sat.azimuth')}</Term>} value={`${fmtNum(look.azimuth)}° ${compass(look.azimuth)}`} />
+                <Stat label={<Term hint={t('sat.elevationHint')}>{t('sat.elevation')}</Term>} value={`${fmtNum(look.elevation)}°`} />
+                <Stat label={t('sat.distance')} value={`${fmtNum(look.rangeKm)} km`} />
               </>
             )}
           </dl>
         ) : (
           <div className="stats"><Skeleton rows={4} className="stat" /></div>
         )}
-        <p className="panel__note">Computed in your browser from the satellite&rsquo;s latest orbital elements.</p>
+        <p className="panel__note">{t('sat.computed')}</p>
       </aside>
     </div>
   )

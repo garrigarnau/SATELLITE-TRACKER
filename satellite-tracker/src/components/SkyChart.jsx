@@ -1,4 +1,5 @@
 import { compass } from '../lib/format'
+import { localCompass, tr } from '../lib/i18n'
 
 // Polar plot of the sky: centre is straight up (90°), the edge is the horizon,
 // north at the top. Draws the pass path with its start, peak and end.
@@ -17,13 +18,13 @@ export default function SkyChart({ path, pass, current }) {
   const d = visible.map((p, i) => `${i ? 'L' : 'M'}${project(p.azimuth, p.elevation).map((n) => n.toFixed(1)).join(' ')}`).join(' ')
 
   const marks = pass && [
-    { key: 'start', label: 'Start', az: pass.startAz, el: pass.startEl },
-    { key: 'max', label: 'Peak', az: pass.maxAz, el: pass.maxEl },
-    { key: 'end', label: 'End', az: pass.endAz, el: pass.endEl },
+    { key: 'start', label: tr('chart.start'), az: pass.startAz, el: pass.startEl },
+    { key: 'max', label: tr('chart.peak'), az: pass.maxAz, el: pass.maxEl },
+    { key: 'end', label: tr('chart.end'), az: pass.endAz, el: pass.endEl },
   ]
 
   return (
-    <svg className="sky" viewBox={`0 0 ${SIZE} ${SIZE}`} role="img" aria-label={pass ? `Sky path from ${compass(pass.startAz)} to ${compass(pass.endAz)}, peaking at ${Math.round(pass.maxEl)} degrees` : 'Sky chart'}>
+    <svg className="sky" viewBox={`0 0 ${SIZE} ${SIZE}`} role="img" aria-label={pass ? tr('chart.aria', { from: compass(pass.startAz), to: compass(pass.endAz), el: Math.round(pass.maxEl) }) : tr('chart.label')}>
       <defs>
         <radialGradient id="sky-bg">
           <stop offset="0" stopColor="#1c1a1d" />
@@ -43,7 +44,7 @@ export default function SkyChart({ path, pass, current }) {
       <line x1={C - R} y1={C} x2={C + R} y2={C} className="sky__ring" />
       {[['N', 0], ['E', 90], ['S', 180], ['W', 270]].map(([l, az]) => {
         const [x, y] = project(az, -12)
-        return <text key={l} x={x} y={y} className="sky__cardinal">{l}</text>
+        return <text key={l} x={x} y={y} className="sky__cardinal">{localCompass(l)}</text>
       })}
       <text x={C + 4} y={C - R * (1 - 60 / 90) - 4} className="sky__deg">60°</text>
       <text x={C + 4} y={C - R * (1 - 30 / 90) - 4} className="sky__deg">30°</text>

@@ -64,6 +64,54 @@ export const TIANGONG_COPY = {
     sourcesTitle: 'Sources',
     sources: [SOURCES.wiki, SOURCES.celestrakCss, SOURCES.celestrakIss, SOURCES.nasa],
   },
+  es: {
+    eyebrow: 'Estación espacial china · NORAD 48274',
+    title: 'Tiangong en directo: dónde está la estación espacial china ahora',
+    intro: [
+      'Tiangong («Palacio Celestial») es la estación espacial de China, tripulada de forma permanente y gestionada por la Agencia Espacial Tripulada de China (CMSA). Su módulo central, Tianhe, se lanzó el 29 de abril de 2021, y los módulos laboratorio Wentian y Mengtian se le unieron en 2022.',
+      'Suele llevar tres astronautas y da una vuelta a la Tierra cada 92 minutos aproximadamente, a unos 385 km de altura. Como la ISS, es lo bastante brillante para verla a simple vista cuando cruza un cielo oscuro iluminada por el sol, al amanecer y al anochecer.',
+    ],
+    passesTitle: 'Próximos pasos visibles',
+    passesNote: 'Pasos visibles a simple vista en los próximos 10 días. Elige uno para ver su trayectoria en tu cielo.',
+    noLocationTitle: '¿Cuándo puedes ver Tiangong?',
+    noLocationNote: 'Indica tu ubicación para ver los pasos visibles de Tiangong y hacia dónde mirar.',
+    compareTitle: 'Tiangong frente a la ISS',
+    compareNote: `Datos orbitales del catálogo de CelesTrak a ${FACTS_DATE}.`,
+    compareHead: ['', 'Tiangong', 'ISS'],
+    compare: [
+      ['Operador', 'Agencia Espacial Tripulada de China', 'NASA, Roscosmos, ESA, JAXA y CSA'],
+      ['Primer módulo lanzado', '29 abr 2021 (Tianhe)', '20 nov 1998 (Zarya)'],
+      ['Tripulación habitual', '3 (hasta 6)', '7'],
+      ['Masa', '~100 t', '~420 t'],
+      ['Altitud', '384–386 km', '415–424 km'],
+      ['Tiempo de órbita', '92,3 min', '93,0 min'],
+      ['Inclinación', '41,5°', '51,6°'],
+      ['Sobrevuela latitudes', 'hasta 41,5° N y S', 'hasta 51,6° N y S'],
+    ],
+    compareFootnote:
+      'Por su menor inclinación, Tiangong nunca pasa justo por encima de lugares al norte de unos 41,5° N, como la mayor parte de Europa. Desde allí puede verse baja en el cielo del sur, mientras que la ISS pasa mucho más alta.',
+    faqTitle: 'Preguntas sobre Tiangong',
+    faq: [
+      {
+        q: '¿Qué es Tiangong?',
+        a: 'Tiangong es la estación espacial de China, operada por la Agencia Espacial Tripulada de China. Está formada por tres módulos: el núcleo Tianhe (lanzado el 29 de abril de 2021) y los laboratorios Wentian y Mengtian (lanzados en 2022). Normalmente la ocupan tres astronautas.',
+      },
+      {
+        q: '¿Puedo ver Tiangong desde donde vivo?',
+        a: 'Su órbita está inclinada 41,5° respecto al ecuador, así que sobrevuela todo lo que hay entre 41,5° N y 41,5° S, y puede verse baja en el horizonte hasta unos 10° más al norte o al sur. Indica tu ubicación arriba para obtener las horas exactas, la dirección y la altura que alcanzará.',
+      },
+      {
+        q: '¿Por qué solo se ve al amanecer o al anochecer?',
+        a: 'Tiangong se ve porque refleja la luz del Sol. Para eso, tu cielo tiene que estar oscuro mientras la estación, a 385 km de altura, sigue iluminada, algo que ocurre en las horas posteriores a la puesta de sol y anteriores al amanecer.',
+      },
+      {
+        q: '¿En qué se diferencia Tiangong de la ISS?',
+        a: 'Tiangong tiene aproximadamente una cuarta parte de la masa de la ISS (~100 t frente a ~420 t), vuela unos 35 km más baja y su órbita se mantiene más cerca del ecuador (41,5° frente a 51,6° de inclinación). La ISS la gestionan cinco agencias espaciales; Tiangong, solo China.',
+      },
+    ],
+    sourcesTitle: 'Fuentes',
+    sources: [SOURCES.wiki, SOURCES.celestrakCss, SOURCES.celestrakIss, SOURCES.nasa],
+  },
 }
 
 export const tiangongFaqJsonLd = (copy) => ({

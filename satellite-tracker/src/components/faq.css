@@ -1,0 +1,25 @@
+/* FAQ: native <details>, formal black/white, sharp edges (tokens from styles.css). */
+.faq { margin-top: clamp(28px, 4vw, 44px); padding-bottom: 8px; }
+.faq__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; padding-bottom: 12px; margin-bottom: 0; border-bottom: 1px solid var(--line); }
+.faq__updated { margin: 0; font-size: 12px; color: var(--faint); font-variant-numeric: tabular-nums; }
+.faq__list { display: grid; }
+.faq__item { border-bottom: 1px solid var(--line); }
+.faq__item summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  min-height: 48px; padding: 12px 2px; cursor: pointer; list-style: none;
+  font-size: 15px; font-weight: 500; color: var(--text);
+  touch-action: manipulation;
+}
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary::after {
+  content: '+'; flex: none; width: 20px; text-align: center; color: var(--muted); font-weight: 400; font-size: 18px;
+  transition: transform 160ms var(--ease);
+}
+.faq__item[open] summary::after { transform: rotate(45deg); color: var(--text); }
+.faq__item summary:hover { color: #fff; }
+.faq__item summary:focus-visible { outline-offset: -1px; }
+.faq__item p { margin: 0 0 12px; max-width: 70ch; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.faq__sources { font-size: 12px !important; color: var(--faint) !important; }
+.faq__sources a { color: var(--muted); text-underline-offset: 3px; }
+.faq__sources a:hover { color: var(--text); }
+.faq--home { padding-top: clamp(28px, 5vw, 56px); padding-bottom: 56px; }

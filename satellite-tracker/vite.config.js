@@ -45,6 +45,8 @@ function starlinkFixture() {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   return {
+    // Shown as the "Last updated" line next to the FAQ.
+    define: { __BUILD_DATE__: JSON.stringify(new Date().toISOString().slice(0, 10)) },
     plugins: [react(), starlinkFixture()],
     // Workers are ES modules (satellite.js 7 is ESM-only).
     worker: { format: 'es' },

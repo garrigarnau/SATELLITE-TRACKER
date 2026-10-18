@@ -35,6 +35,18 @@ export const tiangongBand = (city) => band(city.lat, TIANGONG_INCLINATION, TIANG
 const coord = (v, pos, neg, locale) =>
   `${Math.abs(v).toLocaleString(locale === 'es' ? 'es-ES' : 'en-US', { maximumFractionDigits: 2 })}° ${v >= 0 ? pos : neg}`
 
+// Readable time zone name ("hora de Reino Unido", "Eastern Time") instead of the
+// IANA id; falls back to the id if the runtime lacks the data.
+function tzName(tz, locale) {
+  try {
+    return new Intl.DateTimeFormat(locale === 'es' ? 'es-ES' : 'en-US', { timeZone: tz, timeZoneName: 'longGeneric' })
+      .formatToParts(new Date())
+      .find((p) => p.type === 'timeZoneName').value
+  } catch {
+    return tz
+  }
+}
+
 // Nearest other cities in the same country (then anywhere), for internal links.
 export function nearbyCities(city, n = 6) {
   const d = (c) => (c.lat - city.lat) ** 2 + ((c.lon - city.lon) * Math.cos((city.lat * Math.PI) / 180)) ** 2
@@ -89,7 +101,7 @@ export function cityCopy(city, locale) {
       intro: [
         `Desde ${name} (${pos}) puedes ver la Estación Espacial Internacional a simple vista cuando cruza tu cielo de noche mientras aún la ilumina el Sol: normalmente en las dos horas después de la puesta de sol o antes del amanecer.`,
         `${issText} ${tgText}`,
-        `Las horas de la lista se muestran en la zona horaria de tu dispositivo (en ${name} rige ${city.tz}).`,
+        `Las horas de la lista se muestran en la zona horaria de tu dispositivo (en ${name} rige la ${tzName(city.tz, 'es')}).`,
       ],
       passesNote: `Calculados en directo para ${name} cada vez que abres la página.`,
       openFull: `Abrir el rastreador completo para ${name}`,
@@ -130,7 +142,7 @@ export function cityCopy(city, locale) {
     intro: [
       `From ${name} (${pos}) you can see the International Space Station with the naked eye whenever it crosses your night sky while still lit by the Sun, usually in the two hours after sunset or before sunrise.`,
       `${issText} ${tgText}`,
-      `Times in the list are shown in your device’s time zone (${name} is on ${city.tz}).`,
+      `Times in the list are shown in your device’s time zone (${name} is on ${tzName(city.tz, 'en')}).`,
     ],
     passesNote: `Calculated live for ${name} every time you open this page.`,
     openFull: `Open the full tracker for ${name}`,

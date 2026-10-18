@@ -1,9 +1,10 @@
 import { useEffect, useMemo } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
 import { useSeo, useJsonLd } from '../lib/seo'
 import { useT } from '../lib/i18n'
 import { cityBySlug, cityCopy, cityJsonLd, cityMeta, cityPath, cityQuery, nearbyCities } from '../lib/cities'
 import { track } from '../lib/track'
+import { enCitySlug, localizePath } from '../lib/paths'
 import { Passes } from './Home'
 import '../components/cities.css'
 import '../components/faq.css'
@@ -13,8 +14,12 @@ import '../components/faq.css'
 export default function City() {
   const { slug } = useParams()
   const t = useT()
-  const city = cityBySlug(slug)
+  const { search } = useLocation()
   const locale = t.locale
+  // Either language's slug finds the city; a non-canonical one is redirected below
+  // (e.g. the old /es/esta-noche/london → /es/esta-noche/londres).
+  const city = cityBySlug(enCitySlug(slug))
+  const canonicalPath = city ? localizePath(cityPath(city.slug), locale) : null
 
   useSeo(city ? cityMeta(city, locale) : {})
   useJsonLd('ld-city', city ? cityJsonLd(city, locale) : {})
@@ -27,6 +32,10 @@ export default function City() {
     () => (city ? { lat: city.lat, lon: city.lon, alt: 0, name: city.name[locale] } : null),
     [city, locale],
   )
+
+  if (city && !canonicalPath.endsWith(`/${slug}`)) {
+    return <Navigate replace to={canonicalPath + search} />
+  }
 
   if (!city) {
     return (

@@ -1,6 +1,7 @@
 [
  {
   "slug": "madrid",
+  "slug_es": "madrid",
   "name": {
    "en": "Madrid",
    "es": "Madrid"
@@ -16,6 +17,7 @@
  },
  {
   "slug": "barcelona",
+  "slug_es": "barcelona",
   "name": {
    "en": "Barcelona",
    "es": "Barcelona"
@@ -31,6 +33,7 @@
  },
  {
   "slug": "valencia",
+  "slug_es": "valencia",
   "name": {
    "en": "Valencia",
    "es": "Valencia"
@@ -46,6 +49,7 @@
  },
  {
   "slug": "seville",
+  "slug_es": "sevilla",
   "name": {
    "en": "Seville",
    "es": "Sevilla"
@@ -61,6 +65,7 @@
  },
  {
   "slug": "zaragoza",
+  "slug_es": "zaragoza",
   "name": {
    "en": "Zaragoza",
    "es": "Zaragoza"
@@ -76,6 +81,7 @@
  },
  {
   "slug": "malaga",
+  "slug_es": "malaga",
   "name": {
    "en": "Málaga",
    "es": "Málaga"
@@ -91,6 +97,7 @@
  },
  {
   "slug": "murcia",
+  "slug_es": "murcia",
   "name": {
    "en": "Murcia",
    "es": "Murcia"
@@ -106,6 +113,7 @@
  },
  {
   "slug": "palma",
+  "slug_es": "palma",
   "name": {
    "en": "Palma",
    "es": "Palma"
@@ -121,6 +129,7 @@
  },
  {
   "slug": "las-palmas",
+  "slug_es": "las-palmas",
   "name": {
    "en": "Las Palmas de Gran Canaria",
    "es": "Las Palmas de Gran Canaria"
@@ -136,6 +145,7 @@
  },
  {
   "slug": "bilbao",
+  "slug_es": "bilbao",
   "name": {
    "en": "Bilbao",
    "es": "Bilbao"
@@ -151,6 +161,7 @@
  },
  {
   "slug": "alicante",
+  "slug_es": "alicante",
   "name": {
    "en": "Alicante",
    "es": "Alicante"
@@ -166,6 +177,7 @@
  },
  {
   "slug": "cordoba",
+  "slug_es": "cordoba",
   "name": {
    "en": "Córdoba",
    "es": "Córdoba"
@@ -181,6 +193,7 @@
  },
  {
   "slug": "valladolid",
+  "slug_es": "valladolid",
   "name": {
    "en": "Valladolid",
    "es": "Valladolid"
@@ -196,6 +209,7 @@
  },
  {
   "slug": "vigo",
+  "slug_es": "vigo",
   "name": {
    "en": "Vigo",
    "es": "Vigo"
@@ -211,6 +225,7 @@
  },
  {
   "slug": "gijon",
+  "slug_es": "gijon",
   "name": {
    "en": "Gijón",
    "es": "Gijón"
@@ -226,6 +241,7 @@
  },
  {
   "slug": "granada",
+  "slug_es": "granada",
   "name": {
    "en": "Granada",
    "es": "Granada"
@@ -241,6 +257,7 @@
  },
  {
   "slug": "a-coruna",
+  "slug_es": "a-coruna",
   "name": {
    "en": "A Coruña",
    "es": "A Coruña"
@@ -256,6 +273,7 @@
  },
  {
   "slug": "vitoria-gasteiz",
+  "slug_es": "vitoria-gasteiz",
   "name": {
    "en": "Vitoria-Gasteiz",
    "es": "Vitoria-Gasteiz"
@@ -271,6 +289,7 @@
  },
  {
   "slug": "santa-cruz-de-tenerife",
+  "slug_es": "santa-cruz-de-tenerife",
   "name": {
    "en": "Santa Cruz de Tenerife",
    "es": "Santa Cruz de Tenerife"
@@ -286,6 +305,7 @@
  },
  {
   "slug": "pamplona",
+  "slug_es": "pamplona",
   "name": {
    "en": "Pamplona",
    "es": "Pamplona"
@@ -301,6 +321,7 @@
  },
  {
   "slug": "san-sebastian",
+  "slug_es": "san-sebastian",
   "name": {
    "en": "San Sebastián",
    "es": "San Sebastián"
@@ -316,6 +337,7 @@
  },
  {
   "slug": "santander",
+  "slug_es": "santander",
   "name": {
    "en": "Santander",
    "es": "Santander"
@@ -331,6 +353,7 @@
  },
  {
   "slug": "girona",
+  "slug_es": "girona",
   "name": {
    "en": "Girona",
    "es": "Girona"
@@ -346,6 +369,7 @@
  },
  {
   "slug": "lleida",
+  "slug_es": "lleida",
   "name": {
    "en": "Lleida",
    "es": "Lleida"
@@ -361,6 +385,7 @@
  },
  {
   "slug": "tarragona",
+  "slug_es": "tarragona",
   "name": {
    "en": "Tarragona",
    "es": "Tarragona"
@@ -376,6 +401,7 @@
  },
  {
   "slug": "mexico-city",
+  "slug_es": "ciudad-de-mexico",
   "name": {
    "en": "Mexico City",
    "es": "Ciudad de México"
@@ -391,6 +417,7 @@
  },
  {
   "slug": "buenos-aires",
+  "slug_es": "buenos-aires",
   "name": {
    "en": "Buenos Aires",
    "es": "Buenos Aires"
@@ -406,6 +433,7 @@
  },
  {
   "slug": "bogota",
+  "slug_es": "bogota",
   "name": {
    "en": "Bogotá",
    "es": "Bogotá"
@@ -421,6 +449,7 @@
  },
  {
   "slug": "lima",
+  "slug_es": "lima",
   "name": {
    "en": "Lima",
    "es": "Lima"
@@ -436,6 +465,7 @@
  },
  {
   "slug": "santiago",
+  "slug_es": "santiago-de-chile",
   "name": {
    "en": "Santiago",
    "es": "Santiago de Chile"
@@ -451,6 +481,7 @@
  },
  {
   "slug": "london",
+  "slug_es": "londres",
   "name": {
    "en": "London",
    "es": "Londres"
@@ -466,6 +497,7 @@
  },
  {
   "slug": "new-york",
+  "slug_es": "nueva-york",
   "name": {
    "en": "New York",
    "es": "Nueva York"
@@ -481,6 +513,7 @@
  },
  {
   "slug": "los-angeles",
+  "slug_es": "los-angeles",
   "name": {
    "en": "Los Angeles",
    "es": "Los Ángeles"
@@ -496,6 +529,7 @@
  },
  {
   "slug": "chicago",
+  "slug_es": "chicago",
   "name": {
    "en": "Chicago",
    "es": "Chicago"
@@ -511,6 +545,7 @@
  },
  {
   "slug": "miami",
+  "slug_es": "miami",
   "name": {
    "en": "Miami",
    "es": "Miami"
@@ -526,6 +561,7 @@
  },
  {
   "slug": "toronto",
+  "slug_es": "toronto",
   "name": {
    "en": "Toronto",
    "es": "Toronto"
@@ -541,6 +577,7 @@
  },
  {
   "slug": "sydney",
+  "slug_es": "sidney",
   "name": {
    "en": "Sydney",
    "es": "Sídney"
@@ -556,6 +593,7 @@
  },
  {
   "slug": "dublin",
+  "slug_es": "dublin",
   "name": {
    "en": "Dublin",
    "es": "Dublín"
@@ -571,6 +609,7 @@
  },
  {
   "slug": "paris",
+  "slug_es": "paris",
   "name": {
    "en": "Paris",
    "es": "París"
@@ -586,6 +625,7 @@
  },
  {
   "slug": "lisbon",
+  "slug_es": "lisboa",
   "name": {
    "en": "Lisbon",
    "es": "Lisboa"

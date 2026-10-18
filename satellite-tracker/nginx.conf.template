@@ -6,6 +6,11 @@ proxy_cache_path /var/cache/nginx/api levels=1:2 keys_zone=api:10m max_size=200m
 server {
     listen 80;
     root /usr/share/nginx/html;
+    # Relative Location headers, so redirects keep the public https host.
+    absolute_redirect off;
+
+    # 301s for renamed city slugs, generated at build time (scripts/prerender.mjs).
+    include /etc/nginx/redirects/*.conf;
 
     # Orbital elements are refreshed a few times a day.
     location /api/n2yo/tle/ {
@@ -113,6 +118,17 @@ server {
     location / {
         # Prerendered routes (scripts/prerender.mjs) live at /route/index.html.
         try_files $uri $uri/index.html /index.html;
+    }
+
+    # City pages are all prerendered, so an unknown slug is a real 404. The 404
+    # files are app shells, so the SPA still renders its "not found" page.
+    location ^~ /tonight/ {
+        error_page 404 /404.html;
+        try_files $uri $uri/index.html =404;
+    }
+    location ^~ /es/esta-noche/ {
+        error_page 404 /es/404.html;
+        try_files $uri $uri/index.html =404;
     }
 
     # Spanish pages without their own prerendered file get the Spanish shell

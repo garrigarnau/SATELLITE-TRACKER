@@ -5,7 +5,20 @@
 //   /satellite/:id    ↔ /es/satelite/:id
 //   /about            ↔ /es/acerca
 //   /starlink         ↔ /es/starlink
-//   /tonight/:slug    ↔ /es/esta-noche/:slug
+//   /tonight/:slug    ↔ /es/esta-noche/:slug_es  (Spanish city slug, e.g. london ↔ londres)
+
+import CITIES from '../data/cities.json' with { type: 'json' }
+
+// City slugs differ by language for some cities (london ↔ londres).
+const ES_SLUG = Object.fromEntries(CITIES.map((c) => [c.slug, c.slug_es]))
+const EN_SLUG = Object.fromEntries(CITIES.map((c) => [c.slug_es, c.slug]))
+export const esCitySlug = (slug) => ES_SLUG[slug] ?? slug
+// Accepts a Spanish slug or, for old links, the English one.
+export const enCitySlug = (slug) => EN_SLUG[slug] ?? slug
+
+// Cities whose Spanish slug changed from the English one: old /es/esta-noche/{en}
+// URLs (live before Spanish slugs existed) redirect to the Spanish slug.
+export const RENAMED_CITY_SLUGS = CITIES.filter((c) => c.slug_es !== c.slug).map((c) => ({ en: c.slug, es: c.slug_es }))
 
 export const LOCALES = ['en', 'es']
 export const DEFAULT_LOCALE = 'en'
@@ -22,7 +35,7 @@ export function localizePath(path, locale) {
   if (pathname === '/' || pathname === '') out = '/es'
   else if (pathname.startsWith('/satellite/')) out = `/es/satelite/${pathname.slice('/satellite/'.length)}`
   else if (pathname === '/about') out = '/es/acerca'
-  else if (pathname.startsWith('/tonight/')) out = `/es/esta-noche/${pathname.slice('/tonight/'.length)}`
+  else if (pathname.startsWith('/tonight/')) out = `/es/esta-noche/${esCitySlug(pathname.slice('/tonight/'.length))}`
   else out = `/es${pathname}`
   return out + query
 }
@@ -33,7 +46,7 @@ export function toEnglishPath(pathname) {
   const rest = pathname.slice(3) || '/'
   if (rest.startsWith('/satelite/')) return `/satellite/${rest.slice('/satelite/'.length)}`
   if (rest === '/acerca') return '/about'
-  if (rest.startsWith('/esta-noche/')) return `/tonight/${rest.slice('/esta-noche/'.length)}`
+  if (rest.startsWith('/esta-noche/')) return `/tonight/${enCitySlug(rest.slice('/esta-noche/'.length))}`
   return rest
 }
 

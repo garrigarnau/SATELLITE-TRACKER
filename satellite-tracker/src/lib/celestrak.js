@@ -28,7 +28,7 @@ function cached(key, ttlMs, load) {
 }
 
 async function getText(path) {
-  const res = await fetch(`${BASE}/${path}`)
+  const res = await fetch(`${BASE}/${path}`, { signal: AbortSignal.timeout(8000) })
   if (!res.ok) throw new Error(`CelesTrak request failed (${res.status})`)
   return res.text()
 }

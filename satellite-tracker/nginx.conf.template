@@ -50,6 +50,8 @@ server {
 
     # CelesTrak (no key). SATCAT changes daily, so cache it for a day.
     location = /api/celestrak/satcat/records.php {
+        proxy_connect_timeout 4s;
+        proxy_read_timeout 10s;
         rewrite ^/api/celestrak/(.*)$ /$1 break;
         proxy_pass https://celestrak.org;
         proxy_set_header Host celestrak.org;
@@ -64,9 +66,13 @@ server {
     }
 
     # Orbital elements update every ~2 h. CelesTrak answers 403 to repeat
+    # (the short connect/read timeouts make outages fail fast: nginx serves the
+    # stale copy if it has one, otherwise the app falls back to N2YO.)
     # downloads within an update and firewalls clients that keep erroring, so
     # cache for 2 h and keep serving the stale copy if it refuses.
     location = /api/celestrak/NORAD/elements/gp.php {
+        proxy_connect_timeout 4s;
+        proxy_read_timeout 10s;
         rewrite ^/api/celestrak/(.*)$ /$1 break;
         proxy_pass https://celestrak.org;
         proxy_set_header Host celestrak.org;
@@ -86,6 +92,7 @@ server {
     # keeps concurrent misses from each hitting CelesTrak, and stale copies are
     # served when it answers 403 ("not updated since your last download").
     location = /api/starlink {
+        proxy_connect_timeout 4s;
         rewrite ^ /NORAD/elements/gp.php?GROUP=starlink&FORMAT=json break;
         proxy_pass https://celestrak.org;
         proxy_set_header Host celestrak.org;

@@ -58,7 +58,10 @@ const NAMES = { 25544: 'ISS', 48274: 'Tiangong (CSS)', 20580: 'Hubble', 27386: '
 // update cadence), with N2YO only as a fallback.
 export async function getTle(id) {
   try {
-    const res = await fetch(`/api/celestrak/NORAD/elements/gp.php?CATNR=${encodeURIComponent(id)}&FORMAT=TLE`)
+    // Give up quickly so a CelesTrak outage costs seconds, not a minute.
+    const res = await fetch(`/api/celestrak/NORAD/elements/gp.php?CATNR=${encodeURIComponent(id)}&FORMAT=TLE`, {
+      signal: AbortSignal.timeout(6000),
+    })
     if (!res.ok) throw new Error(`CelesTrak ${res.status}`)
     const [name, line1, line2] = (await res.text()).trim().split(/\r?\n/).map((l) => l.trim())
     if (!line1?.startsWith('1 ') || !line2?.startsWith('2 ')) throw new Error('No elements')

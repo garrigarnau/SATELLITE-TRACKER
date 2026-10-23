@@ -223,13 +223,15 @@ button { font: inherit; color: inherit; }
 
 .search--compact .search__bar { padding: 3px 3px 3px 12px; }
 .search--compact .search__locate { padding: 0 12px; height: 38px; }
-.search--compact .search__locate span { display: none; }
 .search--compact input { height: 38px; }
 .search--compact .search__results { position: static; margin-top: 8px; box-shadow: none; }
 
+/* Phones: the location button gets its own full-width row so its label fits. */
 @media (max-width: 520px) {
-  .search:not(.search--compact) .search__locate span { display: none; }
-  .search:not(.search--compact) .search__locate { padding: 0 14px; }
+  .search__bar { flex-wrap: wrap; row-gap: 4px; padding: 4px 4px 4px 14px; }
+  .search input { flex: 1 1 0; }
+  .search__locate { flex: 1 1 100%; justify-content: center; height: 44px; margin-left: -10px; }
+  .search--compact .search__locate { height: 44px; padding: 0 12px; margin-left: -8px; }
 }
 
 .spinner {
